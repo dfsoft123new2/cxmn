@@ -1,0 +1,1324 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#101717">
+  <meta name="description" content="在 20×20 网格上搭建能量运输系统，让每一份能量抵达潮汐核心。">
+  <title>潮汐实验室 · TIDAL LAB</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22%3E%3Cpath fill=%22%2376d9a1%22 d=%22M12 2 21 7v10l-9 5-9-5V7z%22/%3E%3C/svg%3E">
+  <style>
+
+:root{color-scheme:dark;--bg:#101616;--panel:#171e1e;--panel-deep:#121a1a;--line:#2a3332;--text:#e1e8e5;--muted:#7b8d87;--mint:#8be4bf;--mint-dim:#273b31;--gold:#ddbc75;--font:'DM Sans','Microsoft YaHei','PingFang SC',sans-serif;--mono:'Space Grotesk','Consolas',monospace}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:var(--font);font-size:13px;-webkit-font-smoothing:antialiased}button,input,select{font:inherit}button,a,input,select,canvas{-webkit-tap-highlight-color:transparent}button{cursor:pointer}button{color:inherit;background:none;border:0}button:disabled{opacity:.33;cursor:not-allowed}button:focus-visible,a:focus-visible,select:focus-visible,input:focus-visible{outline:2px solid var(--mint);outline-offset:4px}button,select{transition:background .16s,color .16s,border-color .16s,opacity .16s}svg{display:block;width:18px;height:18px;flex-shrink:0}span[data-icon]{display:inline-flex;align-items:center;justify-content:center}a{color:inherit;text-decoration:none}kbd{font-family:var(--mono);font-size:10px;border:1px solid #3a4540;border-radius:4px;padding:2px 5px;line-height:1.2;color:#8e9c96;white-space:nowrap}.mono{font-family:var(--mono)}.tiny-dot{display:inline-block;width:5px;height:5px;border-radius:50%;background:currentColor;flex-shrink:0}.mint-dot{color:var(--mint)}
+.app-header{height:84px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 40px;gap:24px;background:#141b1a}.brand{display:flex;align-items:center;gap:13px}.brand-mark{width:40px;height:44px;color:var(--mint)}.brand-mark svg{width:39px;height:43px}.brand strong{display:block;font-size:18px;letter-spacing:2.5px;font-weight:600}.brand small{display:block;font:9px var(--mono);letter-spacing:1.65px;color:#82938b;margin-top:6px}.brand small span{margin:0 5px;color:#53665d}.header-center{display:flex;align-items:center;gap:10px;color:#788d82;font-size:11px;letter-spacing:2px}.header-center .tiny-dot{color:#9bb993}.header-actions{display:flex;gap:20px;align-items:center}.text-button{display:flex;align-items:center;gap:7px;color:#a6b7ad;font-size:12px;padding:9px 0}.text-button:hover{color:var(--mint)}.text-button svg{width:16px;height:16px}.version{border:1px solid #354139;border-radius:5px;padding:4px 7px;font:10px var(--mono);color:#9ba99c;background:#1b2520}
+.workspace{max-width:1680px;margin:0 auto;padding:30px 36px 0}.page-heading{display:flex;align-items:center;justify-content:space-between;gap:20px;margin-bottom:26px}.eyebrow{font:9px var(--mono);letter-spacing:2.5px;color:#8c9d88;margin-bottom:9px}h1{font-size:27px;font-weight:500;letter-spacing:1.5px;margin:0 0 10px}.heading-dot{color:var(--mint);padding-left:3px}.page-heading p{color:var(--muted);font-size:12px;letter-spacing:.5px;margin:0}.main-controls{display:flex;gap:10px;padding-top:16px}.button{display:inline-flex;align-items:center;justify-content:center;gap:9px;min-height:40px;padding:0 16px;border-radius:7px;font-size:12px;font-weight:600;white-space:nowrap}.button svg{width:16px;height:16px}.button.secondary{background:#1b2321;border:1px solid #354039;color:#b1c0b6}.button.secondary:hover{background:#25332b;border-color:#506659}.button.primary{background:#b9e6a0;color:#1f3525;border:1px solid #b9e6a0;box-shadow:0 0 22px #b9e6a00a}.button.primary:hover{background:#caf4b4;border-color:#caf4b4}.button.primary kbd{border-color:#8eb879;color:#49623d;margin-left:10px}.button.primary.running{background:#263f34;border-color:#5c9277;color:#a1e2bd}.button.primary.running kbd{border-color:#51725f;color:#98bda3}
+.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px}.metric-card{position:relative;padding:16px 19px 14px;background:linear-gradient(120deg,#1a2320,#171f1d);border:1px solid #303c33;border-radius:9px;overflow:hidden}.metric-top{display:flex;align-items:center;justify-content:space-between;color:#a4b2a6;font-size:11px;letter-spacing:.5px}.metric-icon{width:23px;height:23px}.metric-icon svg{width:19px;height:19px}.mint{color:#9bd5b2}.gold{color:var(--gold)}.blue{color:#8dbad0}.lilac{color:#b4aed1}.metric-value{display:flex;align-items:baseline;gap:9px;margin:5px 0 10px;height:40px}.metric-value strong{font-family:var(--mono);font-size:36px;font-weight:500;letter-spacing:-1.5px;font-variant-numeric:tabular-nums}.metric-value>span:not(.metric-graphic,.fps-signal){font:10px var(--mono);color:#7c8f83}.metric-bottom{display:flex;align-items:center;gap:5px;color:#73867b;font-size:10px}.metric-rate{margin-left:auto;white-space:nowrap;color:#98ad9d;font-size:10px}.metric-card:first-child .metric-value strong{color:#b7e6ab}.metric-card:first-child .metric-rate{color:#a4d49d}.mini-chart{margin-left:auto;align-self:center;width:84px;height:27px}.mini-chart path{stroke:#93bd83;fill:none;stroke-width:1.4}.metric-graphic{margin-left:auto;align-self:center;display:flex;gap:4px;height:22px;align-items:flex-end}.energy-bars i{width:4px;border-radius:2px;background:#a1925f}.energy-bars i:nth-child(1){height:7px;opacity:.3}.energy-bars i:nth-child(2){height:11px;opacity:.4}.energy-bars i:nth-child(3){height:8px;opacity:.45}.energy-bars i:nth-child(4){height:18px;opacity:.5}.energy-bars i:nth-child(5){height:13px;opacity:.6}.energy-bars i:nth-child(6){height:20px;opacity:.7}.energy-bars i:nth-child(7){height:16px;opacity:.8}.energy-bars i:nth-child(8){height:23px;opacity:.85}.fps-signal{display:flex;align-items:flex-end;margin-left:auto;height:20px;gap:3px;align-self:center}.fps-signal i{width:4px;background:#91aa96;border-radius:1px}.fps-signal i:nth-child(1){height:5px}.fps-signal i:nth-child(2){height:10px}.fps-signal i:nth-child(3){height:15px}.fps-signal i:nth-child(4){height:20px}
+.studio{display:grid;grid-template-columns:238px minmax(360px,1fr) 242px;gap:18px;align-items:start}.panel{border:1px solid var(--line);border-radius:9px;background:var(--panel)}.panel-heading{display:flex;align-items:center;justify-content:space-between;gap:10px}.panel-heading h2{margin:0;font-size:12px;font-weight:500;letter-spacing:.5px;display:flex;align-items:center;gap:8px}.panel-heading h2 svg{width:15px;height:15px;color:#8c9f93}.count-badge{font:10px var(--mono);color:#9dac9f;padding:3px 5px;border:1px solid #364139;border-radius:4px;min-width:23px;text-align:center}.device-panel{padding:17px 12px 0;overflow:hidden}.device-panel .panel-heading{padding:0 4px}.panel-subtitle{font-size:10px;color:var(--muted);margin:9px 4px 15px}.library-tabs{display:flex;gap:3px;padding:3px;background:#101716;border:1px solid #26322a;border-radius:6px;margin-bottom:11px}.library-tabs button{padding:6px 0;flex:1;color:#829487;font-size:10px;border-radius:4px;white-space:nowrap}.library-tabs button:hover{color:#c7d9cc}.library-tabs button.active{background:#2c3a30;color:#d4e3d1;box-shadow:0 1px 4px #0003}.device-list{display:flex;flex-direction:column;gap:4px}.device-card{display:flex;gap:10px;align-items:center;text-align:left;border:1px solid transparent;border-radius:6px;min-height:52px;padding:6px 9px;width:100%;position:relative}.device-card:hover{background:#202b26}.device-card.active{background:#27352a;border-color:#526d48}.device-card.active::after{content:'';position:absolute;left:-1px;top:16px;bottom:16px;width:2px;background:#b6dba1;border-radius:2px}.device-card-icon{background:color-mix(in srgb,var(--device-color) 8%,#161d1b);color:var(--device-color);width:32px;height:32px;border-radius:6px;display:grid;place-items:center;flex-shrink:0;border:1px solid color-mix(in srgb,var(--device-color) 18%,transparent)}.device-card-icon svg{width:21px;height:21px}.device-card-text{min-width:0}.device-card-text strong{font-size:11px;letter-spacing:.4px;font-weight:500;display:block;color:#c3cec5}.device-card-text small{font-size:9px;color:#788e7e;display:block;margin-top:4px;white-space:nowrap}.device-interval{font:10px var(--mono);color:#95a593;margin-left:auto;align-self:flex-start;line-height:22px}.library-footer{display:flex;align-items:center;gap:6px;font-size:9px;color:#718879;margin:13px -12px 0;padding:13px 14px;background:#141d19;border-top:1px solid var(--line)}.library-footer svg{width:13px;height:13px}.library-footer>span:last-child{margin-left:auto;font:9px var(--mono);color:#869888}.map-panel{overflow:hidden;background:#121a19}.map-toolbar{height:55px;padding:9px 14px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--line);background:#1a2320;gap:8px}.mode-group{display:flex;align-items:center;gap:3px}.mode-group button{display:flex;align-items:center;justify-content:center;gap:6px;padding:8px 10px;border-radius:5px;font-size:11px;color:#8da08f;white-space:nowrap}.mode-group button svg{width:14px;height:14px}.mode-group button.active{background:#34412f;color:#c1dda7}.mode-group button[data-mode=delete].active{background:#48312e;color:#f0a99f}.mode-group button:not(.active):not(:disabled):hover{color:#cbdacb;background:#263029}.map-tools{display:flex;align-items:center;gap:10px}.icon-button{width:27px;height:27px;display:grid;place-items:center;border-radius:5px;color:#819684;padding:0}.icon-button svg{width:15px;height:15px}.icon-button:hover{background:#2b3a2f;color:#c9ddc6}.icon-button.active{background:#27372b;color:#a7c39f}.toolbar-separator{height:16px;width:1px;background:#354236;display:inline-block;flex-shrink:0}.grid-size{font:10px var(--mono);color:#7c917f;white-space:nowrap}.map-status{display:flex;align-items:center;gap:11px;min-height:48px;padding:10px 17px;font-size:10px}.status-badge{color:#b5c78c;background:#293321;border:1px solid #3d4c2b;border-radius:4px;padding:4px 6px;display:inline-flex;gap:5px;align-items:center;white-space:nowrap}.status-badge.is-running{color:#8de2bb;background:#203c2c;border-color:#3d7253}.status-badge.is-running .tiny-dot{animation:pulse-dot 1.3s ease-in-out infinite}.status-badge.is-deleting{color:#e5a498;background:#3a2825;border-color:#573b35}#map-name{color:#8a9a8c;white-space:nowrap}#map-name span{color:#425748;margin:0 5px}.map-text-button{display:flex;gap:4px;align-items:center;font-size:9px;color:#91a78b;margin-left:auto;padding:3px 0;white-space:nowrap}.map-text-button svg{width:12px;height:12px}.map-text-button:hover{color:#c5e4ae}.map-stage{position:relative;width:100%;aspect-ratio:1/1;max-height:730px;background:radial-gradient(ellipse at center,#182622 0%,#121a19 75%);overflow:hidden;touch-action:none}.map-stage canvas{display:block;width:100%;height:100%;touch-action:none;outline:none}.map-stage canvas:focus-visible{box-shadow:inset 0 0 0 1px #86c3a0}.map-watermark{position:absolute;bottom:12px;left:33px;pointer-events:none;font:7px var(--mono);color:#43584c;letter-spacing:2px}.map-watermark span{margin-left:6px;color:#6c856f}.map-tooltip{position:absolute;z-index:3;background:#233029f5;box-shadow:0 5px 20px #0005;border:1px solid #4c6656;border-radius:5px;padding:8px 10px;pointer-events:none;font-size:10px;color:#d0dfd3;white-space:nowrap}.map-tooltip small{display:block;font:9px var(--mono);color:#8baf95;margin-top:5px}.map-bottom{display:flex;justify-content:space-between;gap:10px;align-items:center;height:37px;padding:0 18px;border-bottom:1px solid #26342c;color:#6b8370;font-size:9px}.map-legend{display:flex;gap:13px}.map-legend>span{display:flex;align-items:center;gap:5px;white-space:nowrap}.map-legend i{display:inline-block;width:7px;height:7px}.legend-core{background:#72c79c;transform:rotate(45deg);border-radius:1px}.legend-energy{border-radius:50%;background:#e8cf77;box-shadow:0 0 5px #e8cf7733}.legend-range{border:1px dashed #8c9d61;background:#adb97d12}.map-hint{padding:13px 16px;color:#7b927f;font-size:10px;display:flex;align-items:center;gap:7px;background:#17201b;min-height:42px}.map-hint>span[data-icon]{color:#7c967e}.map-hint svg{width:13px;height:13px}.shortcut-hint{margin-left:auto;font-size:9px;white-space:nowrap}.shortcut-hint kbd{font-size:8px;margin-right:2px;padding:1px 3px;border-color:#354b38;color:#859a83}
+.inspector-panel{display:flex;flex-direction:column;gap:14px}.selection-panel{padding:18px 17px 0}.small-tag{font-size:9px;color:#9aae90;background:#293329;padding:3px 6px;border-radius:4px;white-space:nowrap}.selection-identity{display:flex;gap:11px;align-items:center;margin:21px 0 13px}.selected-icon{display:grid;place-items:center;width:44px;height:44px;border:1px solid #60553b;border-radius:9px;background:#3b3424;color:#dfbc74;flex-shrink:0}.selected-icon svg{width:27px;height:27px}.selection-identity h3{margin:0 0 6px;font-size:15px;font-weight:500;letter-spacing:.5px}.selection-identity div>span{font:8px var(--mono);color:#899b89;letter-spacing:1.5px}.selection-description{font-size:10px;line-height:1.9;color:#8b9e8f;min-height:40px;margin:0 0 16px}.property-row{display:flex;align-items:center;justify-content:space-between;font-size:10px;padding:9px 0;border-top:1px solid #29352d;color:#819787}.property-row strong{font-family:var(--mono);font-size:11px;color:#c6d6c2;font-weight:500}.property-row strong span{color:#889c87;font-size:9px}.direction-section{border-top:1px solid #2c382f;margin-top:4px;padding-top:15px}.direction-heading{display:flex;justify-content:space-between;align-items:center;color:#91a493;font-size:10px}.direction-heading kbd{font-size:8px;border:0;color:#728776;padding:0}.direction-buttons{display:flex;gap:7px;margin:10px 0 17px}.direction-buttons button{flex:1;border:1px solid #354137;border-radius:5px;background:#1c2821;height:30px;font:19px var(--mono);color:#859b87}.direction-buttons button:hover{border-color:#77946b}.direction-buttons button.active{border-color:#839e68;background:#38462e;color:#c5dfa3}.selected-position{display:flex;align-items:center;gap:6px;border-top:1px solid #29382d;background:#18241c;padding:12px 16px;margin:0 -17px;font-size:9px;color:#809879;border-radius:0 0 9px 9px}.selected-position svg{width:12px;height:12px}.flow-panel{padding:16px 17px}.chart-period{font:9px var(--mono);color:#7d9480}.flow-value{display:flex;align-items:baseline;gap:7px;margin-top:13px}.flow-value>span:first-child{font:27px var(--mono);color:#d5e7cf}.flow-value small{font:9px var(--mono);color:#77937c}.live-tag{margin-left:auto;font:8px var(--mono);letter-spacing:1px;color:#86b291;display:flex;align-items:center;gap:4px}.live-tag i{width:4px;height:4px;border-radius:50%;background:#88c797}#flow-chart{width:100%;height:68px;margin-top:9px}.chart-grid{stroke:#2a3b2d;stroke-dasharray:3 4;fill:none;stroke-width:.7}.chart-axis{display:flex;justify-content:space-between;font:8px var(--mono);color:#617e67;margin-top:5px}.efficiency{display:flex;justify-content:space-between;align-items:center;font-size:9px;color:#819980;margin-top:17px}.efficiency strong{font:10px var(--mono);color:#b4cf9d}.efficiency-track{height:3px;background:#2b3b2b;border-radius:3px;margin-top:8px;overflow:hidden}.efficiency-track>div{width:0;height:100%;background:#b3d398;transition:width .5s}.run-settings{padding:16px 17px}.muted-icon{color:#79917c}.muted-icon svg{width:14px;height:14px}.run-settings .panel-heading{margin-bottom:13px}.setting-row{display:flex;justify-content:space-between;align-items:center;gap:6px;min-height:34px;font-size:10px;color:#8b9f8c}.setting-row select{font-size:10px;border:1px solid #354536;border-radius:5px;background:#1c281f;color:#b1c6aa;padding:5px 7px;max-width:96px;cursor:pointer}.setting-row select:disabled{opacity:.4;cursor:not-allowed}.switch{appearance:none;position:relative;width:27px;height:15px;border-radius:10px;border:1px solid #526547;background:#2a3829;cursor:pointer;margin:0;transition:all .2s}.switch:checked{background:#a8c68c;border-color:#a8c68c}.switch::before{content:'';position:absolute;width:9px;height:9px;border-radius:50%;top:2px;left:2px;background:#7f9474;transition:all .2s}.switch:checked::before{transform:translateX(12px);background:#304025}
+.workspace-footer{display:flex;align-items:center;justify-content:space-between;gap:16px;min-height:65px;color:#6c8272;font-size:10px}.workspace-footer>div:first-child{display:flex;align-items:center;gap:6px}.footer-actions{display:flex;gap:19px;align-items:center}.footer-actions button{color:#879b88;display:flex;align-items:center;gap:6px;padding:7px 0;font-size:10px}.footer-actions button:hover{color:#c2d7b6}.footer-actions svg{width:13px;height:13px}.footer-note{font-size:9px;letter-spacing:1px;color:#596f60}.toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%);z-index:20;border:1px solid #53715a;background:#253b2df5;border-radius:8px;padding:12px 22px;color:#d3e9ce;font-size:12px;box-shadow:0 8px 40px #0006;max-width:90vw;text-align:center}.toast.error{border-color:#85594f;background:#3b2a26;color:#ecc4b8}dialog{color:var(--text);background:#19221e;border:1px solid #435542;border-radius:14px;box-shadow:0 30px 150px #0009}dialog::backdrop{background:#080e0ccc;backdrop-filter:blur(6px)}.help-dialog{width:min(760px,92vw);max-height:88vh;padding:30px}.dialog-top{display:flex;justify-content:space-between;align-items:flex-start;gap:18px}.dialog-top h2{font-size:21px;font-weight:500;letter-spacing:1px;margin:0}.help-intro{display:flex;align-items:center;gap:14px;padding:15px 18px;background:#22362a;border:1px solid #354f39;border-radius:8px;margin-top:23px}.help-intro>span{color:#a2d397}.help-intro svg{width:30px;height:30px}.help-intro p{font-size:12px;line-height:1.8;margin:0;color:#93af97}.help-intro strong{font-weight:500;color:#cbddc1}.help-steps{display:grid;grid-template-columns:repeat(3,1fr);gap:23px;margin:27px 0}.help-steps b{font:22px var(--mono);color:#839b72}.help-steps h3{font-size:12px;font-weight:500;margin:10px 0}.help-steps p{font-size:11px;line-height:1.9;color:#889f8e;margin:0}.help-subhead{font-size:13px;font-weight:500;border-top:1px solid #324332;padding-top:20px}.help-device-list{display:grid;grid-template-columns:1fr 1fr;gap:16px 22px;margin-top:20px}.help-device{display:flex;gap:10px;align-items:flex-start}.help-device .device-card-icon{width:29px;height:29px}.help-device h4{font-size:11px;font-weight:500;margin:0 0 5px}.help-device p{font-size:10px;color:#8aa18c;line-height:1.8;margin:0}.rules-notes{border:1px solid #344532;background:#162019;padding:15px 18px;border-radius:8px;margin-top:25px}.rules-notes h3{font-size:12px;font-weight:500;margin:0 0 10px}.rules-notes ul{padding-left:16px;margin:0}.rules-notes li{font-size:10px;color:#8ca087;line-height:1.9;margin:5px 0}.help-keyboard{display:flex;flex-wrap:wrap;gap:12px;font-size:9px;color:#8da18c;margin-top:23px}.help-keyboard kbd{font-size:9px;margin-right:3px}.confirm-dialog{width:min(370px,90vw);padding:28px}.confirm-icon{color:#b6d494;margin-bottom:16px}.confirm-icon svg{width:28px;height:28px}.confirm-dialog h2{font-size:20px;font-weight:500;margin:0 0 12px}.confirm-dialog p{color:#94a68f;font-size:12px;line-height:1.8}.confirm-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:24px}.locked .device-card{cursor:not-allowed}.locked .device-card:hover{background:transparent}.locked .device-card.active{background:#27352a}.locked .map-stage{cursor:default}body[data-mode=delete] .map-stage{cursor:crosshair}body[data-mode=edit] .map-stage{cursor:grab}body.is-dragging .map-stage{cursor:grabbing}body[data-mode=place] .map-stage{cursor:crosshair}[hidden]{display:none!important}@keyframes pulse-dot{50%{opacity:.35}}
+@media(min-width:1001px){.map-stage{max-height:610px}.device-panel{min-height:100%;display:flex;flex-direction:column}.device-list{gap:6px;flex:1;justify-content:space-between}.library-footer{margin-top:18px}.map-panel{min-height:100%;display:flex;flex-direction:column}.map-stage{flex:1;min-height:480px}.map-hint{margin-top:auto}}
+@media(min-width:1500px){.studio{grid-template-columns:255px minmax(360px,1fr) 260px;gap:22px}.map-stage{max-height:680px}.device-card{min-height:56px}.device-card-text strong{font-size:12px}.device-card-text small{font-size:10px}.device-panel{padding-top:20px}.selection-description{font-size:11px;min-height:44px}.selection-panel{padding-top:20px}.flow-panel{padding-top:20px;padding-bottom:20px}.run-settings{padding-top:20px;padding-bottom:20px}}
+@media(max-width:1200px){.workspace{padding:25px 22px 0}.app-header{padding:0 25px}.studio{grid-template-columns:208px minmax(320px,1fr) 213px;gap:12px}.device-card{padding:6px;gap:7px}.device-card-icon{width:28px;height:30px}.device-card-text strong{font-size:10px}.device-card-text small{font-size:8px}.device-interval{font-size:9px}.map-toolbar{padding:9px}.mode-group button{padding:7px}.map-tools{gap:6px}.map-status{padding:10px 12px;gap:8px}#map-name{font-size:9px}.shortcut-hint{display:none}.metric-card{padding:14px}.metric-bottom{font-size:9px}.metric-rate{font-size:9px}.metric-graphic,.mini-chart{display:none}.map-legend{gap:9px}.map-bottom{padding:0 12px}.selection-panel,.flow-panel,.run-settings{padding-left:14px;padding-right:14px}.selected-position{margin-left:-14px;margin-right:-14px;padding:12px}.footer-note{display:none}}
+@media(max-width:1000px){.studio{grid-template-columns:205px minmax(0,1fr)}.inspector-panel{grid-column:1/-1;display:grid;grid-template-columns:1.15fr 1fr 1fr;gap:12px}.selection-panel{padding-top:15px}.selection-identity{margin:14px 0 10px}.selection-description{min-height:0}.property-row{display:none}.direction-section{margin-top:10px;padding-top:10px}.direction-buttons{margin-bottom:13px}.selection-identity h3{font-size:13px}.selection-identity div>span{font-size:7px}.selection-identity .selected-icon{width:35px;height:35px}.header-center{display:none}.map-stage{max-height:600px}.map-hint{font-size:9px}.page-heading h1{font-size:24px}.flow-panel{align-self:stretch}.run-settings{align-self:stretch}.setting-row{min-height:43px}.metric-value strong{font-size:30px}.metric-bottom .metric-rate{display:none}.map-panel{align-self:stretch;display:flex;flex-direction:column}.map-stage{flex:1;min-height:420px;aspect-ratio:auto}.map-hint{margin-top:auto}.device-panel{padding-bottom:0}}
+@media(max-width:700px){.app-header{height:72px;padding:0 16px}.brand strong{font-size:16px}.brand small{font-size:7px;letter-spacing:1px}.brand-mark{width:30px}.brand-mark svg{width:30px}.header-actions{gap:10px}.text-button span:last-child{display:none}.version{font-size:9px}.workspace{padding:23px 14px 0}.page-heading{display:block;margin-bottom:20px}.page-heading h1{font-size:23px}.page-heading p{font-size:11px}.eyebrow{font-size:8px}.main-controls{padding-top:20px}.main-controls .primary{flex:1}.main-controls .secondary{flex:1}.metrics{grid-template-columns:repeat(2,1fr);gap:9px;margin-bottom:18px}.metric-card{padding:12px}.metric-top{font-size:10px}.metric-value{margin:3px 0 6px;height:34px}.metric-value strong{font-size:28px}.metric-bottom{font-size:9px}.metric-bottom .metric-rate{display:none}.studio{display:flex;flex-direction:column;gap:12px}.device-panel{width:100%;padding:13px 11px 0}.device-panel .panel-heading{padding:0 2px}.panel-subtitle{margin:7px 3px 10px}.library-tabs{max-width:240px}.device-list{display:grid;grid-template-columns:repeat(2,1fr);gap:5px;padding-bottom:4px}.device-card{min-height:47px}.device-card-text strong{font-size:11px}.device-card-text small{font-size:9px}.library-footer{margin-top:8px;padding:10px 14px}.map-panel{width:100%}.map-stage{aspect-ratio:1/1;min-height:0;flex:none;height:auto}.map-toolbar{height:50px}.mode-group button{font-size:11px;padding:7px 10px}.map-tools{gap:8px}.map-status{font-size:9px}.map-bottom{font-size:8px;height:34px}.map-legend{gap:11px}.map-hint{font-size:9px;padding:11px}.map-watermark{font-size:6px;left:29px;bottom:6px}.inspector-panel{width:100%;display:grid;grid-template-columns:1fr 1fr;gap:10px}.selection-panel{grid-row:span 2}.run-settings{padding-top:14px;padding-bottom:12px}.setting-row{min-height:32px;font-size:9px}.setting-row select{font-size:9px;padding:4px}.flow-panel{padding:14px 12px}.flow-panel .panel-heading h2,.run-settings .panel-heading h2,.selection-panel .panel-heading h2{font-size:11px}.chart-period{font-size:8px}.flow-value>span:first-child{font-size:23px}#flow-chart{height:49px}.selection-description{font-size:10px;line-height:2.1;margin-bottom:20px}.property-row{display:flex;font-size:9px}.direction-section{margin-top:12px;padding-top:15px}.direction-buttons{gap:4px}.direction-buttons button{height:30px;font-size:17px}.selected-position{font-size:8px;padding:12px 10px}.workspace-footer{align-items:center;flex-wrap:wrap;justify-content:center;padding:20px 0;gap:12px;min-height:92px}.workspace-footer>div:first-child{width:100%;justify-content:center;font-size:9px}.footer-actions{gap:17px}.footer-actions button{font-size:10px}.help-dialog{padding:22px}.dialog-top h2{font-size:17px}.help-steps{grid-template-columns:1fr;gap:17px}.help-steps article{position:relative;padding-left:34px}.help-steps b{position:absolute;left:0;top:5px;font-size:19px}.help-steps h3{margin:5px 0}.help-device-list{grid-template-columns:1fr}.help-intro{padding:12px}.help-intro p{font-size:11px}.toast{font-size:11px;bottom:20px}.flow-value .live-tag{font-size:7px}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+
+.legend-compression{border:1px dashed #dd9ad6;background:#dd9ad618}.fixed-interval{font-size:10px;font-weight:500;color:#b1c6aa}.map-legend{flex-wrap:wrap;row-gap:5px}.map-bottom{min-height:37px;height:auto;padding-top:10px;padding-bottom:10px}
+
+/* Saved blueprints and per-second production readout. */
+.workspace-footer{flex-wrap:wrap;min-height:76px;gap:12px}
+.blueprint-tools{display:flex;align-items:center;gap:7px;flex:1 1 100%;order:2;flex-wrap:wrap}
+.blueprint-tools input,.blueprint-tools select{min-width:0;height:30px;padding:0 9px;color:#bac9bc;background:#18211c;border:1px solid #354238;border-radius:5px;font:10px var(--sans)}
+.blueprint-tools input{width:145px}
+.blueprint-tools select{width:190px}
+.blueprint-tools button{height:30px;padding:0 10px;color:#a6d0b3;background:#1b2a22;border:1px solid #3b5844;border-radius:5px;font-size:10px}
+.blueprint-tools button:hover:not(:disabled){background:#24392b;color:#d2edcf}
+.blueprint-tools button:disabled{opacity:.45}
+.blueprint-storage-status{order:4;font-size:9px;color:#758a79}
+.workspace-footer>div:first-child{order:1}
+.footer-actions{order:3}
+.footer-note{order:5}
+.core-position{margin-left:auto;white-space:nowrap;color:#9fca9f;font:9px var(--mono)}
+.flow-panel .efficiency+.efficiency{margin-top:7px}
+.flow-panel #production-bars rect{transition:y .16s ease,height .16s ease}
+@media(max-width:700px){.blueprint-tools{gap:6px;justify-content:center}.blueprint-tools input{width:125px}.blueprint-tools select{width:154px;flex:1}.blueprint-storage-status{width:100%;text-align:center}.core-position{font-size:8px}.map-status{flex-wrap:wrap}.flow-panel .efficiency{font-size:9px}}
+
+</style>
+  <script>
+(function (root, factory) {
+  const api = factory();
+  if (typeof module === 'object' && module.exports) module.exports = api;
+  else root.Tidal = api;
+})(typeof globalThis !== 'undefined' ? globalThis : this, function () {
+  'use strict';
+
+  const SIZE = 20;
+  const CORE = Object.freeze({ x: 9, y: 9 });
+  const DIRECTIONS = Object.freeze([
+    { x: 0, y: -1, name: '上', arrow: '↑' },
+    { x: 1, y: 0, name: '右', arrow: '→' },
+    { x: 0, y: 1, name: '下', arrow: '↓' },
+    { x: -1, y: 0, name: '左', arrow: '←' },
+  ]);
+  const TYPES = Object.freeze({
+    generator: { name: '集能装置', en: 'HARVESTER', interval: 1, color: '#e1bc70', category: '生产', description: '每 1 秒，在上下左右相邻 1 格的随机位置生成 1 单位能量。', short: '相邻一格 · 随机集能' },
+    rail: { name: '传输轨道', en: 'CONVEYOR', interval: 2, color: '#6bb8f3', category: '运输', description: '每 2 秒，将后方一格的全部能量送到前方一格，可送入核心。', short: '后方 → 前方' },
+    pusher: { name: '单推机械', en: 'PUSHER', interval: 1, color: '#a7a7ff', category: '机械', description: '每 1 秒，将面前的装置和能量向前推 1 格；能量可推入核心。装置目标被占用时，本次推动失败。', short: '向前推进一格' },
+    puller: { name: '推拉机械', en: 'PULL / PUSH', interval: 1, color: '#c7a2ef', category: '机械', description: '每 1 秒，交替推 / 拉，使前方第 1 格与第 2 格之间的装置往复移动。只移动装置。', short: '两格之间 · 往复推拉' },
+    disposer: { name: '置空装置', en: 'ERASER', interval: 2, color: '#ed8f98', category: '机械', description: '每 2 秒，清除前方一格的装置。保留能量，不能清除潮汐核心。', short: '清除前方装置' },
+    rotator: { name: '转向装置', en: 'ROTATOR', interval: 2, color: '#e4a476', category: '机械', description: '每 2 秒，将前方一格的装置顺时针旋转 90°。', short: '顺时针旋转 90°' },
+    splitter: { name: '侧传装置', en: 'SPLITTER', interval: 1, color: '#66c9d4', category: '运输', description: '每 1 秒，将前方一格的全部能量随机送至自身左侧或右侧一格。侧传不直接送入核心。', short: '前方 → 随机左 / 右' },
+    collector: { name: '集合装置', en: 'COLLECTOR', interval: 3, color: '#79dcb4', category: '运输', description: '每 3 秒，将自身左、右、后三格的全部能量汇入前方一格，可送入核心。', short: '三向汇入 · 单向输出' },
+    ring: { name: '环能装置', en: 'RING HARVESTER', interval: 1, color: '#d5ca79', category: '生产', description: '每 1 秒，在上下左右距离 2 格的随机位置生产能量。目标已有能量且没有压能覆盖时，本次生产失败。', short: '间隔两格 · 每秒集能' },
+    compressor: { name: '压能装置', en: 'COMPRESSOR', interval: null, color: '#dd9ad6', category: '辅助', description: '使周围八格（不含自身）允许无限能量堆叠。持续生效，不吸取或移动能量；普通格已有能量时不能接收新的能量。', short: '周围八格 · 允许堆叠' },
+    accelerator: { name: '加速引擎', en: 'ACCELERATOR', interval: null, color: '#efb97b', category: '辅助', description: '使周围八格（包括对角线）的装置执行间隔变为 1 秒。持续生效，多个引擎不叠加。', short: '周围八格 · 间隔变为 1s' },
+  });
+  const inside = (x, y) => Number.isInteger(x) && Number.isInteger(y) && x >= 0 && y >= 0 && x < SIZE && y < SIZE;
+  const isCore = (x, y) => x === CORE.x && y === CORE.y;
+  const index = (x, y) => y * SIZE + x;
+
+  class Simulation {
+    constructor(random = Math.random) {
+      this.random = random;
+      this.core = { ...CORE };
+      this.devices = new Map();
+      this.energy = new Array(SIZE * SIZE).fill(0);
+      this.nextId = 1;
+      this.resetMetrics();
+    }
+
+    resetMetrics() {
+      this.time = 0;
+      this.produced = 0;
+      this.delivered = 0;
+      this.removed = 0;
+      this.productionEvents = [];
+      this.deliveryEvents = [];
+      this.history = [];
+      this.effects = [];
+      this.logs = [];
+      this.lastSample = 0;
+      this.lastDelivered = 0;
+      this.productionMin = null;
+      this.productionMax = null;
+      this.productionSamples = 0;
+      this.lastProduced = 0;
+    }
+
+    getDevice(x, y) { return inside(x, y) ? this.devices.get(index(x, y)) : undefined; }
+    getEnergy(x, y) { return inside(x, y) ? this.energy[index(x, y)] : 0; }
+    isCore(x, y) { return x === this.core.x && y === this.core.y; }
+    moveCore(x, y) {
+      if (!inside(x, y) || this.isCore(x, y) || this.getDevice(x, y) || this.getEnergy(x, y)) return false;
+      this.core = { x, y };
+      return true;
+    }
+    get totalEnergy() { return this.energy.reduce((sum, n) => sum + n, 0); }
+    get productionRate() { return this.productionEvents.reduce((sum, e) => sum + e.count, 0); }
+    get deliveryRate() { return this.deliveryEvents.reduce((sum, e) => sum + e.count, 0); }
+
+    get ringInterval() { return 1; }
+
+    place(type, x, y, dir = 0) {
+      if (!Object.hasOwn(TYPES, type) || !inside(x, y) || this.isCore(x, y) || this.getDevice(x, y)) return false;
+      if (!Number.isInteger(dir) || dir < 0 || dir > 3) return false;
+      const device = { id: this.nextId++, type, x, y, dir, elapsed: 0, pulling: false, firedAt: -10 };
+      this.devices.set(index(x, y), device);
+      return device;
+    }
+
+    moveDevice(x, y, nx, ny) {
+      const device = this.getDevice(x, y);
+      if (!device || !inside(nx, ny) || this.isCore(nx, ny) || this.getDevice(nx, ny)) return false;
+      this.devices.delete(index(x, y));
+      device.x = nx;
+      device.y = ny;
+      this.devices.set(index(nx, ny), device);
+      return true;
+    }
+
+    rotate(x, y) {
+      const device = this.getDevice(x, y);
+      if (!device) return false;
+      device.dir = (device.dir + 1) % 4;
+      return true;
+    }
+
+    deleteAt(x, y) {
+      if (!inside(x, y) || this.isCore(x, y)) return false;
+      if (this.devices.delete(index(x, y))) return 'device';
+      const amount = this.getEnergy(x, y);
+      if (!amount) return false;
+      this.removed += amount;
+      this.energy[index(x, y)] = 0;
+      return 'energy';
+    }
+
+    boosted(device) {
+      for (let dy = -1; dy <= 1; dy++) {
+        for (let dx = -1; dx <= 1; dx++) {
+          if ((dx || dy) && this.getDevice(device.x + dx, device.y + dy)?.type === 'accelerator') return true;
+        }
+      }
+      return false;
+    }
+
+    interval(device) {
+      if (TYPES[device.type].interval === null) return Infinity;
+      if (this.boosted(device)) return 1;
+      return TYPES[device.type].interval;
+    }
+
+    stackable(x, y) {
+      if (!inside(x, y) || this.isCore(x, y)) return false;
+      for (let dy = -1; dy <= 1; dy++) {
+        for (let dx = -1; dx <= 1; dx++) {
+          if ((dx || dy) && this.getDevice(x + dx, y + dy)?.type === 'compressor') return true;
+        }
+      }
+      return false;
+    }
+
+    canReceive(x, y, allowCore = true) {
+      if (!inside(x, y)) return false;
+      if (this.isCore(x, y)) return allowCore;
+      return this.getEnergy(x, y) === 0 || this.stackable(x, y);
+    }
+
+    position(device, relative = 0, distance = 1) {
+      const direction = DIRECTIONS[(device.dir + relative + 4) % 4];
+      return { x: device.x + direction.x * distance, y: device.y + direction.y * distance };
+    }
+
+    addEffect(from, to, kind = 'energy', count = 1) {
+      this.effects.push({ from: { ...from }, to: { ...to }, kind, count, at: this.time });
+      if (this.effects.length > 600) this.effects.splice(0, this.effects.length - 600);
+    }
+
+    log(message, kind = 'info') {
+      this.logs.unshift({ at: this.time, message, kind });
+      this.logs.length = Math.min(this.logs.length, 30);
+    }
+
+    transfer(from, to, allowCore = true) {
+      if (!inside(from.x, from.y) || !this.canReceive(to.x, to.y, allowCore)) return 0;
+      if (from.x === to.x && from.y === to.y) return 0;
+      const amount = this.getEnergy(from.x, from.y);
+      if (!amount) return 0;
+      this.energy[index(from.x, from.y)] = 0;
+      if (this.isCore(to.x, to.y)) {
+        this.delivered += amount;
+        this.deliveryEvents.push({ at: this.time, count: amount });
+        this.log(`核心接收 +${amount} 单位能量`, 'delivery');
+      } else {
+        this.energy[index(to.x, to.y)] += amount;
+      }
+      this.addEffect(from, to, 'energy', amount);
+      return amount;
+    }
+
+    generate(device, distance) {
+      const candidates = DIRECTIONS.map(d => ({ x: device.x + d.x * distance, y: device.y + d.y * distance }))
+        .filter(p => inside(p.x, p.y) && !this.isCore(p.x, p.y));
+      if (!candidates.length) return;
+      const destination = candidates[Math.min(candidates.length - 1, Math.floor(this.random() * candidates.length))];
+      // Choose once: a blocked random landing cell does not silently redirect
+      // generation elsewhere. Only successful generation counts as production.
+      if (!this.canReceive(destination.x, destination.y, false)) return;
+      this.energy[index(destination.x, destination.y)]++;
+      this.produced++;
+      this.productionEvents.push({ at: this.time, count: 1 });
+      this.addEffect(device, destination, 'spawn');
+    }
+
+    activate(device) {
+      const front = this.position(device);
+      const rear = this.position(device, 2);
+      const second = this.position(device, 0, 2);
+      device.firedAt = this.time;
+      switch (device.type) {
+        case 'generator': this.generate(device, 1); break;
+        case 'ring': this.generate(device, 2); break;
+        case 'rail': this.transfer(rear, front); break;
+        case 'collector':
+          for (const relative of [3, 1, 2]) this.transfer(this.position(device, relative), front);
+          break;
+        case 'splitter': {
+          const sides = [this.position(device, 3), this.position(device, 1)]
+            .filter(p => inside(p.x, p.y) && !this.isCore(p.x, p.y));
+          if (sides.length) this.transfer(front, sides[Math.min(sides.length - 1, Math.floor(this.random() * sides.length))], false);
+          break;
+        }
+        case 'pusher': {
+          const target = this.getDevice(front.x, front.y);
+          if (this.getEnergy(front.x, front.y) && !this.canReceive(second.x, second.y)) break;
+          if (target && !this.moveDevice(front.x, front.y, second.x, second.y)) break;
+          if (target) this.addEffect(front, second, 'move');
+          this.transfer(front, second);
+          break;
+        }
+        case 'puller': {
+          const from = device.pulling ? second : front;
+          const to = device.pulling ? front : second;
+          if (this.moveDevice(from.x, from.y, to.x, to.y)) this.addEffect(from, to, 'move');
+          device.pulling = !device.pulling;
+          break;
+        }
+        case 'disposer':
+          if (inside(front.x, front.y) && this.devices.delete(index(front.x, front.y))) {
+            this.addEffect(device, front, 'delete');
+            this.log('置空装置清除了前方装置', 'mechanical');
+          }
+          break;
+        case 'rotator':
+          if (this.rotate(front.x, front.y)) this.addEffect(device, front, 'rotate');
+          break;
+      }
+    }
+
+    tick(dt = 0.05) {
+      if (!Number.isFinite(dt) || dt <= 0 || dt > 0.1) throw new RangeError('tick 必须在 (0, 0.1] 秒之间');
+      this.time += dt;
+      // Schedule once from the state at the start of this tick. A moved device
+      // keeps its timer and cannot be activated twice at its new position.
+      const scheduled = [...this.devices.values()].sort((a, b) => a.id - b.id).map(device => ({ device, interval: this.interval(device) }));
+      for (const { device, interval } of scheduled) {
+        if (this.getDevice(device.x, device.y) !== device || interval === Infinity) continue;
+        device.elapsed += dt;
+        if (device.elapsed + 1e-9 >= interval) {
+          device.elapsed %= interval;
+          if (device.elapsed < 1e-8 || interval - device.elapsed < 1e-8) device.elapsed = 0;
+          this.activate(device);
+        }
+      }
+      const cutoff = this.time - 1 + 1e-8;
+      this.productionEvents = this.productionEvents.filter(e => e.at > cutoff);
+      this.deliveryEvents = this.deliveryEvents.filter(e => e.at > cutoff);
+      this.effects = this.effects.filter(e => this.time - e.at < 0.65);
+      if (this.time + 1e-8 >= this.lastSample + 1) {
+        const produced = this.produced - this.lastProduced;
+        this.productionMin = this.productionMin === null ? produced : Math.min(this.productionMin, produced);
+        this.productionMax = this.productionMax === null ? produced : Math.max(this.productionMax, produced);
+        this.productionSamples++;
+        this.history.push({ at: Math.floor(this.time + 1e-8), produced, delivered: this.delivered - this.lastDelivered });
+        if (this.history.length > 40) this.history.shift();
+        this.lastSample = this.time;
+        this.lastDelivered = this.delivered;
+        this.lastProduced = this.produced;
+      }
+    }
+
+    advance(seconds) {
+      if (!Number.isFinite(seconds) || seconds < 0 || seconds > 3600) throw new RangeError('无效模拟时长');
+      let remaining = seconds;
+      while (remaining > 1e-8) {
+        const dt = Math.min(0.05, remaining);
+        this.tick(dt);
+        remaining -= dt;
+      }
+    }
+
+    resetRun() {
+      this.energy.fill(0);
+      this.resetMetrics();
+      for (const device of this.devices.values()) {
+        device.elapsed = 0;
+        device.pulling = false;
+        device.firedAt = -10;
+      }
+    }
+
+    serialize() {
+      return {
+        format: 'tidal-lab', version: 3, size: SIZE, ringInterval: 1,
+        core: { ...this.core },
+        // Map insertion order changes when a machine moves another device.
+        // Persist creation order so restoring a save preserves event ordering.
+        devices: [...this.devices.values()].sort((a, b) => a.id - b.id).map(({ type, x, y, dir, elapsed, pulling }) => ({ type, x, y, dir, elapsed, pulling })),
+        energy: [...this.energy],
+        stats: {
+          time: this.time, produced: this.produced, delivered: this.delivered, removed: this.removed,
+          productionMin: this.productionMin, productionMax: this.productionMax, productionSamples: this.productionSamples,
+        },
+      };
+    }
+
+    static from(data, random = Math.random) {
+      if (!data || data.format !== 'tidal-lab' || ![1, 2, 3].includes(data.version) || data.size !== SIZE || !Array.isArray(data.devices) || data.devices.length > 399) throw new Error('这不是有效的潮汐实验室存档。');
+      const simulation = new Simulation(random);
+      if (data.version >= 3) {
+        if (!data.core || !inside(data.core.x, data.core.y)) throw new Error('潮汐核心坐标无效。');
+        simulation.core = { x: data.core.x, y: data.core.y };
+      }
+      if (!(data.version === 1 ? [1, 2, 3, 4, 5] : [1]).includes(data.ringInterval)) throw new Error('环能装置的间隔必须为 1 秒。');
+      for (const entry of data.devices) {
+        if (!entry || typeof entry !== 'object') throw new Error('装置数据无效。');
+        const device = simulation.place(entry.type, entry.x, entry.y, entry.dir);
+        if (!device) throw new Error('装置位置、类型或方向无效，或格子被重复占用。');
+        if (!Number.isFinite(entry.elapsed) || entry.elapsed < 0 || entry.elapsed >= 5 || typeof entry.pulling !== 'boolean') throw new Error('装置计时数据无效。');
+        device.elapsed = data.version === 1 && device.type === 'ring' ? entry.elapsed % 1 : entry.elapsed;
+        device.pulling = entry.pulling;
+      }
+      if (!Array.isArray(data.energy) || data.energy.length !== SIZE * SIZE || data.energy.some(n => !Number.isSafeInteger(n) || n < 0 || n > 1e12) || data.energy[index(simulation.core.x, simulation.core.y)] !== 0) throw new Error('能量数据无效。');
+      simulation.energy = [...data.energy];
+      for (const key of ['time', 'produced', 'delivered', 'removed']) {
+        const value = data.stats?.[key];
+        if (!Number.isFinite(value) || value < 0 || value > 1e14 || (key !== 'time' && !Number.isSafeInteger(value))) throw new Error('统计数据无效。');
+        simulation[key] = value;
+      }
+      if (simulation.produced !== simulation.delivered + simulation.removed + simulation.totalEnergy) throw new Error('存档能量总数不一致。');
+      simulation.lastSample = simulation.time;
+      simulation.lastDelivered = simulation.delivered;
+      simulation.lastProduced = simulation.produced;
+      if (data.version >= 3) {
+        const { productionMin, productionMax, productionSamples } = data.stats;
+        if (!Number.isSafeInteger(productionSamples) || productionSamples < 0 ||
+          !(productionMin === null || Number.isSafeInteger(productionMin) && productionMin >= 0) ||
+          !(productionMax === null || Number.isSafeInteger(productionMax) && productionMax >= 0) ||
+          (productionSamples === 0) !== (productionMin === null && productionMax === null) ||
+          (productionSamples > 0 && (productionMin === null || productionMax === null || productionMin > productionMax))) throw new Error('产能区间统计无效。');
+        simulation.productionMin = productionMin;
+        simulation.productionMax = productionMax;
+        simulation.productionSamples = productionSamples;
+      }
+      return simulation;
+    }
+
+    static demo(random = Math.random) {
+      const simulation = new Simulation(random);
+      // A symmetric four-source cross. Each collector receives a source's
+      // adjacent output and delivers it toward the central core.
+      simulation.place('generator', 5, 8, 1);
+      simulation.place('generator', 10, 5, 2);
+      simulation.place('generator', 13, 10, 3);
+      simulation.place('generator', 8, 13, 0);
+      simulation.place('collector', 6, 9, 1);
+      simulation.place('collector', 9, 6, 2);
+      simulation.place('collector', 12, 9, 3);
+      simulation.place('collector', 9, 12, 0);
+      simulation.place('rail', 8, 9, 1);
+      simulation.place('rail', 9, 8, 2);
+      simulation.place('rail', 10, 9, 3);
+      simulation.place('rail', 9, 10, 0);
+      simulation.place('accelerator', 8, 8, 0);
+      simulation.place('accelerator', 10, 10, 0);
+      return simulation;
+    }
+  }
+
+  return { Simulation, TYPES, SIZE, CORE, DIRECTIONS, inside, isCore, index };
+});
+
+  </script>
+</head>
+<body>
+  <header class="app-header">
+    <a class="brand" href="./" aria-label="潮汐实验室首页"><span class="brand-mark" data-icon="core"></span><span><strong>潮汐实验室</strong><small>TIDAL LAB <span>/</span> ENERGY SANDBOX</small></span></a>
+    <div class="header-center"><span class="tiny-dot"></span>让能量，找到它的方向。</div>
+    <div class="header-actions"><button id="help-button" class="text-button"><span data-icon="help"></span><span>使用指南</span></button><span class="version">v1.1</span></div>
+  </header>
+
+  <main class="workspace">
+    <section class="page-heading">
+      <div><div class="eyebrow">THE ENERGY EXPERIMENT</div><h1>构建流动，汇聚能量<span class="heading-dot">.</span></h1><p>从一格开始，设计属于你的高效能量网络。</p></div>
+      <div class="main-controls"><button id="reset-button" class="button secondary" title="清空能量和统计，保留当前装置布局"><span data-icon="reset"></span>重置模拟</button><button id="run-button" class="button primary"><span data-icon="play"></span><span id="run-label">开始运行</span><kbd>Space</kbd></button></div>
+    </section>
+
+    <section class="metrics" aria-label="实时统计">
+      <article class="metric-card"><div class="metric-top"><span>核心累计能量</span><span class="metric-icon mint" data-icon="core"></span></div><div class="metric-value"><strong id="delivered-value">0</strong><span>EU</span><svg class="mini-chart" viewBox="0 0 94 29" aria-hidden="true"><path id="delivery-sparkline" d="M0 25H94"/></svg></div><div class="metric-bottom"><span class="tiny-dot mint-dot"></span>已成功送达潮汐核心<span id="delivery-rate" class="metric-rate">+0 /s</span></div></article>
+      <article class="metric-card"><div class="metric-top"><span>地图现存能量</span><span class="metric-icon gold" data-icon="energy"></span></div><div class="metric-value"><strong id="energy-value">0</strong><span>EU</span><span class="metric-graphic energy-bars" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span></div><div class="metric-bottom">等待收集与运输<span id="occupied-energy" class="metric-rate">0 个格子</span></div></article>
+      <article class="metric-card"><div class="metric-top"><span>每秒生产数量</span><span class="metric-icon blue" data-icon="activity"></span></div><div class="metric-value"><strong id="production-value">0</strong><span>EU /s</span></div><div class="metric-bottom">最近 1 秒模拟时间<span id="producer-count" class="metric-rate">0 个生产装置</span></div></article>
+      <article class="metric-card"><div class="metric-top"><span>实时帧率</span><span class="metric-icon lilac" data-icon="monitor"></span></div><div class="metric-value"><strong id="fps-value">—</strong><span>FPS</span><span class="fps-signal" aria-hidden="true"><i></i><i></i><i></i><i></i></span></div><div class="metric-bottom"><span class="tiny-dot mint-dot"></span><span id="fps-state">渲染就绪</span><span id="elapsed-value" class="metric-rate mono">00:00</span></div></article>
+    </section>
+
+    <div class="studio">
+      <aside class="device-panel panel">
+        <div class="panel-heading"><h2><span data-icon="blocks"></span>装置库</h2><span class="count-badge">11</span></div>
+        <p class="panel-subtitle">选择装置，点击网格放置</p>
+        <div class="library-tabs" aria-label="装置分类"><button class="active" data-category="全部">全部</button><button data-category="生产">生产</button><button data-category="运输">运输</button><button data-category="机械">机械</button></div>
+        <div id="device-list" class="device-list"></div>
+        <div class="library-footer"><span data-icon="infinity"></span><span>无限装置 · 自由搭建</span><span id="device-count">14 / 399</span></div>
+      </aside>
+
+      <section class="map-panel panel" aria-label="模拟工作台">
+        <div class="map-toolbar"><div class="mode-group" role="group" aria-label="操作模式"><button data-mode="place" class="active" title="放置装置 (1)"><span data-icon="plus"></span><span>放置</span></button><button data-mode="edit" title="旋转和拖动装置 (2)"><span data-icon="cursor"></span><span>修改</span></button><button data-mode="delete" title="删除装置或能量 (3)"><span data-icon="trash"></span><span>删除</span></button></div><div class="map-tools"><button id="undo-button" class="icon-button" title="撤销编辑 (Ctrl+Z)" aria-label="撤销编辑" disabled><span data-icon="undo"></span></button><span class="toolbar-separator"></span><span class="grid-size">20 × 20</span><button id="grid-button" class="icon-button active" title="显示或隐藏网格" aria-label="显示网格" aria-pressed="true"><span data-icon="grid"></span></button></div></div>
+        <div class="map-status"><span id="status-badge" class="status-badge"><span class="tiny-dot"></span><span id="status-label">编辑模式</span></span><span id="map-name">实验场 01 <span>/</span> 四向汇流</span><span id="core-position" class="core-position">核心 X10 · Y10</span><button id="demo-button" class="map-text-button">载入示例<span data-icon="arrow-right"></span></button></div>
+        <div class="map-stage" id="map-stage"><canvas id="map-canvas" tabindex="0" aria-label="20乘20能量地图。方向键移动光标，回车放置或操作，R旋转，空格运行。"></canvas><div id="map-tooltip" class="map-tooltip" hidden></div><div class="map-watermark">TIDAL FIELD <span>01</span></div></div>
+        <div class="map-bottom"><div class="map-legend"><span><i class="legend-core"></i>潮汐核心</span><span><i class="legend-energy"></i>能量</span><span><i class="legend-range"></i>加速范围</span><span><i class="legend-compression"></i>可堆叠范围</span></div><span id="coordinates" class="mono">X — &nbsp; Y —</span></div>
+        <div class="map-hint"><span data-icon="info"></span><span id="interaction-hint">点击空格放置装置，按 R 切换摆放方向</span><span class="shortcut-hint"><kbd>1</kbd><kbd>2</kbd><kbd>3</kbd> 切换模式</span></div>
+      </section>
+
+      <aside class="inspector-panel">
+        <section class="selection-panel panel"><div class="panel-heading"><h2>装置详情</h2><span id="selection-tag" class="small-tag">待放置</span></div><div class="selection-identity"><span id="selected-icon" class="selected-icon"></span><div><h3 id="selected-name">集能装置</h3><span id="selected-en">HARVESTER</span></div></div><p id="selected-description" class="selection-description"></p><div class="property-row"><span>执行间隔</span><strong id="selected-interval">1 <span>s</span></strong></div><div class="property-row"><span>装置类型</span><strong id="selected-category">能量生产</strong></div><div class="direction-section"><div class="direction-heading"><span>摆放方向</span><kbd>R 旋转</kbd></div><div class="direction-buttons" role="group" aria-label="摆放方向"><button data-direction="0" class="active" title="朝上" aria-label="朝上">↑</button><button data-direction="1" title="朝右" aria-label="朝右">→</button><button data-direction="2" title="朝下" aria-label="朝下">↓</button><button data-direction="3" title="朝左" aria-label="朝左">←</button></div></div><div id="selected-position" class="selected-position"><span data-icon="cursor"></span>点击地图中的空格即可放置</div></section>
+
+        <section class="flow-panel panel"><div class="panel-heading"><h2>平均每秒产能</h2><span class="chart-period">最近 40 秒</span></div><div class="flow-value"><span id="flow-value">0</span><small>EU /s</small><span class="live-tag"><i></i> 全程平均</span></div><svg id="flow-chart" viewBox="0 0 210 72" role="img" aria-label="最近40秒每秒生产能量折线图，绿色虚线标注全程平均"><defs><linearGradient id="production-fill" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#78dfbc" stop-opacity="0.2"/><stop offset="1" stop-color="#78dfbc" stop-opacity="0"/></linearGradient></defs><path class="chart-grid" d="M0 10H210 M0 36H210 M0 62H210"/><path id="production-area" fill="url(#production-fill)"/><path id="production-line" d="M0 62H210" fill="none" stroke="#88b8cf" stroke-width="1.8"/><path id="production-average-line" d="M0 62H210" fill="none" stroke="#77dcbc" stroke-width="1.4" stroke-dasharray="4 3"/><text id="production-average-label" x="4" y="12" text-anchor="start" fill="#77dcbc" stroke="#17201c" stroke-width="3" paint-order="stroke" font-size="8">平均 0.00 EU/s</text></svg><div class="chart-axis"><span>−40s</span><span>现在</span></div><div class="efficiency"><span>逐秒产能区间</span><strong id="production-range">—</strong></div><div class="efficiency-track"><div id="efficiency-bar"></div></div><div class="efficiency"><span>累计送达率</span><strong id="efficiency-value">0%</strong></div></section>
+
+        <section class="run-settings panel"><div class="panel-heading"><h2>模拟设置</h2><span data-icon="sliders" class="muted-icon"></span></div><div class="setting-row"><label for="speed-select">运行速度</label><select id="speed-select"><option value="0.5">0.5×</option><option value="1" selected>1× 正常</option><option value="2">2×</option><option value="4">4×</option></select></div><div class="setting-row"><label for="range-toggle">显示辅助范围</label><input id="range-toggle" class="switch" type="checkbox" checked></div><div class="setting-row"><span>环能装置间隔</span><strong id="ring-interval" class="fixed-interval">1 秒 · 固定</strong></div></section>
+      </aside>
+    </div>
+
+    <footer class="workspace-footer"><div id="save-status"><span class="tiny-dot mint-dot"></span>布局已在本地保存</div><div class="blueprint-tools"><label class="sr-only" for="blueprint-name">蓝图名称</label><input id="blueprint-name" maxlength="30" placeholder="蓝图名称" aria-label="蓝图名称"><button id="save-blueprint-button">保存蓝图</button><label class="sr-only" for="blueprint-select">选择已保存蓝图</label><select id="blueprint-select" aria-label="选择已保存蓝图"><option value="">我的蓝图</option></select><button id="load-blueprint-button" disabled>载入</button><button id="delete-blueprint-button" disabled>删除</button><button id="export-blueprint-button">导出蓝图</button></div><div id="blueprint-storage-status" class="blueprint-storage-status">多份蓝图保存在此浏览器</div><div class="footer-actions"><button id="export-button"><span data-icon="download"></span>导出存档</button><button id="import-button"><span data-icon="upload"></span>导入存档</button><span class="toolbar-separator"></span><button id="clear-button"><span data-icon="trash"></span>清空地图</button></div><span class="footer-note">每一格，都有无限可能。</span></footer>
+  </main>
+
+  <input type="file" id="import-file" accept="application/json,.json" hidden>
+  <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+  <dialog id="help-dialog" class="help-dialog"><div class="dialog-top"><div><div class="eyebrow">FIELD MANUAL</div><h2>让你的能量网络运转起来</h2></div><button id="close-help" class="icon-button" aria-label="关闭指南"><span data-icon="close"></span></button></div><div class="help-intro"><span data-icon="core"></span><p>将能量送入可移动的潮汐核心（默认在第 10 列 · 第 10 行）。不同蓝图可以使用不同核心位置。</p></div><div class="help-steps"><article><b>01</b><h3>搭建你的网络</h3><p>在左侧选择装置，点击空格放置。使用 R 或方向按钮调整朝向；方向箭头指向装置的前方。</p></article><article><b>02</b><h3>调整布局</h3><p>切换「修改」，点击装置顺时针旋转，拖动装置到空格移动；也可拖动潮汐核心更改位置。</p></article><article><b>03</b><h3>启动并观察</h3><p>空格键开始 / 暂停。运行时禁止手动编辑。保存多份蓝图后，可随时载入和比较不同布局。</p></article></div><h3 class="help-subhead">装置规则</h3><div id="help-device-list" class="help-device-list"></div><div class="rules-notes"><h3>这个实验场的约定</h3><ul><li>每格最多放置一个装置，能量可以与装置共存。普通格已有能量时，不能接收新的能量；压能装置周围八格允许无限堆叠，不包括压能自身格。</li><li>随机生产仅选择地图内的上下左右四个位置，不直接在核心生成能量。核心只接受轨道、单推和集合输入。</li><li>单推只推动前方一个装置，不连续推动整排装置；目标被占用、越界或为核心时不移动。推拉每次交替执行推 / 拉，不搬运能量。</li><li>随机侧传以装置自身的左右为目标；不可用的目标会被排除。传输越界或目标能量阻挡时，源格能量保留。随机生产若选中的落点不能接收能量，则本次不产出、不重新选点。</li><li>所有间隔以模拟秒计算；同一时刻的事件按装置创建顺序执行。加速范围随引擎移动实时变化，不叠加。</li><li>实时每秒产量统计最近 1 模拟秒，全程平均 = 累计生产量 ÷ 模拟时长；产能区间记录每个完整模拟秒的最低到最高产量。</li><li>环能装置固定每 1 秒生产一次。压能装置不吸取、不移动能量；移走后已有堆叠保留，但失去覆盖的格子不能继续叠加。堆叠能量作为整体可以进入空的普通格。</li></ul></div><div class="help-keyboard"><span><kbd>Space</kbd> 运行 / 暂停</span><span><kbd>R</kbd> 旋转</span><span><kbd>1 / 2 / 3</kbd> 模式</span><span><kbd>Ctrl Z</kbd> 撤销</span><span><kbd>方向键 + Enter</kbd> 网格操作</span></div></dialog>
+  <dialog id="confirm-dialog" class="confirm-dialog"><span data-icon="reset" class="confirm-icon"></span><h2 id="confirm-title">清空地图？</h2><p id="confirm-description"></p><div class="confirm-actions"><button id="confirm-cancel" class="button secondary">取消</button><button id="confirm-accept" class="button primary">确认</button></div></dialog>
+  <script>
+/* Tidal Lab — dependency-free canvas workspace and interaction layer. */
+(() => {
+  'use strict';
+  const { Simulation, TYPES, SIZE, DIRECTIONS, inside } = window.Tidal;
+  const $ = id => document.getElementById(id);
+  const canvas = $('map-canvas');
+  const ctx = canvas.getContext('2d');
+  const STORAGE_KEY = 'tidal-lab-v1';
+  const BLUEPRINTS_KEY = 'tidal-lab-blueprints-v1';
+  const ICONS = {
+    core: 'M12 2 21 7v10l-9 5-9-5V7Z M13.5 6 8 13h4l-1.5 5L17 10h-4Z',
+    generator: 'M9 3h6l3 4v7l-3 4H9l-3-4V7Z M9 7h6v7H9Z M3 10H1 M23 10h-2 M12 1v2 M12 18v5 M9 21h6',
+    rail: 'M5 20V5 M19 20V5 M8 11l4-4 4 4 M8 18l4-4 4 4 M8 4l4-3 4 3',
+    pusher: 'M5 20h14v-5H5Z M12 15V4 M7 9l5-5 5 5 M7 18h10',
+    puller: 'M5 8l4-4 4 4 M9 4v13 M11 16l4 4 4-4 M15 20V7 M4 21h4 M16 3h4',
+    disposer: 'M5 7h14 M9 7V4h6v3 M7 7l1 14h8l1-14 M10 10v7 M14 10v7',
+    rotator: 'M18 7a8 8 0 1 0 2 7 M18 2v5h-5 M9 9h6v6H9Z',
+    splitter: 'M12 3v8 M12 11 4 17 M12 11l8 6 M4 12v5h5 M20 12v5h-5',
+    collector: 'M3 15h4l5-6 5 6h4 M12 21V3 M8 7l4-4 4 4',
+    ring: 'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18 M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8 M12 1v4 M12 19v4 M1 12h4 M19 12h4',
+    compressor: 'M3 8V3h5 M16 3h5v5 M21 16v5h-5 M8 21H3v-5 M8 8h8v8H8Z M8 11h8 M8 14h8',
+    accelerator: 'M13 2 5 13h6l-1 9 9-13h-6Z',
+    play: 'M8 4v16l12-8Z', pause: 'M8 5v14 M16 5v14', reset: 'M3 10a9 9 0 1 1 1 8 M3 4v6h6',
+    plus: 'M12 5v14 M5 12h14', cursor: 'M4 3v17l5-5 4 7 3-2-4-7h8Z',
+    trash: 'M4 6h16 M9 6V3h6v3 M6 6l1 15h10l1-15 M10 10v7 M14 10v7',
+    undo: 'M9 4 3 10l6 6 M3 10h11a7 7 0 0 1 7 7v3',
+    grid: 'M3 3h18v18H3Z M3 9h18 M3 15h18 M9 3v18 M15 3v18',
+    blocks: 'M3 3h7v7H3Z M14 3h7v7h-7Z M3 14h7v7H3Z M14 14h7v7h-7Z',
+    info: 'M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20 M12 11v6 M12 7v.1',
+    help: 'M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20 M9 9a3 3 0 1 1 5 2c-2 1-2 2-2 3 M12 17v.1',
+    activity: 'M2 12h4l3-8 6 16 3-8h4', monitor: 'M3 4h18v13H3Z M8 21h8 M12 17v4 M7 12l3-4 3 4 4-5',
+    energy: 'M13 2 5 14h6l-1 8 9-13h-6Z', infinity: 'M12 12C5-1-3 14 5 17c3 1 5-3 7-5 7-13 15 2 7 5-3 1-5-3-7-5Z',
+    download: 'M12 3v12 M7 10l5 5 5-5 M4 16v5h16v-5', upload: 'M12 16V4 M7 9l5-5 5 5 M4 16v5h16v-5',
+    'arrow-right': 'M4 12h16 M14 6l6 6-6 6', close: 'M6 6l12 12 M6 18 18 6',
+    sliders: 'M4 6h16 M4 12h16 M4 18h16 M8 3v6 M16 9v6 M10 15v6',
+  };
+  const icon = (name, extra = '') => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" ${extra}><path d="${ICONS[name] || ICONS.blocks}"/></svg>`;
+  document.querySelectorAll('[data-icon]').forEach(el => { el.innerHTML = icon(el.dataset.icon); });
+  const paths = Object.fromEntries(Object.entries(ICONS).map(([name, path]) => [name, new Path2D(path)]));
+
+  let simulation = Simulation.demo();
+  let blueprints = [];
+  let currentBlueprintId = '';
+  let restored = false;
+  let saveAvailable = true;
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) { simulation = Simulation.from(JSON.parse(saved)); restored = true; }
+  } catch (error) {
+    // A malformed or unavailable browser store never prevents opening the lab.
+    saveAvailable = false;
+    console.warn('Local save unavailable:', error.message);
+  }
+  let running = false;
+  let mode = 'place';
+  let selectedType = 'generator';
+  let direction = 0;
+  let selectedCell = null;
+  let hover = null;
+  let keyboardCell = { x: 9, y: 9 };
+  let keyboardActive = false;
+  let pointer = null;
+  let speed = 1;
+  let category = '全部';
+  let showGrid = true;
+  let showRanges = true;
+  let geometry = { width: 0, height: 0, x: 0, y: 0, cell: 1 };
+  let accumulator = 0;
+  let lastTime = 0;
+  let lastUI = 0;
+  let frameCount = 0;
+  let fpsWindow = 0;
+  let fps = 0;
+  let lastSaveTime = 0;
+  let toastTimer;
+  let pendingConfirmation = null;
+  const undoStack = [];
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const formatNumber = number => new Intl.NumberFormat('zh-CN').format(Math.round(number));
+  const formatTime = seconds => {
+    const total = Math.floor(seconds + 1e-8);
+    const hours = Math.floor(total / 3600);
+    return `${hours ? `${hours}:` : ''}${String(Math.floor(total / 60) % 60).padStart(2, '0')}:${String(total % 60).padStart(2, '0')}`;
+  };
+
+  function toast(message, error = false) {
+    $('toast').textContent = message;
+    $('toast').classList.toggle('error', error);
+    $('toast').hidden = false;
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => { $('toast').hidden = true; }, 3000);
+  }
+
+  function save() {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(simulation.serialize()));
+      saveAvailable = true;
+      $('save-status').innerHTML = '<span class="tiny-dot mint-dot"></span>布局已在本地保存';
+    } catch {
+      saveAvailable = false;
+      $('save-status').textContent = '本地保存不可用，请导出存档';
+    }
+  }
+
+  function blueprintSnapshot() {
+    const data = simulation.serialize();
+    data.devices = data.devices.map(device => ({ ...device, elapsed: 0, pulling: false }));
+    data.energy.fill(0);
+    data.stats = { time: 0, produced: 0, delivered: 0, removed: 0, productionMin: null, productionMax: null, productionSamples: 0 };
+    return data;
+  }
+
+  function persistBlueprints() {
+    try {
+      localStorage.setItem(BLUEPRINTS_KEY, JSON.stringify(blueprints));
+      $('blueprint-storage-status').textContent = '多份蓝图保存在此浏览器';
+    } catch {
+      $('blueprint-storage-status').textContent = '蓝图空间不足，请先导出存档';
+    }
+  }
+
+  function renderBlueprints(selectedId = $('blueprint-select').value) {
+    const select = $('blueprint-select');
+    select.replaceChildren(new Option('我的蓝图', ''));
+    for (const blueprint of blueprints) select.add(new Option(`${blueprint.name} · ${blueprint.devices} 装置`, blueprint.id));
+    select.value = blueprints.some(blueprint => blueprint.id === selectedId) ? selectedId : '';
+    const selected = !!select.value && !running;
+    $('load-blueprint-button').disabled = !selected;
+    $('delete-blueprint-button').disabled = !selected;
+  }
+
+  function loadBlueprints() {
+    try {
+      const stored = JSON.parse(localStorage.getItem(BLUEPRINTS_KEY) || '[]');
+      if (!Array.isArray(stored) || stored.length > 100) throw new Error('invalid');
+      blueprints = stored.filter(item => item && typeof item.id === 'string' && typeof item.name === 'string' && item.name.length <= 30 && item.data && Array.isArray(item.data.devices));
+      for (const blueprint of blueprints) Simulation.from(blueprint.data);
+    } catch {
+      blueprints = [];
+    }
+    renderBlueprints();
+  }
+
+  function setMapName(label, title) {
+    const element = $('map-name');
+    element.replaceChildren(document.createTextNode(`${label} `));
+    const separator = document.createElement('span');
+    separator.textContent = '/';
+    element.append(separator, document.createTextNode(` ${title}`));
+  }
+
+  function checkpoint() {
+    undoStack.push(simulation.serialize());
+    if (undoStack.length > 40) undoStack.shift();
+  }
+
+  function afterEdit() {
+    save();
+    renderInspector();
+    updateStats();
+    updateControls();
+  }
+
+  function undo() {
+    if (running || !undoStack.length) return;
+    simulation = Simulation.from(undoStack.pop());
+    selectedCell = null;
+    afterEdit();
+    renderLibrary();
+    toast('已撤销上一步编辑');
+  }
+
+  function confirmAction(title, description, label, action) {
+    pendingConfirmation = action;
+    $('confirm-title').textContent = title;
+    $('confirm-description').textContent = description;
+    $('confirm-accept').textContent = label;
+    $('confirm-dialog').showModal();
+  }
+
+  function renderLibrary() {
+    const entries = Object.entries(TYPES).filter(([, type]) => category === '全部' || type.category === category);
+    $('device-list').innerHTML = entries.map(([type, data]) => `<button class="device-card ${selectedType === type ? 'active' : ''}" data-device="${type}" style="--device-color:${data.color}" aria-label="选择${data.name}" aria-pressed="${selectedType === type}" ${running ? 'disabled' : ''}><span class="device-card-icon">${icon(type)}</span><span class="device-card-text"><strong>${data.name}</strong><small>${data.short}</small></span><span class="device-interval">${data.interval === null ? '∞' : `${data.interval}s`}</span></button>`).join('');
+  }
+
+  function inspectedDevice() {
+    return selectedCell ? simulation.getDevice(selectedCell.x, selectedCell.y) : null;
+  }
+
+  function renderInspector() {
+    const device = inspectedDevice();
+    const type = device?.type || selectedType;
+    const data = TYPES[type];
+    const displayDirection = device?.dir ?? direction;
+    $('selected-icon').innerHTML = icon(type);
+    $('selected-icon').style.cssText = `color:${data.color};background:${data.color}13;border-color:${data.color}40`;
+    $('selected-name').textContent = data.name;
+    $('selected-en').textContent = data.en;
+    $('selected-description').textContent = data.description;
+    const interval = device ? simulation.interval(device) : data.interval;
+    $('selected-interval').innerHTML = data.interval === null ? '持续生效' : `${interval} <span>s${device && simulation.boosted(device) && data.interval > 1 ? ' · 已加速' : ''}</span>`;
+    $('selected-category').textContent = { 生产: '能量生产', 运输: '能量运输', 机械: '机械控制', 辅助: '效率辅助' }[data.category];
+    $('selection-tag').textContent = device ? (running ? '运行中' : '已选中') : '待放置';
+    $('selected-position').innerHTML = icon(device ? 'grid' : 'cursor') + (device ? `第 ${device.x + 1} 列 · 第 ${device.y + 1} 行${simulation.getEnergy(device.x, device.y) ? ` · ${simulation.getEnergy(device.x, device.y)} EU` : ''}` : '点击地图中的空格即可放置');
+    document.querySelectorAll('[data-direction]').forEach(button => {
+      button.classList.toggle('active', Number(button.dataset.direction) === displayDirection);
+      button.setAttribute('aria-pressed', String(Number(button.dataset.direction) === displayDirection));
+      button.disabled = running;
+    });
+  }
+
+  function setMode(nextMode) {
+    if (running) return;
+    mode = nextMode;
+    selectedCell = null;
+    pointer = null;
+    document.body.classList.remove('is-dragging');
+    renderInspector();
+    updateControls();
+  }
+
+  function updateControls() {
+    document.body.dataset.mode = mode;
+    document.body.classList.toggle('locked', running);
+    $('run-button').classList.toggle('running', running);
+    $('run-button').querySelector('[data-icon]').innerHTML = icon(running ? 'pause' : 'play');
+    $('run-label').textContent = running ? '暂停运行' : '开始运行';
+    $('run-button').setAttribute('aria-pressed', String(running));
+    $('status-label').textContent = running ? (document.hidden ? '后台暂停' : '运行中') : mode === 'delete' ? '删除模式' : '编辑模式';
+    $('status-badge').classList.toggle('is-running', running);
+    $('status-badge').classList.toggle('is-deleting', !running && mode === 'delete');
+    $('interaction-hint').textContent = running ? '网络运行中 · 暂停后可继续搭建和调整装置' : { place: '点击空格放置装置，按 R 切换摆放方向', edit: '点击装置旋转；拖动装置或潮汐核心可更改位置', delete: '点击删除装置；再次点击可删除该格的能量' }[mode];
+    document.querySelectorAll('[data-mode]').forEach(button => {
+      button.classList.toggle('active', button.dataset.mode === mode);
+      button.setAttribute('aria-pressed', String(button.dataset.mode === mode));
+      button.disabled = running;
+    });
+    document.querySelectorAll('[data-device]').forEach(button => { button.disabled = running; });
+    for (const id of ['clear-button', 'demo-button', 'reset-button', 'import-button', 'save-blueprint-button', 'export-blueprint-button']) $(id).disabled = running;
+    $('blueprint-name').disabled = running;
+    renderBlueprints();
+    $('undo-button').disabled = running || !undoStack.length;
+    document.querySelectorAll('[data-direction]').forEach(button => { button.disabled = running; });
+  }
+
+  function toggleRun() {
+    if ($('help-dialog').open || $('confirm-dialog').open) return;
+    running = !running;
+    pointer = null;
+    document.body.classList.remove('is-dragging');
+    if (running) {
+      // An undo from a previous editing session must not erase live simulation progress.
+      undoStack.length = 0;
+      accumulator = 0;
+    } else save();
+    updateControls();
+    renderInspector();
+    toast(running ? '模拟已开始 · 按空格暂停' : '已暂停，可以继续编辑布局');
+  }
+
+  function setDirection(next) {
+    if (running) return;
+    const device = inspectedDevice();
+    if (device && device.dir !== next) {
+      checkpoint();
+      device.dir = next;
+      afterEdit();
+    }
+    direction = next;
+    renderInspector();
+  }
+
+  function chartPath(values, width, baseline, height, maxValue) {
+    return values.map((value, i) => `${i ? 'L' : 'M'}${(i / (values.length - 1) * width).toFixed(1)} ${(baseline - value / maxValue * height).toFixed(1)}`).join(' ');
+  }
+
+  function updateStats() {
+    const total = simulation.totalEnergy;
+    const count = simulation.devices.size;
+    const producers = [...simulation.devices.values()].filter(d => d.type === 'generator' || d.type === 'ring').length;
+    const averageProduction = simulation.time > 0 ? simulation.produced / simulation.time : 0;
+    const productionSamples = simulation.history.slice(-40);
+    const productionScaleMax = Math.max(1, averageProduction, ...productionSamples.map(entry => entry.produced));
+    $('delivered-value').textContent = formatNumber(simulation.delivered);
+    $('energy-value').textContent = formatNumber(total);
+    $('production-value').textContent = formatNumber(simulation.productionRate);
+    $('production-range').textContent = simulation.productionSamples
+      ? `${formatNumber(simulation.productionMin)}–${formatNumber(simulation.productionMax)} EU/s`
+      : '等待完整 1 秒';
+    $('delivery-rate').textContent = `+${formatNumber(simulation.deliveryRate)} /s`;
+    $('flow-value').textContent = averageProduction.toFixed(2);
+    $('occupied-energy').textContent = `${simulation.energy.filter(e => e > 0).length} 个格子`;
+    $('producer-count').textContent = `${producers} 个生产装置`;
+    $('device-count').textContent = `${count} / 399`;
+    $('core-position').textContent = `核心 X${String(simulation.core.x + 1).padStart(2, '0')} · Y${String(simulation.core.y + 1).padStart(2, '0')}`;
+    $('fps-value').textContent = fps || '—';
+    $('fps-state').textContent = fps >= 45 ? '运行流畅' : fps >= 25 ? '渲染正常' : fps ? '渲染较慢' : '渲染就绪';
+    $('elapsed-value').textContent = formatTime(simulation.time);
+    const efficiency = simulation.produced ? simulation.delivered / simulation.produced * 100 : 0;
+    $('efficiency-value').textContent = `${efficiency.toFixed(1)}%`;
+    $('efficiency-bar').style.width = `${Math.min(100, efficiency)}%`;
+    const values = new Array(Math.max(0, 40 - simulation.history.length)).fill(0).concat(simulation.history.map(entry => entry.produced));
+    const productionPath = chartPath(values, 210, 62, 52, productionScaleMax);
+    const averageY = 62 - averageProduction / productionScaleMax * 52;
+    $('production-line').setAttribute('d', productionPath);
+    $('production-area').setAttribute('d', `${productionPath} L210 72 L0 72Z`);
+    $('production-average-line').setAttribute('d', `M0 ${averageY.toFixed(1)}H210`);
+    $('production-average-label').setAttribute('y', String(Math.max(12, averageY - 3)));
+    $('production-average-label').textContent = `平均 ${averageProduction.toFixed(2)} EU/s`;
+    const deliveryValues = simulation.history.slice(-20).map(entry => entry.delivered);
+    $('delivery-sparkline').setAttribute('d', deliveryValues.length ? chartPath(deliveryValues, 94, 25, 22, Math.max(2, ...simulation.history.map(entry => entry.delivered))) : 'M0 25H94');
+    if (selectedCell) renderInspector();
+  }
+
+  function resize() {
+    const bounds = $('map-stage').getBoundingClientRect();
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    canvas.width = Math.round(bounds.width * dpr);
+    canvas.height = Math.round(bounds.height * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    const cell = Math.min((bounds.width - 47) / SIZE, (bounds.height - 49) / SIZE);
+    geometry = { width: bounds.width, height: bounds.height, x: (bounds.width - cell * SIZE) / 2 + 5, y: (bounds.height - cell * SIZE) / 2 - 1, cell };
+  }
+
+  const cellCenter = position => ({ x: geometry.x + (position.x + 0.5) * geometry.cell, y: geometry.y + (position.y + 0.5) * geometry.cell });
+  function roundedRect(x, y, w, h, radius = 4) {
+    ctx.beginPath();
+    ctx.roundRect(x, y, w, h, radius);
+  }
+
+  function drawGlyph(type, x, y, size, rotation = 0, color = '#fff', alpha = 1) {
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.rotate(rotation);
+    ctx.scale(size / 24, size / 24);
+    ctx.translate(-12, -12);
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 1.45;
+    ctx.lineJoin = 'round';
+    ctx.lineCap = 'round';
+    ctx.globalAlpha = alpha;
+    ctx.stroke(paths[type]);
+    ctx.restore();
+  }
+
+  function drawDevice(device, ghost = false) {
+    const { cell } = geometry;
+    const center = cellCenter(device);
+    const data = TYPES[device.type];
+    const side = cell * 0.78;
+    ctx.save();
+    ctx.globalAlpha = ghost ? 0.45 : 1;
+    roundedRect(center.x - side / 2, center.y - side / 2, side, side, Math.max(2, cell * 0.12));
+    ctx.fillStyle = data.color + '16';
+    ctx.fill();
+    ctx.strokeStyle = data.color + (running && simulation.time - device.firedAt < 0.24 ? 'c0' : '52');
+    ctx.lineWidth = 1;
+    ctx.stroke();
+    drawGlyph(device.type, center.x, center.y + cell * 0.025, cell * 0.5, device.dir * Math.PI / 2, data.color, ghost ? 0.5 : 1);
+    // Every device exposes its orientation, including symmetric generators.
+    ctx.translate(center.x, center.y);
+    ctx.rotate(device.dir * Math.PI / 2);
+    ctx.beginPath();
+    ctx.moveTo(0, -cell * 0.48);
+    ctx.lineTo(-cell * 0.075, -cell * 0.37);
+    ctx.lineTo(cell * 0.075, -cell * 0.37);
+    ctx.closePath();
+    ctx.fillStyle = data.color;
+    ctx.fill();
+    ctx.restore();
+  }
+
+  function highlightCell(x, y, fill, stroke = '') {
+    if (!inside(x, y)) return;
+    const { cell } = geometry;
+    const center = cellCenter({ x, y });
+    ctx.fillStyle = fill;
+    ctx.fillRect(center.x - cell / 2 + 1, center.y - cell / 2 + 1, cell - 2, cell - 2);
+    if (stroke) {
+      ctx.strokeStyle = stroke;
+      ctx.lineWidth = 1;
+      ctx.strokeRect(center.x - cell / 2 + 0.5, center.y - cell / 2 + 0.5, cell - 1, cell - 1);
+    }
+  }
+
+  function drawMap(now) {
+    const { width, height, x, y, cell } = geometry;
+    if (!width || cell <= 0) return;
+    ctx.clearRect(0, 0, width, height);
+    const core = cellCenter(simulation.core);
+    const glow = ctx.createRadialGradient(core.x, core.y, 0, core.x, core.y, cell * 5.5);
+    glow.addColorStop(0, '#65b78a0e');
+    glow.addColorStop(1, '#65b78a00');
+    ctx.fillStyle = glow;
+    ctx.fillRect(x, y, cell * SIZE, cell * SIZE);
+
+    if (showRanges) {
+      for (const device of simulation.devices.values()) {
+        if (device.type !== 'accelerator' && device.type !== 'compressor') continue;
+        const compression = device.type === 'compressor';
+        for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) {
+          if (dx || dy) highlightCell(device.x + dx, device.y + dy, compression ? '#dd9ad615' : '#b3bd640b', compression ? '#dd9ad620' : '');
+        }
+        const left = Math.max(0, device.x - 1), top = Math.max(0, device.y - 1);
+        const right = Math.min(SIZE, device.x + 2), bottom = Math.min(SIZE, device.y + 2);
+        ctx.strokeStyle = compression ? '#dd9ad665' : '#a8b66035';
+        ctx.setLineDash([3, 4]);
+        ctx.lineWidth = 1;
+        ctx.strokeRect(x + left * cell + 1, y + top * cell + 1, (right - left) * cell - 2, (bottom - top) * cell - 2);
+        ctx.setLineDash([]);
+      }
+    }
+    if (showGrid) {
+      for (let i = 0; i <= SIZE; i++) {
+        ctx.beginPath();
+        ctx.strokeStyle = i % 5 === 0 ? '#42604b42' : '#45604e24';
+        ctx.lineWidth = 0.75;
+        ctx.moveTo(x + i * cell, y);
+        ctx.lineTo(x + i * cell, y + SIZE * cell);
+        ctx.moveTo(x, y + i * cell);
+        ctx.lineTo(x + SIZE * cell, y + i * cell);
+        ctx.stroke();
+      }
+      ctx.fillStyle = '#536e5a';
+      for (let row = 0; row <= SIZE; row += 5) for (let col = 0; col <= SIZE; col += 5) {
+        ctx.fillRect(x + col * cell - 1, y + row * cell - 1, 2, 2);
+      }
+    } else {
+      ctx.strokeStyle = '#3b554842';
+      ctx.lineWidth = 1;
+      ctx.strokeRect(x, y, SIZE * cell, SIZE * cell);
+    }
+    ctx.font = `${Math.max(6, Math.min(9, cell * 0.3))}px "Space Grotesk", Consolas, monospace`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    for (let i = 0; i < SIZE; i++) {
+      ctx.fillStyle = i === simulation.core.x ? '#89aa89' : '#4c6655';
+      ctx.fillText(String(i + 1).padStart(2, '0'), x + (i + 0.5) * cell, y - 12);
+      ctx.fillStyle = i === simulation.core.y ? '#89aa89' : '#4c6655';
+      ctx.fillText(String(i + 1).padStart(2, '0'), x - 15, y + (i + 0.5) * cell);
+    }
+
+    const target = hover || (keyboardActive ? keyboardCell : null);
+    if (target && !running && mode === 'place' && !simulation.getDevice(target.x, target.y) && !simulation.isCore(target.x, target.y)) {
+      const ghostDevice = { ...target, type: selectedType, dir: direction };
+      const range = selectedType === 'ring' ? 2 : 1;
+      if (selectedType === 'generator' || selectedType === 'ring') {
+        DIRECTIONS.forEach(d => highlightCell(target.x + d.x * range, target.y + d.y * range, '#d7bd6620', '#d7bd6628'));
+      } else if (selectedType === 'accelerator' || selectedType === 'compressor') {
+        for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) if (dx || dy) highlightCell(target.x + dx, target.y + dy, selectedType === 'compressor' ? '#dd9ad620' : '#b7c56620', selectedType === 'compressor' ? '#dd9ad650' : '#b7c56622');
+      } else {
+        const front = simulation.position(ghostDevice);
+        highlightCell(front.x, front.y, '#8de3b418', '#8de3b431');
+      }
+      drawDevice(ghostDevice, true);
+    }
+
+    // Soft rings keep the one-cell core easy to locate without hiding neighbors.
+    ctx.save();
+    ctx.translate(core.x, core.y);
+    ctx.strokeStyle = '#80cba622';
+    ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.arc(0, 0, cell * 1.46, 0, Math.PI * 2); ctx.stroke();
+    ctx.setLineDash([2, 6]);
+    ctx.beginPath(); ctx.arc(0, 0, cell * 2.02, 0, Math.PI * 2); ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.restore();
+
+    for (const device of simulation.devices.values()) {
+      if (pointer?.dragging && pointer.deviceId === device.id) continue;
+      drawDevice(device);
+    }
+    for (let i = 0; i < simulation.energy.length; i++) {
+      const amount = simulation.energy[i];
+      if (!amount) continue;
+      const position = { x: i % SIZE, y: Math.floor(i / SIZE) };
+      const center = cellCenter(position);
+      const hasDevice = !!simulation.getDevice(position.x, position.y);
+      const px = center.x + (hasDevice ? cell * 0.29 : 0);
+      const py = center.y + (hasDevice ? cell * 0.28 : 0);
+      ctx.save();
+      ctx.shadowColor = '#e3d373';
+      ctx.shadowBlur = reducedMotion ? 0 : cell * 0.26;
+      ctx.fillStyle = '#ebd98c';
+      ctx.beginPath();
+      ctx.arc(px, py, cell * (hasDevice ? 0.078 : 0.095), 0, Math.PI * 2);
+      ctx.fill();
+      ctx.shadowBlur = 0;
+      if (amount > 1) {
+        ctx.textAlign = 'left';
+        ctx.font = `500 ${Math.max(6, cell * 0.26)}px "Space Grotesk", Consolas, monospace`;
+        ctx.fillStyle = '#e3d8a1';
+        ctx.fillText(amount > 999 ? '1k+' : String(amount), center.x + (hasDevice ? -cell * 0.3 : cell * 0.15), center.y + (hasDevice ? cell * 0.29 : -cell * 0.03));
+      }
+      ctx.restore();
+    }
+
+    const corePulse = running && !reducedMotion ? (Math.sin(now / 380) + 1) / 2 : 0.4;
+    ctx.save();
+    ctx.shadowColor = '#76d9a1';
+    ctx.shadowBlur = cell * (0.32 + corePulse * 0.25);
+    roundedRect(core.x - cell * 0.45, core.y - cell * 0.45, cell * 0.9, cell * 0.9, cell * 0.19);
+    ctx.fillStyle = '#285b40';
+    ctx.fill();
+    ctx.strokeStyle = '#9de8b5';
+    ctx.lineWidth = 1.2;
+    ctx.stroke();
+    ctx.restore();
+    drawGlyph('core', core.x, core.y, cell * 0.7, 0, '#b9f0c6');
+
+    if (running && !reducedMotion) {
+      for (const effect of simulation.effects) {
+        const progress = Math.min(1, (simulation.time - effect.at) / 0.55);
+        if (progress >= 1 || progress < 0) continue;
+        const from = cellCenter(effect.from), to = cellCenter(effect.to);
+        const eased = 1 - (1 - progress) ** 2;
+        const px = from.x + (to.x - from.x) * eased;
+        const py = from.y + (to.y - from.y) * eased;
+        ctx.save();
+        ctx.globalAlpha = Math.sin(progress * Math.PI) * 0.9;
+        ctx.strokeStyle = effect.kind === 'energy' ? '#aed997' : '#e1cf8c';
+        ctx.lineWidth = 1;
+        ctx.beginPath(); ctx.moveTo(from.x, from.y); ctx.lineTo(px, py); ctx.stroke();
+        ctx.fillStyle = effect.kind === 'energy' ? '#c8efb2' : '#efd484';
+        ctx.shadowColor = ctx.fillStyle;
+        ctx.shadowBlur = 7;
+        ctx.beginPath(); ctx.arc(px, py, cell * 0.075, 0, Math.PI * 2); ctx.fill();
+        ctx.restore();
+      }
+    }
+    if (selectedCell) highlightCell(selectedCell.x, selectedCell.y, '#a3d9bc07', '#9dd2b5a0');
+    if (target) {
+      const deleteMode = mode === 'delete' && !running;
+      highlightCell(target.x, target.y, deleteMode ? '#db837c12' : '#adccae08', deleteMode ? '#d68f7f90' : '#9bbe9790');
+    }
+    if (pointer?.dragging && target) {
+      const source = [...simulation.devices.values()].find(device => device.id === pointer.deviceId);
+      if (source) drawDevice({ ...source, ...target }, true);
+    }
+  }
+
+  function pointFromEvent(event) {
+    const bounds = canvas.getBoundingClientRect();
+    const x = Math.floor((event.clientX - bounds.left - geometry.x) / geometry.cell);
+    const y = Math.floor((event.clientY - bounds.top - geometry.y) / geometry.cell);
+    return inside(x, y) ? { x, y } : null;
+  }
+
+  function updateHover(event) {
+    hover = pointFromEvent(event);
+    keyboardActive = false;
+    if (!hover) {
+      $('coordinates').innerHTML = 'X — &nbsp; Y —';
+      $('map-tooltip').hidden = true;
+      return;
+    }
+    keyboardCell = { ...hover };
+    $('coordinates').textContent = `X ${String(hover.x + 1).padStart(2, '0')}   Y ${String(hover.y + 1).padStart(2, '0')}`;
+    const device = simulation.getDevice(hover.x, hover.y);
+    const energy = simulation.getEnergy(hover.x, hover.y);
+    if ((device || energy || simulation.isCore(hover.x, hover.y)) && !pointer?.dragging) {
+      const title = simulation.isCore(hover.x, hover.y) ? '潮汐核心' : device ? TYPES[device.type].name : '能量';
+      const detail = simulation.isCore(hover.x, hover.y) ? `累计接收 ${formatNumber(simulation.delivered)} EU · 修改模式下拖动可移动` : `${device ? `${DIRECTIONS[device.dir].arrow} 朝${DIRECTIONS[device.dir].name}${TYPES[device.type].interval === null ? ' · 持续生效' : ` · ${simulation.interval(device)}s`}` : ''}${energy ? `${device ? ' · ' : ''}${formatNumber(energy)} EU` : ''}${simulation.stackable(hover.x, hover.y) ? ' · 可堆叠' : ' · 不可叠加'}`;
+      $('map-tooltip').innerHTML = `${title}<small>${detail}</small>`;
+      $('map-tooltip').hidden = false;
+      const center = cellCenter(hover);
+      const tooltipWidth = $('map-tooltip').offsetWidth;
+      $('map-tooltip').style.left = `${Math.max(5, Math.min(geometry.width - tooltipWidth - 8, center.x + geometry.cell * 0.7))}px`;
+      $('map-tooltip').style.top = `${Math.max(5, center.y - 58)}px`;
+    } else $('map-tooltip').hidden = true;
+  }
+
+  function operateAt(position) {
+    if (running || !position) return;
+    const { x, y } = position;
+    if (simulation.isCore(x, y)) { toast('切换到「修改」并拖动潮汐核心即可更改位置'); return; }
+    const device = simulation.getDevice(x, y);
+    if (mode === 'place') {
+      if (device) {
+        selectedCell = { x, y };
+        renderInspector();
+        toast('该格已有装置；切换「修改」可旋转或移动');
+        return;
+      }
+      checkpoint();
+      simulation.place(selectedType, x, y, direction);
+      selectedCell = null;
+      currentBlueprintId = '';
+      setMapName('实验场', '自由搭建');
+    } else if (mode === 'edit') {
+      if (!device) { selectedCell = null; renderInspector(); return; }
+      checkpoint();
+      selectedCell = { x, y };
+      simulation.rotate(x, y);
+      direction = device.dir;
+    } else {
+      if (!device && !simulation.getEnergy(x, y)) return;
+      checkpoint();
+      simulation.deleteAt(x, y);
+      selectedCell = null;
+    }
+    afterEdit();
+  }
+
+  $('device-list').addEventListener('click', event => {
+    const button = event.target.closest('[data-device]');
+    if (!button || running) return;
+    selectedType = button.dataset.device;
+    selectedCell = null;
+    setMode('place');
+    renderLibrary();
+    renderInspector();
+  });
+  document.querySelectorAll('[data-category]').forEach(button => button.addEventListener('click', () => {
+    category = button.dataset.category;
+    document.querySelectorAll('[data-category]').forEach(el => { el.classList.toggle('active', el === button); el.setAttribute('aria-pressed', String(el === button)); });
+    renderLibrary();
+  }));
+  document.querySelectorAll('[data-mode]').forEach(button => button.addEventListener('click', () => setMode(button.dataset.mode)));
+  document.querySelectorAll('[data-direction]').forEach(button => button.addEventListener('click', () => setDirection(Number(button.dataset.direction))));
+  $('run-button').addEventListener('click', toggleRun);
+  $('undo-button').addEventListener('click', undo);
+  $('speed-select').addEventListener('change', event => { speed = Number(event.target.value); });
+  $('range-toggle').addEventListener('change', event => { showRanges = event.target.checked; });
+  $('grid-button').addEventListener('click', () => {
+    showGrid = !showGrid;
+    $('grid-button').classList.toggle('active', showGrid);
+    $('grid-button').setAttribute('aria-pressed', String(showGrid));
+  });
+  $('reset-button').addEventListener('click', () => {
+    if (running) return;
+    confirmAction('重新开始这次实验？', '保留当前装置布局，清空地图能量、核心累计能量和计时。可使用撤销恢复。', '重置模拟', () => {
+      checkpoint(); simulation.resetRun(); afterEdit(); toast('能量和统计已重置，布局已保留');
+    });
+  });
+  $('clear-button').addEventListener('click', () => {
+    if (running) return;
+    confirmAction('清空实验场？', '移除所有装置和能量，保留中央潮汐核心。可使用撤销恢复。', '清空地图', () => {
+      checkpoint();
+      simulation = new Simulation();
+      selectedCell = null;
+      currentBlueprintId = '';
+      setMapName('实验场', '空白画布');
+      afterEdit(); toast('实验场已清空，开始新的构想吧');
+    });
+  });
+  $('demo-button').addEventListener('click', () => {
+    if (running) return;
+    confirmAction('载入四向汇流示例？', '以四个集能装置、集合装置和传输轨道演示核心供能。当前布局可使用撤销恢复。', '载入示例', () => {
+      checkpoint(); simulation = Simulation.demo(); selectedCell = null;
+      currentBlueprintId = '';
+      setMapName('实验场', '四向汇流');
+      afterEdit(); renderLibrary(); toast('示例已就绪，点击「开始运行」观察能量流动');
+    });
+  });
+  $('confirm-accept').addEventListener('click', () => {
+    const action = pendingConfirmation;
+    pendingConfirmation = null;
+    $('confirm-dialog').close();
+    if (!running) action?.();
+  });
+  $('confirm-cancel').addEventListener('click', () => { pendingConfirmation = null; $('confirm-dialog').close(); });
+  $('confirm-dialog').addEventListener('cancel', () => { pendingConfirmation = null; });
+  $('help-button').addEventListener('click', () => $('help-dialog').showModal());
+  $('close-help').addEventListener('click', () => $('help-dialog').close());
+  $('help-dialog').addEventListener('click', event => {
+    if (event.target !== $('help-dialog')) return;
+    const box = event.target.getBoundingClientRect();
+    if (event.clientX < box.left || event.clientX > box.right || event.clientY < box.top || event.clientY > box.bottom) event.target.close();
+  });
+  $('help-device-list').innerHTML = Object.entries(TYPES).map(([type, data]) => `<article class="help-device"><span class="device-card-icon" style="--device-color:${data.color}">${icon(type)}</span><div><h4>${data.name}</h4><p>${data.description}</p></div></article>`).join('');
+
+  $('blueprint-select').addEventListener('change', event => renderBlueprints(event.target.value));
+  $('save-blueprint-button').addEventListener('click', () => {
+    if (running) return;
+    const name = $('blueprint-name').value.trim() || `蓝图 ${blueprints.length + 1}`;
+    const data = blueprintSnapshot();
+    const id = `bp-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+    blueprints.push({ id, name, devices: data.devices.length, core: { ...data.core }, data });
+    currentBlueprintId = id;
+    persistBlueprints(); renderBlueprints(id); $('blueprint-name').value = '';
+    setMapName('蓝图', name);
+    toast(`「${name}」已保存，可继续保存其他布局`);
+  });
+  $('load-blueprint-button').addEventListener('click', () => {
+    if (running) return;
+    const blueprint = blueprints.find(item => item.id === $('blueprint-select').value);
+    if (!blueprint) return;
+    checkpoint(); simulation = Simulation.from(blueprint.data); selectedCell = null; currentBlueprintId = blueprint.id;
+    setMapName('蓝图', blueprint.name); afterEdit(); renderLibrary();
+    toast(`已载入「${blueprint.name}」 · 核心第 ${simulation.core.x + 1} 列、第 ${simulation.core.y + 1} 行`);
+  });
+  $('delete-blueprint-button').addEventListener('click', () => {
+    if (running) return;
+    const id = $('blueprint-select').value;
+    const blueprint = blueprints.find(item => item.id === id);
+    if (!blueprint) return;
+    blueprints = blueprints.filter(item => item.id !== id);
+    if (currentBlueprintId === id) currentBlueprintId = '';
+    persistBlueprints(); renderBlueprints(); toast(`已删除蓝图「${blueprint.name}」`);
+  });
+  $('export-blueprint-button').addEventListener('click', () => {
+    const selected = blueprints.find(item => item.id === $('blueprint-select').value);
+    const name = selected?.name || $('blueprint-name').value.trim() || '当前布局';
+    const data = selected ? selected.data : blueprintSnapshot();
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const anchor = document.createElement('a');
+    anchor.href = url;
+    anchor.download = `潮汐蓝图-${name.replace(/[\\/:*?"<>|]/g, '_')}.json`;
+    anchor.click();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+    toast(`蓝图「${name}」已导出`);
+  });
+
+  $('export-button').addEventListener('click', () => {
+    const blob = new Blob([JSON.stringify(simulation.serialize(), null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const anchor = document.createElement('a');
+    anchor.href = url;
+    const date = new Date();
+    const stamp = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+    anchor.download = `潮汐实验室-${stamp}.json`;
+    anchor.click();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+    toast('存档已导出，包含布局、能量与统计');
+  });
+  $('import-button').addEventListener('click', () => { if (!running) $('import-file').click(); });
+  $('import-file').addEventListener('change', async event => {
+    const file = event.target.files[0];
+    event.target.value = '';
+    if (!file || running) return;
+    try {
+      if (file.size > 1024 * 1024) throw new Error('存档过大，请选择 1 MB 以内的 JSON 文件。');
+      const imported = Simulation.from(JSON.parse(await file.text()));
+      if (running) { toast('请暂停模拟后重新导入', true); return; }
+      confirmAction('载入这个存档？', `存档包含 ${imported.devices.size} 个装置、${formatNumber(imported.totalEnergy)} 单位地图能量。当前布局可使用撤销恢复。`, '载入存档', () => {
+        checkpoint(); simulation = imported; selectedCell = null;
+        currentBlueprintId = '';
+        setMapName('实验场', '导入布局');
+        afterEdit(); renderLibrary(); toast('存档已恢复');
+      });
+    } catch (error) { toast(`导入失败：${error instanceof SyntaxError ? '文件不是有效的 JSON。' : error.message}`, true); }
+  });
+
+  canvas.addEventListener('pointermove', event => {
+    if (pointer && !running && mode === 'edit' && (pointer.deviceId || pointer.isCore) && Math.hypot(event.clientX - pointer.startX, event.clientY - pointer.startY) > 5) {
+      pointer.dragging = true;
+      document.body.classList.add('is-dragging');
+    }
+    updateHover(event);
+  });
+  canvas.addEventListener('pointerleave', () => {
+    if (!pointer?.dragging) hover = null;
+    $('map-tooltip').hidden = true;
+    $('coordinates').innerHTML = 'X — &nbsp; Y —';
+  });
+  canvas.addEventListener('pointerdown', event => {
+    if (event.button !== 0) return;
+    canvas.focus({ preventScroll: true });
+    const position = pointFromEvent(event);
+    if (running || !position) return;
+    const device = simulation.getDevice(position.x, position.y);
+    pointer = { ...position, startX: event.clientX, startY: event.clientY, deviceId: device?.id, isCore: simulation.isCore(position.x, position.y), dragging: false, pointerId: event.pointerId };
+    canvas.setPointerCapture(event.pointerId);
+  });
+  canvas.addEventListener('pointerup', event => {
+    if (!pointer || pointer.pointerId !== event.pointerId) return;
+    const start = pointer;
+    const destination = pointFromEvent(event);
+    pointer = null;
+    document.body.classList.remove('is-dragging');
+    if (canvas.hasPointerCapture(event.pointerId)) canvas.releasePointerCapture(event.pointerId);
+    if (running) return;
+    if (start.dragging && mode === 'edit' && start.isCore) {
+      if (!destination || simulation.getDevice(destination.x, destination.y) || simulation.getEnergy(destination.x, destination.y)) {
+        toast('核心只能移动到空白格', true); return;
+      }
+      checkpoint();
+      simulation.moveCore(destination.x, destination.y);
+      currentBlueprintId = '';
+      setMapName('实验场', '核心位置已更改');
+      afterEdit();
+    } else if (start.dragging && mode === 'edit') {
+      if (!destination || (destination.x === start.x && destination.y === start.y)) return;
+      if (simulation.isCore(destination.x, destination.y) || simulation.getDevice(destination.x, destination.y)) {
+        toast('目标格无法放置，请拖到一个空格', true); return;
+      }
+      checkpoint();
+      if (simulation.moveDevice(start.x, start.y, destination.x, destination.y)) {
+        selectedCell = destination;
+        afterEdit();
+      }
+    } else if (destination && destination.x === start.x && destination.y === start.y) operateAt(destination);
+  });
+  canvas.addEventListener('pointercancel', () => { pointer = null; hover = null; document.body.classList.remove('is-dragging'); });
+  canvas.addEventListener('contextmenu', event => { event.preventDefault(); if (!running) setDirection(((inspectedDevice()?.dir ?? direction) + 1) % 4); });
+  document.addEventListener('keydown', event => {
+    if ($('help-dialog').open || $('confirm-dialog').open) return;
+    if (event.target.matches('input, select, textarea') || event.target.isContentEditable) return;
+    if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'z') { event.preventDefault(); undo(); return; }
+    if (event.ctrlKey || event.metaKey || event.altKey) return;
+    if (event.code === 'Space') { event.preventDefault(); if (!event.repeat) toggleRun(); return; }
+    if (event.key.toLowerCase() === 'r') { event.preventDefault(); if (!event.repeat) setDirection(((inspectedDevice()?.dir ?? direction) + 1) % 4); return; }
+    if (['1', '2', '3'].includes(event.key)) { setMode(['place', 'edit', 'delete'][Number(event.key) - 1]); return; }
+    if (event.key === 'Escape') { selectedCell = null; hover = null; keyboardActive = false; $('map-tooltip').hidden = true; renderInspector(); return; }
+    if (event.target !== canvas) return;
+    const arrows = { ArrowUp: [0, -1], ArrowRight: [1, 0], ArrowDown: [0, 1], ArrowLeft: [-1, 0] };
+    if (arrows[event.key]) {
+      event.preventDefault();
+      keyboardActive = true; hover = null;
+      const [dx, dy] = arrows[event.key];
+      keyboardCell = { x: Math.max(0, Math.min(19, keyboardCell.x + dx)), y: Math.max(0, Math.min(19, keyboardCell.y + dy)) };
+      $('coordinates').textContent = `X ${String(keyboardCell.x + 1).padStart(2, '0')}   Y ${String(keyboardCell.y + 1).padStart(2, '0')}`;
+    } else if (event.key === 'Enter') { event.preventDefault(); keyboardActive = true; operateAt(keyboardCell); }
+  });
+  document.addEventListener('visibilitychange', () => {
+    lastTime = 0; frameCount = 0; fpsWindow = 0;
+    if (document.hidden) save();
+    updateControls();
+  });
+  window.addEventListener('pagehide', save);
+  new ResizeObserver(resize).observe($('map-stage'));
+  window.addEventListener('resize', resize);
+
+  function frame(now) {
+    const dt = lastTime ? Math.min((now - lastTime) / 1000, 0.25) : 0;
+    lastTime = now;
+    if (running && !document.hidden) {
+      accumulator += dt * speed;
+      while (accumulator + 1e-9 >= 0.05) { simulation.tick(0.05); accumulator -= 0.05; }
+    }
+    drawMap(now);
+    frameCount++;
+    fpsWindow += dt;
+    if (fpsWindow >= 0.6) { fps = Math.round(frameCount / fpsWindow); frameCount = 0; fpsWindow = 0; }
+    if (now - lastUI >= 160) { updateStats(); lastUI = now; }
+    if (running && now - lastSaveTime > 3000) { save(); lastSaveTime = now; }
+    requestAnimationFrame(frame);
+  }
+
+  loadBlueprints();
+  if (restored) setMapName('实验场', '已恢复布局');
+  if (!saveAvailable) $('save-status').textContent = '本地保存不可用，请导出存档';
+  renderLibrary();
+  renderInspector();
+  updateControls();
+  updateStats();
+  resize();
+  save();
+  requestAnimationFrame(frame);
+})();
+
+  </script>
+</body>
+</html>
