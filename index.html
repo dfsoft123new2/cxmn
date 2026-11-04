@@ -242,6 +242,7 @@ h1{margin:0;font:600 34px/1.2 var(--font-serif);letter-spacing:.07em}
 .legend-energy{border-radius:50%;background:radial-gradient(circle at 40% 40%,#FFF4D2,var(--energy) 60%);box-shadow:0 0 8px var(--energy)}
 .legend-range{border:1px dashed #D9A05F;border-radius:3px;background:rgba(239,185,123,.16)}
 .legend-compression{border:1px dashed #C77FC0;border-radius:3px;background:rgba(221,154,214,.16)}
+.legend-blocked{border:2px dashed #ff7188;border-radius:3px;background:rgba(255,75,105,.13)}
 #coordinates{color:var(--ink-2);white-space:pre}
 .map-hint{display:flex;align-items:center;gap:8px;min-height:44px;margin-top:auto;padding:10px 16px;border-top:1px solid var(--rule);background:var(--plate-sunk);font-size:12.5px;color:var(--ink-2)}
 .map-hint>span[data-icon]{color:var(--accent)}
@@ -495,16 +496,16 @@ body.is-dragging .map-stage{cursor:grabbing}
     { x: -1, y: 0, name: '左', arrow: '←' },
   ]);
   const TYPES = Object.freeze({
-    generator: { name: '集能装置', en: 'HARVESTER', interval: 1, baseChance: 0.25, color: '#e1bc70', category: '生产', description: '每秒按 25% × 可用落点数 ÷ 总可产能格数的概率，在周围八格中随机生产 1 单位。', short: '周围八格 · 25%×空位比' },
-    rail: { name: '传输轨道', en: 'CONVEYOR', interval: 2, color: '#6bb8f3', category: '运输', description: '每 2 秒，将后方一格的全部能量送到前方一格，可送入核心。', short: '后方 → 前方' },
-    pusher: { name: '单推机械', en: 'PUSHER', interval: 1, color: '#a7a7ff', category: '机械', description: '每 1 秒，将面前的装置或能量向前推 1 格；能量可推入核心。装置与能量不能同格，目标被占用时本次推动失败。', short: '向前推进一格' },
+    generator: { name: '集能装置', en: 'HARVESTER', interval: 1, baseChance: 0.25, color: '#e1bc70', category: '生产', description: '每秒按 25% × 可用落点数 ÷ 总可产能格数的概率，在周围八格的空位随机生产 1 单位；生产不能叠加到已有能量上。', short: '周围八格 · 空位产能' },
+    rail: { name: '传输轨道', en: 'CONVEYOR', interval: 2, color: '#6bb8f3', category: '运输', description: '每 2 秒，将后方一格中的整团能量一次性送到前方一格，可送入核心；源格有多少 EU，就搬运多少 EU。目标格有压能覆盖时，可以与已有能量合并。', short: '整格能量 → 前方' },
+    pusher: { name: '单推机械', en: 'PUSHER', interval: 1, color: '#a7a7ff', category: '机械', description: '每 1 秒，将面前一格的装置或该格中的整团能量向前推 1 格；有 N EU 时一次推动全部 N EU。能量可推入核心，也可在压能覆盖格推入已有能量并堆叠。装置不能推入被占用的格子。', short: '整格能量前推 · 压能格可堆叠' },
     puller: { name: '推拉机械', en: 'PULL / PUSH', interval: 1, color: '#c7a2ef', category: '机械', description: '每 1 秒，交替推 / 拉，使前方第 1 格与第 2 格之间的装置往复移动。只移动装置。', short: '两格之间 · 往复推拉' },
     disposer: { name: '置空装置', en: 'ERASER', interval: 2, color: '#ed8f98', category: '机械', description: '每 2 秒，清除前方一格的装置；装置格没有能量。不能清除潮汐核心。', short: '清除前方装置' },
     rotator: { name: '转向装置', en: 'ROTATOR', interval: 2, color: '#e4a476', category: '机械', description: '每 2 秒，将前方一格的装置顺时针旋转 90°。', short: '顺时针旋转 90°' },
     splitter: { name: '侧传装置', en: 'SPLITTER', interval: 1, color: '#66c9d4', category: '运输', description: '每 1 秒，将前方一格的全部能量随机送至自身左侧或右侧一格。侧传不直接送入核心。', short: '前方 → 随机左 / 右' },
     collector: { name: '集合装置', en: 'COLLECTOR', interval: 3, color: '#79dcb4', category: '运输', description: '每 3 秒，将自身左、右、后三格中一格的全部能量汇入前方一格，可送入核心；多个方向都有能量时，每次只传一个方向。', short: '三向择一汇入 · 单向输出' },
-    ring: { name: '环能装置', en: 'RING HARVESTER', interval: 1, baseChance: 1, color: '#d5ca79', category: '生产', description: '每秒按 100% × 可用落点数 ÷ 总可产能格数的概率，在距离两格的十六个外圈位置随机生产 1 单位。', short: '十六格外圈 · 100%×空位比' },
-    compressor: { name: '压能装置', en: 'COMPRESSOR', interval: null, color: '#dd9ad6', category: '辅助', description: '使周围八格（不含自身）允许无限能量堆叠，但只有单推机械可将能量推入已有能量的格子；生产和其他运输不会堆叠。', short: '周围八格 · 单推堆叠' },
+    ring: { name: '环能装置', en: 'RING HARVESTER', interval: 1, baseChance: 1, color: '#d5ca79', category: '生产', description: '每秒按 100% × 可用落点数 ÷ 总可产能格数的概率，在距离两格的十六个外圈空位随机生产 1 单位；生产不能叠加到已有能量上。', short: '十六格外圈 · 空位产能' },
+    compressor: { name: '压能装置', en: 'COMPRESSOR', interval: null, color: '#dd9ad6', category: '辅助', description: '使周围八格（不含自身）允许搬运来的能量与已有能量无限堆叠，适用于单推、传输轨道等能量运输；随机生产仍只在空格生成。', short: '周围八格 · 搬运可堆叠' },
     accelerator: { name: '加速引擎', en: 'ACCELERATOR', interval: null, color: '#efb97b', category: '辅助', description: '使周围八格（包括对角线）的装置执行间隔变为 1 秒。持续生效，多个引擎不叠加。', short: '周围八格 · 间隔变为 1s' },
   });
   const inside = (x, y) => Number.isInteger(x) && Number.isInteger(y) && x >= 0 && y >= 0 && x < SIZE && y < SIZE;
@@ -654,21 +655,23 @@ body.is-dragging .map-stage{cursor:grabbing}
       this.logs.length = Math.min(this.logs.length, 30);
     }
 
-    transfer(from, to, allowCore = true, allowStack = false) {
+    // Every transport moves the complete stack and may merge into compressor coverage.
+    // Production uses canReceive with stacking disabled and only selects empty cells.
+    transfer(from, to, allowCore = true, allowStack = true) {
       if (!inside(from.x, from.y) || !this.canReceive(to.x, to.y, allowCore, allowStack)) return 0;
       if (from.x === to.x && from.y === to.y) return 0;
-      const amount = this.getEnergy(from.x, from.y);
-      if (!amount) return 0;
+      const stack = this.getEnergy(from.x, from.y);
+      if (!stack) return 0;
       this.energy[index(from.x, from.y)] = 0;
       if (this.isCore(to.x, to.y)) {
-        this.delivered += amount;
-        this.deliveryEvents.push({ at: this.time, count: amount });
-        this.log(`核心接收 +${amount} 单位能量`, 'delivery');
+        this.delivered += stack;
+        this.deliveryEvents.push({ at: this.time, count: stack });
+        this.log(`核心接收 +${stack} EU`, 'delivery');
       } else {
-        this.energy[index(to.x, to.y)] += amount;
+        this.energy[index(to.x, to.y)] += stack;
       }
-      this.addEffect(from, to, 'energy', amount);
-      return amount;
+      this.addEffect(from, to, 'energy', stack);
+      return stack;
     }
 
     generate(device) {
@@ -872,12 +875,6 @@ body.is-dragging .map-stage{cursor:grabbing}
 
   return { Simulation, TYPES, SIZE, CORE, DIRECTIONS, inside, isCore, index };
 });
-
-
-
-
-
-
   </script>
 </head>
 <body>
@@ -928,7 +925,7 @@ body.is-dragging .map-stage{cursor:grabbing}
     <div class="studio">
       <aside class="device-panel panel">
         <div class="panel-heading"><h2>装置库</h2><span id="library-count" class="count-badge">11</span></div>
-        <p class="panel-subtitle">选择装置，点击网格放置</p>
+        <p class="panel-subtitle">选择装置后点击空格放置；单推和传输每次搬动一格中的整团能量</p>
         <div class="library-tabs" role="group" aria-label="装置分类"><button class="active" data-category="全部" aria-pressed="true">全部</button><button data-category="生产" aria-pressed="false">生产</button><button data-category="运输" aria-pressed="false">运输</button><button data-category="机械" aria-pressed="false">机械</button><button data-category="辅助" aria-pressed="false">辅助</button></div>
         <div id="device-list" class="device-list"></div>
         <div class="library-footer"><span>已放置装置</span><span id="device-count">14 / 399</span></div>
@@ -938,7 +935,7 @@ body.is-dragging .map-stage{cursor:grabbing}
         <div class="map-toolbar"><div class="mode-group" role="group" aria-label="操作模式"><button data-mode="place" class="active" title="放置装置 (1)"><span data-icon="plus"></span><span>放置</span></button><button data-mode="edit" title="旋转和拖动装置 (2)"><span data-icon="cursor"></span><span>修改</span></button><button data-mode="delete" title="删除装置或能量 (3)"><span data-icon="trash"></span><span>删除</span></button></div><div class="map-tools"><button id="undo-button" class="icon-button" title="撤销编辑 (Ctrl+Z)" aria-label="撤销编辑" disabled><span data-icon="undo"></span></button><span class="toolbar-separator"></span><span class="grid-size">20 × 20</span><button id="grid-button" class="icon-button active" title="显示或隐藏网格" aria-label="显示网格" aria-pressed="true"><span data-icon="grid"></span></button><label class="icon-button icon-toggle" title="显示辅助范围"><input id="range-toggle" class="sr-only" type="checkbox" checked aria-label="显示辅助范围"><span data-icon="range"></span></label></div></div>
         <div class="map-status"><span id="status-badge" class="status-badge"><span class="tiny-dot"></span><span id="status-label">编辑模式</span></span><span id="map-name">实验场 01 <span>/</span> 四向汇流</span><span id="core-position" class="core-position">核心 X10 Y10</span><button id="demo-button" class="map-text-button">载入示例</button></div>
         <div class="map-stage" id="map-stage"><div class="caustics" aria-hidden="true"></div><canvas id="map-canvas" tabindex="0" aria-label="20乘20能量地图。方向键移动光标，回车放置或操作，R旋转，空格运行。"></canvas><div id="map-tooltip" class="map-tooltip" hidden></div></div>
-        <div class="map-bottom"><div class="map-legend"><span><i class="legend-core"></i>潮汐核心</span><span><i class="legend-energy"></i>能量</span><span><i class="legend-range"></i>加速范围</span><span><i class="legend-compression"></i>可堆叠范围</span></div><span id="coordinates">X —   Y —</span></div>
+        <div class="map-bottom"><div class="map-legend"><span><i class="legend-core"></i>潮汐核心</span><span><i class="legend-energy"></i>能量</span><span><i class="legend-range"></i>加速范围</span><span><i class="legend-compression"></i>可堆叠范围</span><span><i class="legend-blocked"></i>传输受阻</span></div><span id="coordinates">X —   Y —</span></div>
         <div class="map-hint"><span data-icon="info"></span><span id="interaction-hint">点击没有装置和能量的空格放置，按 R 切换方向</span><span class="shortcut-hint"><kbd>1</kbd><kbd>2</kbd><kbd>3</kbd>切换模式</span></div>
       </section>
 
@@ -978,7 +975,7 @@ body.is-dragging .map-stage{cursor:grabbing}
 
   <input type="file" id="import-file" accept="application/json,.json" hidden>
   <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
-  <dialog id="help-dialog" class="help-dialog"><div class="dialog-top"><div><h2>让你的能量网络运转起来</h2><p>Field manual</p></div><button id="close-help" class="icon-button" aria-label="关闭指南"><span data-icon="close"></span></button></div><div class="help-intro"><span data-icon="core"></span><p>将能量送入可移动的潮汐核心（默认在第 10 列、第 10 行）。不同蓝图可以使用不同核心位置。</p></div><div class="help-steps"><article><b>01</b><h3>搭建你的网络</h3><p>在左侧选择装置，点击空格放置。使用 R 或方向按钮调整朝向；方向箭头指向装置的前方。</p></article><article><b>02</b><h3>调整布局</h3><p>切换「修改」，点击装置顺时针旋转，拖动装置到空格移动；也可拖动潮汐核心更改位置。</p></article><article><b>03</b><h3>启动并观察</h3><p>空格键开始 / 暂停。运行时禁止手动编辑。保存多份蓝图后，可随时载入和比较不同布局。</p></article></div><h3 class="help-subhead">装置规则</h3><div id="help-device-list" class="help-device-list"></div><div class="rules-notes"><h3>这个实验场的约定</h3><ul><li>每格只能有一个装置或能量，不能同格。装置占据的格子不能刷新或接收能量；移动装置和放置装置也必须选择没有能量的空格。</li><li>压能装置使周围八个未被装置占据的格子允许单推机械无限堆叠能量，不包括压能自身格；随机生产和其他运输不能向已有能量的格子叠加。</li><li>集能装置基础概率为 25%，环能基础概率为 100%；每秒成功率 = 基础概率 × 可用落点数 ÷ 总可产能格数。可用落点指未被装置占据且没有能量的位置；已有能量的格子即使在压能覆盖范围内也不可产能。</li><li>随机生产成功后，从当前可用落点中随机选择一个；没有可用落点时不会生产。核心和装置占据的格子都不算可产能落点。</li><li>单推只推动前方一个装置或能量，不连续推动整排装置；它可以把能量推进压能覆盖的已有能量格并堆叠。其他运输目标已有能量时会阻挡传输。目标被占用、越界或为核心时，装置推动失败。推拉每次交替执行推 / 拉，只移动装置。</li><li>随机侧传以装置自身的左右为目标；被占用的目标不接收能量。传输越界或目标格被能量阻挡时，源格能量保留。</li><li>所有间隔以模拟秒计算；同一时刻的事件按装置创建顺序执行。加速范围随引擎移动实时变化，不叠加。</li><li>实时每秒产量统计最近 1 模拟秒，全程平均 = 累计生产量 ÷ 模拟时长；产能区间记录每个完整模拟秒的最低到最高产量。点击「重置模拟」可清空能量和统计并保留当前装置布局。</li><li>压能装置不吸取、不移动能量；移走后堆叠失去覆盖的格子不能继续叠加。已有能量作为整体仍可进入空的普通格。</li><li>在地图上放置或选中装置时，虚线格表示它的输入来源，实线格和箭头表示它的输出去向。</li></ul></div><div class="help-keyboard"><span><kbd>Space</kbd>运行 / 暂停</span><span><kbd>R</kbd>旋转</span><span><kbd>1</kbd><kbd>2</kbd><kbd>3</kbd>模式</span><span><kbd>Ctrl Z</kbd>撤销</span><span><kbd>方向键</kbd><kbd>Enter</kbd>网格操作</span><span><kbd>Esc</kbd>取消选中</span></div></dialog>
+  <dialog id="help-dialog" class="help-dialog"><div class="dialog-top"><div><h2>让你的能量网络运转起来</h2><p>Field manual</p></div><button id="close-help" class="icon-button" aria-label="关闭指南"><span data-icon="close"></span></button></div><div class="help-intro"><span data-icon="core"></span><p>将能量送入可移动的潮汐核心（默认在第 10 列、第 10 行）。不同蓝图可以使用不同核心位置。</p></div><div class="help-steps"><article><b>01</b><h3>搭建你的网络</h3><p>在左侧选择装置，点击空格放置。使用 R 或方向按钮调整朝向；方向箭头指向装置的前方。</p></article><article><b>02</b><h3>调整布局</h3><p>切换「修改」，点击装置顺时针旋转，拖动装置到空格移动；也可拖动潮汐核心更改位置。</p></article><article><b>03</b><h3>启动并观察</h3><p>空格键开始 / 暂停。运行时禁止手动编辑。保存多份蓝图后，可随时载入和比较不同布局。</p></article></div><h3 class="help-subhead">装置规则</h3><div id="help-device-list" class="help-device-list"></div><div class="rules-notes"><h3>这个实验场的约定</h3><ul><li>单推和传输按格搬运：一次搬动一个源格中的整团能量。若该格有 N EU，单次就转移全部 N EU，不会拆成 1 EU；能量数量显示为该格中的总 EU。</li><li>每格只能有一个装置或能量，不能同格。装置占据的格子不能刷新或接收能量；移动装置和放置装置也必须选择没有能量的空格。</li><li>压能装置使周围八个未被装置占据的格子允许搬运来的能量无限堆叠，不包括压能自身格；单推、轨道、集合和侧传都可以在覆盖格合并整团能量，随机生产仍只落在空格。</li><li>集能装置基础概率为 25%，环能基础概率为 100%；每秒成功率 = 基础概率 × 可用落点数 ÷ 总可产能格数。可用落点指未被装置占据且没有能量的位置；已有能量的格子即使在压能覆盖范围内也不可产能。</li><li>随机生产成功后，从当前可用落点中随机选择一个；没有可用落点时不会生产。核心和装置占据的格子都不算可产能落点。</li><li>单推只推动前方一个装置或能量，不连续推动整排装置；能量可以推入核心，也能在压能覆盖格推入已有能量并堆叠。装置不能推入被占用、越界或核心格。轨道等运输也可在压能覆盖的目标格合并能量；没有压能覆盖的已有能量格会阻挡搬运。推拉每次交替执行推 / 拉，只移动装置。</li><li>随机侧传以装置自身的左右为目标；目标有装置或已有能量且无压能覆盖时不接收能量。传输越界或受阻时，源格能量保留。</li><li>所有间隔以模拟秒计算；同一时刻的事件按装置创建顺序执行。加速范围随引擎移动实时变化，不叠加。</li><li>实时每秒产量统计最近 1 模拟秒，全程平均 = 累计生产量 ÷ 模拟时长；产能区间记录每个完整模拟秒的最低到最高产量。点击「重置模拟」可清空能量和统计并保留当前装置布局。</li><li>压能装置不吸取、不移动能量；移走后堆叠失去覆盖的格子不能继续叠加。已有能量作为整体仍可进入空的普通格。</li><li>在地图上放置或选中装置时，虚线格表示它的输入来源，实线格和箭头表示它的输出去向。</li></ul></div><div class="help-keyboard"><span><kbd>Space</kbd>运行 / 暂停</span><span><kbd>R</kbd>旋转</span><span><kbd>1</kbd><kbd>2</kbd><kbd>3</kbd>模式</span><span><kbd>Ctrl Z</kbd>撤销</span><span><kbd>方向键</kbd><kbd>Enter</kbd>网格操作</span><span><kbd>Esc</kbd>取消选中</span></div></dialog>
   <dialog id="confirm-dialog" class="confirm-dialog"><span data-icon="reset" class="confirm-icon"></span><h2 id="confirm-title">清空地图？</h2><p id="confirm-description"></p><div class="confirm-actions"><button id="confirm-cancel" class="button secondary">取消</button><button id="confirm-accept" class="button primary">确认</button></div></dialog>
   <script>
 
@@ -1369,6 +1366,34 @@ body.is-dragging .map-stage{cursor:grabbing}
     return selectedCell ? simulation.getDevice(selectedCell.x, selectedCell.y) : null;
   }
 
+  function transportStatus(device) {
+    if (!device || !['rail', 'pusher', 'collector', 'splitter'].includes(device.type)) return '';
+    const inputPositions = device.type === 'collector'
+      ? [3, 1, 2].map(relative => simulation.position(device, relative))
+      : [device.type === 'rail' ? simulation.position(device, 2) : simulation.position(device)];
+    const outputPositions = device.type === 'rail' || device.type === 'collector'
+      ? [simulation.position(device)]
+      : device.type === 'pusher'
+        ? [simulation.position(device, 0, 2)]
+        : [simulation.position(device, 3), simulation.position(device, 1)];
+    const inputEu = inputPositions.reduce((sum, position) => sum + simulation.getEnergy(position.x, position.y), 0);
+    const occupiedInputs = inputPositions.filter(position => simulation.getEnergy(position.x, position.y) > 0).length;
+    const destinations = outputPositions.map(position => {
+      const label = `X${position.x + 1}Y${position.y + 1}`;
+      if (!inside(position.x, position.y)) return `${label}越界`;
+      if (simulation.isCore(position.x, position.y)) return `${label}是核心，${device.type === 'splitter' ? '侧传不直接入核' : '可接收'}`;
+      if (simulation.getDevice(position.x, position.y)) return `${label}被${TYPES[simulation.getDevice(position.x, position.y).type].name}占用`;
+      const amount = simulation.getEnergy(position.x, position.y);
+      if (amount > 0) {
+        if (simulation.stackable(position.x, position.y)) return `${label}已有 ${formatNumber(amount)} EU，可压能堆叠`;
+        return `${label}已有 ${formatNumber(amount)} EU，阻挡（无压能覆盖）`;
+      }
+      return `${label}空闲`;
+    });
+    const inputLabel = device.type === 'collector' ? `输入 ${occupiedInputs}/3 格有能量，共 ${formatNumber(inputEu)} EU` : `输入 ${formatNumber(inputEu)} EU`;
+    return `${inputLabel} · 输出：${destinations.join(' / ')}`;
+  }
+
   function renderInspector() {
     const device = inspectedDevice();
     const type = device?.type || selectedType;
@@ -1380,12 +1405,13 @@ body.is-dragging .map-stage{cursor:grabbing}
     $('selected-en').textContent = titleCase(data.en);
     $('selected-description').textContent = data.description;
     const interval = device ? simulation.interval(device) : data.interval;
+    const movementStatus = transportStatus(device);
     $('selected-interval').innerHTML = data.interval === null ? '持续生效' : `${interval} <span>s${device && simulation.boosted(device) && data.interval > 1 ? '（已加速）' : ''}</span>`;
     $('selected-category').textContent = { 生产: '能量生产', 运输: '能量运输', 机械: '机械控制', 辅助: '效率辅助' }[data.category];
     $('selection-tag').textContent = device ? (running ? '运行中' : '已选中') : '待放置';
     const productionSpace = device && data.baseChance !== undefined ? simulation.productionSpaceInfo(device) : null;
     $('selected-position').innerHTML = icon(device ? 'grid' : 'cursor') + `<span>${device
-      ? `第 ${device.x + 1} 列，第 ${device.y + 1} 行${productionSpace ? `<br>当前生产成功率 ${(productionSpace.chance * 100).toFixed(1)}%，可用空位 ${productionSpace.available}/${productionSpace.total}` : ''}`
+      ? `第 ${device.x + 1} 列，第 ${device.y + 1} 行${productionSpace ? `<br>当前生产成功率 ${(productionSpace.chance * 100).toFixed(1)}%，可用空位 ${productionSpace.available}/${productionSpace.total}` : ''}${movementStatus ? `<br>${movementStatus}` : ''}`
       : '点击无装置、无能量的空格放置'}</span>`;
     document.querySelectorAll('[data-direction]').forEach(button => {
       button.classList.toggle('active', Number(button.dataset.direction) === displayDirection);
@@ -1876,6 +1902,44 @@ body.is-dragging .map-stage{cursor:grabbing}
     }
   }
 
+  function drawTransferWarnings() {
+    if (!running) return;
+    const cell = geometry.cell;
+    for (const device of simulation.devices.values()) {
+      if (!['rail', 'pusher', 'collector', 'splitter'].includes(device.type)) continue;
+      const inputs = device.type === 'collector'
+        ? [3, 1, 2].map(relative => simulation.position(device, relative))
+        : [device.type === 'rail' ? simulation.position(device, 2) : simulation.position(device)];
+      if (!inputs.some(position => simulation.getEnergy(position.x, position.y) > 0)) continue;
+      const outputs = device.type === 'rail' || device.type === 'collector'
+        ? [simulation.position(device)]
+        : device.type === 'pusher'
+          ? [simulation.position(device, 0, 2)]
+          : [simulation.position(device, 3), simulation.position(device, 1)];
+      for (const position of outputs) {
+        if (!inside(position.x, position.y) || simulation.canReceive(position.x, position.y, device.type !== 'splitter', true)) continue;
+        const left = geometry.x + position.x * cell, top = geometry.y + position.y * cell;
+        ctx.save();
+        ctx.strokeStyle = '#ff7188';
+        ctx.fillStyle = 'rgba(255, 75, 105, .13)';
+        ctx.lineWidth = Math.max(1.5, cell * 0.075);
+        ctx.setLineDash([Math.max(2, cell * 0.1), Math.max(2, cell * 0.07)]);
+        ctx.fillRect(left + 1, top + 1, cell - 2, cell - 2);
+        ctx.strokeRect(left + 2, top + 2, cell - 4, cell - 4);
+        ctx.setLineDash([]);
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.font = `700 ${Math.max(9, cell * 0.3)}px system-ui,sans-serif`;
+        ctx.lineWidth = 2.5;
+        ctx.strokeStyle = '#18232b';
+        ctx.strokeText('!', left + cell * 0.82, top + cell * 0.2);
+        ctx.fillStyle = '#ff7188';
+        ctx.fillText('!', left + cell * 0.82, top + cell * 0.2);
+        ctx.restore();
+      }
+    }
+  }
+
   function drawCore(core, now, ghost = false) {
     const { cell } = geometry;
     const pulse = running && !reducedMotion ? (Math.sin(now / 520) + 1) / 2 : 0.5;
@@ -2046,6 +2110,7 @@ body.is-dragging .map-stage{cursor:grabbing}
     }
     if (placing) drawDevice({ ...target, type: selectedType, dir: direction }, true);
     drawEnergy(now);
+    drawTransferWarnings();
     if (!(pointer?.dragging && pointer.isCore)) drawCore(core, now);
     drawEffects();
     drawRipples(now);
@@ -2119,7 +2184,8 @@ body.is-dragging .map-stage{cursor:grabbing}
     if ((device || energy || simulation.isCore(hover.x, hover.y)) && !pointer?.dragging) {
       const title = simulation.isCore(hover.x, hover.y) ? '潮汐核心' : device ? TYPES[device.type].name : '能量';
       const productionSpace = device && TYPES[device.type].baseChance !== undefined ? simulation.productionSpaceInfo(device) : null;
-      const detail = simulation.isCore(hover.x, hover.y) ? `累计接收 ${formatNumber(simulation.delivered)} EU，修改模式下可拖动` : `${device ? `${DIRECTIONS[device.dir].arrow} 朝${DIRECTIONS[device.dir].name}${TYPES[device.type].interval === null ? ' · 持续生效' : ` · ${simulation.interval(device)}s`}` : ''}${productionSpace ? ` · 成功率 ${(productionSpace.chance * 100).toFixed(1)}%（空位 ${productionSpace.available}/${productionSpace.total}）` : ''}${energy ? `${device ? ' · ' : ''}${formatNumber(energy)} EU` : ''}${simulation.stackable(hover.x, hover.y) ? ' · 单推可堆叠' : ' · 不可叠加'}`;
+      const movementStatus = transportStatus(device);
+      const detail = simulation.isCore(hover.x, hover.y) ? `累计接收 ${formatNumber(simulation.delivered)} EU，修改模式下可拖动` : `${device ? `${DIRECTIONS[device.dir].arrow} 朝${DIRECTIONS[device.dir].name}${TYPES[device.type].interval === null ? ' · 持续生效' : ` · ${simulation.interval(device)}s`}` : ''}${movementStatus ? ` · ${movementStatus}` : ''}${productionSpace ? ` · 成功率 ${(productionSpace.chance * 100).toFixed(1)}%（空位 ${productionSpace.available}/${productionSpace.total}）` : ''}${energy ? `${device ? ' · ' : ''}${formatNumber(energy)} EU` : ''}${simulation.stackable(hover.x, hover.y) ? ' · 搬运可堆叠' : ' · 不可叠加'}`;
       $('map-tooltip').innerHTML = `${title}<small>${detail}</small>`;
       $('map-tooltip').hidden = false;
       const center = cellCenter(hover);
@@ -2425,12 +2491,6 @@ body.is-dragging .map-stage{cursor:grabbing}
   // Webfonts can arrive after the first paint; the canvas labels pick them up on the next frame.
   document.fonts?.ready.then(resize);
 })();
-
-
-
-
-
-
   </script>
 </body>
 </html>
