@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <meta name="theme-color" content="#061A25">
   <meta name="description" content="在 20×20 网格上搭建能量运输系统，让每一份能量抵达潮汐核心。">
   <title>潮汐实验室 · Tidal Lab</title>
@@ -73,10 +73,11 @@
 }
 
 *{box-sizing:border-box}
-html{-webkit-text-size-adjust:100%;background:var(--page-bottom)}
+html{-webkit-text-size-adjust:100%;background:var(--page-bottom);scroll-padding-block:16px}
 body{margin:0;min-height:100vh;color:var(--ink);font:400 14px/1.6 var(--font-sans);font-variant-numeric:tabular-nums;background:radial-gradient(1400px 720px at 72% -14%,var(--page-top),transparent 62%),linear-gradient(180deg,var(--page),var(--page-bottom) 1400px);-webkit-font-smoothing:antialiased}
 button,input,select{font:inherit;color:inherit}
 button{cursor:pointer;background:none;border:0;padding:0}
+button,.speed-control label,.icon-toggle{touch-action:manipulation}
 button,a,input,select,canvas{-webkit-tap-highlight-color:transparent}
 button:disabled{opacity:.38;cursor:not-allowed}
 :focus-visible{outline:2px solid var(--accent);outline-offset:3px}
@@ -91,7 +92,7 @@ kbd{font:500 11px/1 var(--font-sans);padding:3px 6px;border-radius:5px;border:1p
 [hidden]{display:none!important}
 
 /* ---------- header ---------- */
-.app-header{display:flex;align-items:center;justify-content:space-between;gap:24px;height:76px;max-width:1720px;margin:0 auto;padding:0 40px}
+.app-header{display:flex;align-items:center;justify-content:space-between;gap:24px;min-height:76px;max-width:1720px;margin:0 auto;padding:env(safe-area-inset-top) max(40px,env(safe-area-inset-right)) 0 max(40px,env(safe-area-inset-left))}
 .brand{display:flex;align-items:center;gap:13px;border-radius:12px}
 .brand-mark{width:40px;height:40px;color:var(--accent)}
 .brand-mark svg{width:40px;height:40px;overflow:visible}
@@ -104,11 +105,11 @@ kbd{font:500 11px/1 var(--font-sans);padding:3px 6px;border-radius:5px;border:1p
 .version{margin-left:8px;padding:3px 9px;border:1px solid var(--rule);border-radius:999px;font-size:12px;color:var(--ink-3)}
 
 /* ---------- heading + run controls ---------- */
-.workspace{max-width:1720px;margin:0 auto;padding:2px 40px 36px}
+.workspace{max-width:1720px;margin:0 auto;padding:2px max(40px,env(safe-area-inset-right)) max(36px,env(safe-area-inset-bottom)) max(40px,env(safe-area-inset-left))}
 .page-heading{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;margin:6px 0 22px}
 h1{margin:0;font:600 34px/1.2 var(--font-serif);letter-spacing:.07em}
 .page-heading p{margin:9px 0 0;color:var(--ink-2);font-size:14.5px}
-.main-controls{display:flex;align-items:center;gap:10px;flex-shrink:0}
+.main-controls{display:flex;flex-wrap:wrap;align-items:center;justify-content:flex-end;gap:10px;min-width:0;max-width:100%}
 .speed-control{display:flex;align-items:center;gap:2px;height:46px;padding:4px 4px 4px 14px;border:1px solid var(--rule);border-radius:999px;background:var(--plate)}
 .speed-label{margin-right:6px;font-size:13px;color:var(--ink-3)}
 .speed-control label{position:relative;display:block;cursor:pointer}
@@ -161,7 +162,7 @@ h1{margin:0;font:600 34px/1.2 var(--font-serif);letter-spacing:.07em}
 
 /* ---------- studio ---------- */
 .studio{display:grid;grid-template-columns:250px minmax(0,1fr) 280px;gap:18px;align-items:stretch}
-.panel{border:1px solid var(--rule);border-radius:14px;background:var(--plate);box-shadow:var(--plate-shadow)}
+.panel{min-width:0;border:1px solid var(--rule);border-radius:14px;background:var(--plate);box-shadow:var(--plate-shadow)}
 .panel-heading{display:flex;align-items:center;justify-content:space-between;gap:10px}
 .panel-heading h2{display:flex;align-items:center;gap:8px;margin:0;font:600 16px/1.3 var(--font-serif);letter-spacing:.06em}
 .count-badge{min-width:26px;padding:1px 8px;border-radius:999px;background:var(--plate-sunk);font-size:12px;color:var(--ink-3);text-align:center}
@@ -195,7 +196,7 @@ h1{margin:0;font:600 34px/1.2 var(--font-serif);letter-spacing:.07em}
 /* map — the hero */
 .map-panel{display:flex;flex-direction:column;min-width:0;overflow:hidden;border-radius:22px;box-shadow:var(--stage-shadow);transition:box-shadow .4s,border-color .4s}
 .locked .map-panel{border-color:var(--accent-line);box-shadow:var(--stage-shadow),var(--live-rim)}
-.map-toolbar{display:flex;align-items:center;justify-content:space-between;gap:10px;height:58px;padding:0 12px;border-bottom:1px solid var(--rule)}
+.map-toolbar{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px;min-height:58px;padding:8px 12px;border-bottom:1px solid var(--rule)}
 .mode-group{display:flex;gap:2px;padding:3px;border:1px solid var(--rule);border-radius:13px;background:var(--plate-sunk)}
 .mode-group button{display:inline-flex;align-items:center;gap:6px;height:34px;padding:0 14px;border-radius:10px;font-size:13px;color:var(--ink-2);white-space:nowrap;transition:background .15s,color .15s,box-shadow .15s}
 .mode-group button svg{width:15px;height:15px}
@@ -223,16 +224,16 @@ h1{margin:0;font:600 34px/1.2 var(--font-serif);letter-spacing:.07em}
 .core-position{margin-left:auto;font-size:12.5px;color:var(--ink-3);white-space:nowrap}
 .map-text-button{display:inline-flex;align-items:center;height:30px;padding:0 13px;border:1px solid var(--rule-strong);border-radius:999px;font-size:12.5px;color:var(--ink-2);white-space:nowrap;transition:border-color .15s,color .15s}
 .map-text-button:hover:not(:disabled){border-color:var(--accent-line);color:var(--accent)}
-.map-stage{position:relative;flex:1 1 auto;min-height:clamp(480px,calc(100vh - 340px),780px);overflow:hidden;isolation:isolate;touch-action:none;background:radial-gradient(circle at var(--core-x,50%) var(--core-y,50%),var(--water-1) 0%,var(--water-2) 44%,var(--water-3) 100%)}
+.map-stage{position:relative;flex:1 1 auto;min-height:clamp(480px,calc(100vh - 340px),780px);overflow:hidden;isolation:isolate;touch-action:auto;background:radial-gradient(circle at var(--core-x,50%) var(--core-y,50%),var(--water-1) 0%,var(--water-2) 44%,var(--water-3) 100%)}
 .caustics{position:absolute;inset:0;z-index:0;overflow:hidden;pointer-events:none;-webkit-mask-image:radial-gradient(ellipse at center,#000 32%,transparent 92%);mask-image:radial-gradient(ellipse at center,#000 32%,transparent 92%)}
 .caustics::before,.caustics::after{content:'';position:absolute;background-image:var(--caustic,none);opacity:var(--caustic-opacity);will-change:transform}
 .caustics::before{top:-320px;left:-320px;right:0;bottom:0;background-size:320px 320px;animation:drift-a 44s linear infinite}
 .caustics::after{top:-470px;right:-470px;left:0;bottom:0;background-size:470px 470px;opacity:calc(var(--caustic-opacity) * .7);animation:drift-b 62s linear infinite}
 @keyframes drift-a{to{transform:translate3d(320px,320px,0)}}
 @keyframes drift-b{to{transform:translate3d(-470px,470px,0)}}
-.map-stage canvas{position:relative;z-index:1;display:block;width:100%;height:100%;outline:none;touch-action:none}
+.map-stage canvas{position:absolute;inset:0;z-index:1;display:block;width:100%;height:100%;outline:none;touch-action:pan-y}
 .map-stage canvas:focus-visible{box-shadow:inset 0 0 0 2px var(--accent)}
-.map-tooltip{position:absolute;z-index:3;padding:9px 12px;border:1px solid var(--rule-strong);border-radius:10px;background:color-mix(in srgb,var(--plate-raised) 88%,transparent);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);box-shadow:0 14px 34px -14px rgba(0,0,0,.5);font:600 13.5px/1.3 var(--font-serif);color:var(--ink);pointer-events:none;white-space:nowrap}
+.map-tooltip{position:absolute;z-index:3;max-width:calc(100% - 16px);padding:9px 12px;border:1px solid var(--rule-strong);border-radius:10px;background:color-mix(in srgb,var(--plate-raised) 88%,transparent);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);box-shadow:0 14px 34px -14px rgba(0,0,0,.5);font:600 13.5px/1.3 var(--font-serif);color:var(--ink);pointer-events:none;overflow-wrap:anywhere}
 .map-tooltip small{display:block;margin-top:4px;font:400 12px/1.5 var(--font-sans);color:var(--ink-2)}
 .map-bottom{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px 12px;padding:10px 16px;border-top:1px solid var(--rule);font-size:12px;color:var(--ink-3)}
 .map-legend{display:flex;flex-wrap:wrap;gap:6px 16px}
@@ -348,7 +349,7 @@ dialog{padding:0;border:1px solid var(--rule-strong);border-radius:22px;backgrou
 dialog[open]{animation:dialog-in .3s cubic-bezier(.2,.9,.3,1)}
 @keyframes dialog-in{from{opacity:0;transform:translateY(12px) scale(.98)}}
 dialog::backdrop{background:color-mix(in srgb,var(--page-bottom) 72%,transparent);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
-.help-dialog{width:min(820px,94vw);max-height:88vh;padding:34px 38px;scrollbar-width:thin}
+.help-dialog{width:min(820px,94vw);max-height:88vh;max-height:88dvh;padding:34px 38px;scrollbar-width:thin;overscroll-behavior:contain}
 .dialog-top{display:flex;align-items:flex-start;justify-content:space-between;gap:20px}
 .dialog-top h2{margin:0;font:600 27px/1.3 var(--font-serif);letter-spacing:.05em}
 .dialog-top p{margin:6px 0 0;font:italic 500 14px/1.4 var(--font-serif);color:var(--ink-3)}
@@ -390,14 +391,101 @@ body.is-dragging .map-stage{cursor:grabbing}
 .app-header,.workspace{animation:surface .9s cubic-bezier(.2,.8,.2,1) both}
 @keyframes surface{from{opacity:0}}
 
+/* View controls stay outside the canvas so they remain usable at every zoom. */
+.workbench-bar{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:6px 10px;padding:8px 12px;border-bottom:1px solid var(--rule);background:var(--plate)}
+.workbench-metrics{display:flex;flex-wrap:wrap;gap:4px 16px;min-width:0;color:var(--ink-3);font-size:11.5px}
+.workbench-metrics>span{display:flex;align-items:baseline;gap:5px}
+.workbench-metrics strong{font-size:16px;font-weight:600;color:var(--accent);overflow-wrap:anywhere}
+.workbench-metrics small{font-size:10px}
+.workbench-actions,.navigation-actions{display:flex;align-items:center;gap:6px}
+.map-run-button,.map-library-button{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:40px;padding:0 12px;border:1px solid var(--accent-line);border-radius:10px;background:var(--accent-soft);color:var(--accent);font-size:13px;white-space:nowrap}
+.map-run-button[aria-pressed=true]{background:var(--accent);color:var(--accent-ink)}
+.map-run-button svg,.map-library-button svg{width:16px;height:16px}
+.map-navigation{position:relative;z-index:5;display:flex;flex-wrap:wrap;align-items:center;justify-content:flex-end;gap:8px 12px;padding:7px 12px;border-bottom:1px solid var(--rule);background:var(--plate)}
+.map-device-picker{position:absolute;inset-inline:8px;top:100%;z-index:6;max-height:min(48vh,340px);max-height:min(48dvh,340px);overflow-y:auto;overscroll-behavior:contain;padding:8px;border:1px solid var(--accent-line);border-radius:0 0 14px 14px;background:var(--plate-raised);box-shadow:0 18px 35px -12px rgba(0,0,0,.35)}
+.picker-heading{display:flex;align-items:center;justify-content:space-between;padding:0 6px 6px;color:var(--ink-2);font-size:13px}
+.map-device-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(132px,1fr));gap:6px}
+.map-device-option{display:flex;align-items:center;gap:8px;min-width:0;min-height:48px;padding:6px 8px;border:1px solid var(--rule);border-radius:10px;text-align:left;background:var(--plate);font-size:12px}
+.map-device-option[aria-pressed=true]{background:var(--accent-soft);border-color:var(--accent-line)}
+.map-device-option .device-card-icon{width:30px;height:30px}
+.map-device-option>span:last-child{overflow-wrap:anywhere}
+.viewport-tools,.zoom-controls{display:flex;align-items:center;gap:3px}
+.viewport-tools{flex-wrap:wrap;gap:8px}
+.zoom-controls{padding:2px;border:1px solid var(--rule);border-radius:12px;background:var(--plate-sunk)}
+.zoom-value{display:flex;align-items:center;justify-content:center;gap:6px;min-width:82px;min-height:36px;padding:0 7px;border-radius:8px;font-size:13px;font-weight:500}
+.zoom-value small{font-size:11px;font-weight:400;color:var(--ink-3)}
+.zoom-value:hover{background:var(--plate-hover)}
+.pan-button{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:40px;padding:0 12px;border:1px solid var(--rule-strong);border-radius:11px;font-size:13px;white-space:nowrap}
+.pan-button[aria-pressed=true]{border-color:var(--accent-line);background:var(--accent-soft);color:var(--accent)}
+.quick-rotate{display:none;align-items:center;gap:8px;min-width:0;min-height:44px;padding:4px 8px;border:1px solid var(--rule);border-radius:10px;text-align:left}
+.quick-rotate>span:first-child{color:var(--accent)}
+.quick-rotate>span:last-child{margin-left:6px;color:var(--ink-3)}
+.quick-rotate strong,.quick-rotate small{display:block;font-size:12px;font-weight:500;line-height:1.5}
+.quick-rotate>span{flex-shrink:0}
+.quick-rotate strong,.quick-rotate small{white-space:nowrap}
+.quick-rotate small{color:var(--ink-3);font-weight:400}
+.viewport-hint{padding:6px 12px;border-top:1px solid var(--rule);font-size:11.5px;color:var(--ink-3)}
+.is-panning .map-stage,.is-panning.locked .map-stage{cursor:grab}
+.is-view-dragging .map-stage{cursor:grabbing}
+.map-hint>span:not([data-icon]){min-width:0;overflow-wrap:anywhere}
+.map-legend{flex-wrap:wrap}
+.blueprint-tools,.footer-actions{min-width:0;max-width:100%}
+.toast{bottom:max(28px,env(safe-area-inset-bottom))}
+
+/* The native modal keeps keyboard focus on the workbench and restores it on exit. */
+.map-focus-dialog{position:fixed;inset:0;width:100%;max-width:none;height:100%;height:100dvh;max-height:none;margin:0;padding:max(6px,env(safe-area-inset-top)) max(6px,env(safe-area-inset-right)) max(6px,env(safe-area-inset-bottom)) max(6px,env(safe-area-inset-left));border:0;border-radius:0;overflow:hidden;background:var(--page)}
+.map-focus-dialog[open]{animation:none}
+.map-focus-dialog .map-panel{height:100%;border-radius:14px}
+.map-focus-dialog .map-panel>div{flex-shrink:0}
+.map-focus-dialog .map-stage{flex:1 1 0;min-height:90px;height:auto;aspect-ratio:auto}
+.map-focus-dialog .map-status,.map-focus-dialog .viewport-hint,.map-focus-dialog .shortcut-hint{display:none}
+.map-focus-dialog .quick-rotate{display:inline-flex}
+.map-focus-dialog .map-navigation{justify-content:space-between}
+body.map-focused{overflow:hidden}
+
+@media (max-width:620px){
+  .workbench-bar{padding:7px 8px;flex-wrap:nowrap}
+  .workbench-metrics{flex-direction:column;gap:1px}
+  .workbench-metrics strong{font-size:15px}
+  .map-library-button{padding-inline:10px}
+  .map-navigation .quick-rotate{flex:1 1 160px}
+  .map-navigation .viewport-tools{flex-basis:100%;justify-content:space-between;gap:4px}
+  .navigation-actions{gap:2px}
+}
+@media (pointer:coarse){
+  .map-run-button,.map-library-button,.map-device-option{min-height:44px}
+}
+@media (max-height:600px){
+  .map-focus-dialog .workbench-bar{padding-block:4px}
+  .map-focus-dialog .map-navigation{gap:4px 8px;padding-block:4px}
+  .map-focus-dialog .map-toolbar{min-height:0;padding-block:4px}
+  .map-focus-dialog .map-bottom,.map-focus-dialog .map-hint{display:none}
+}
+@media (min-width:700px) and (max-height:600px){
+  .map-focus-dialog .map-panel{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);grid-template-rows:auto auto minmax(90px,1fr)}
+  .map-focus-dialog .workbench-bar{grid-area:1/1;gap:6px;padding-inline:10px;border-right:1px solid var(--rule)}
+  .map-focus-dialog .workbench-metrics{flex-direction:column;gap:0}
+  .map-focus-dialog .map-toolbar{grid-area:1/2;padding-inline:8px}
+  .map-focus-dialog .map-navigation{grid-area:2/1/3/-1;flex-wrap:wrap}
+  .map-focus-dialog .map-stage{grid-area:3/1/4/-1;min-height:0}
+}
+@media (max-width:620px) and (max-height:600px){
+  .map-focus-dialog .workbench-metrics>span:last-child{display:none}
+  .map-focus-dialog .map-navigation{display:grid;grid-template-columns:auto minmax(0,1fr)}
+  .map-focus-dialog .viewport-tools{grid-column:1/-1;justify-content:space-between}
+  .map-focus-dialog .quick-rotate{min-width:0}
+}
+
 /* ---------- responsive ---------- */
 @media (min-width:1500px){
   .studio{grid-template-columns:268px minmax(0,1fr) 300px;gap:20px}
 }
 @media (max-width:1280px){
-  .app-header{padding:0 24px}
-  .workspace{padding:2px 24px 30px}
-  .studio{grid-template-columns:224px minmax(0,1fr) 252px;gap:14px}
+  .app-header{padding-inline:max(24px,env(safe-area-inset-left)) max(24px,env(safe-area-inset-right))}
+  .workspace{padding:2px max(24px,env(safe-area-inset-right)) max(30px,env(safe-area-inset-bottom)) max(24px,env(safe-area-inset-left))}
+  .page-heading{flex-direction:column;align-items:stretch;gap:16px}
+  .studio{grid-template-columns:220px minmax(0,1fr);gap:14px}
+  .inspector-panel{grid-column:1/-1;display:grid;grid-template-columns:1.1fr 1fr;align-items:stretch;gap:14px}
   .metric{padding:14px 16px}
   .metric-value strong{font-size:28px}
   .metric-primary .metric-value strong{font-size:40px}
@@ -407,79 +495,150 @@ body.is-dragging .map-stage{cursor:grabbing}
   .mode-group button{padding:0 11px}
   .selection-panel,.flow-panel,.run-settings{padding-left:15px;padding-right:15px}
   .selected-position{margin:0 -15px;padding:12px 15px}
-  .compass{grid-template-columns:repeat(3,30px);grid-template-rows:repeat(3,30px)}
+  .selection-description{min-height:0}
 }
 @media (max-width:1060px){
-  .studio{grid-template-columns:220px minmax(0,1fr)}
-  .inspector-panel{grid-column:1/-1;display:grid;grid-template-columns:1.2fr 1fr;align-items:stretch;gap:14px}
-  .selection-description{min-height:0}
   .map-stage{min-height:clamp(440px,66vh,640px)}
   .metrics{grid-template-columns:1.4fr 1fr 1fr 1fr}
   .metric-primary{flex-direction:column;gap:6px}
   .mini-chart{height:36px;flex:none}
-  .core-position{display:none}
+  .map-status{flex-wrap:wrap}
+  .core-position{margin-left:0}
   .map-text-button{margin-left:auto}
 }
-@media (max-width:760px){
-  .app-header{height:64px;padding:0 14px}
+@media (max-width:900px){
+  .app-header{gap:12px;min-height:64px;padding-inline:max(16px,env(safe-area-inset-left)) max(16px,env(safe-area-inset-right))}
+  .workspace{padding:2px max(16px,env(safe-area-inset-right)) max(24px,env(safe-area-inset-bottom)) max(16px,env(safe-area-inset-left))}
+  .studio{display:flex;flex-direction:column;gap:12px}
+  .device-panel{height:auto;min-height:0;padding:12px 10px 0}
+  .device-panel .panel-heading{min-height:24px}
+  .panel-subtitle{margin-bottom:8px;font-size:12px}
+  .library-tabs{margin-bottom:6px}
+  .device-list{flex-direction:row;flex:none;gap:6px;overflow-x:auto;overflow-y:hidden;padding-bottom:7px;scroll-snap-type:x proximity;overscroll-behavior-x:contain;touch-action:pan-x pan-y}
+  .device-card{flex:0 0 146px;min-height:52px;scroll-snap-align:start}
+  .device-card-text strong{font-size:13px;white-space:nowrap}
+  .device-card-text small,.device-interval{display:none}
+  .library-footer{margin-top:0;padding:6px 16px}
+  .quick-rotate{display:inline-flex}
+  .map-navigation{justify-content:space-between}
+  .map-panel{border-radius:18px}
+  .map-stage{flex:none;min-height:0;height:clamp(360px,65svh,700px)}
+  .inspector-panel{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+  .workspace-footer{padding:14px}
+}
+@media (max-width:620px){
+  .app-header{min-height:60px;padding-inline:max(10px,env(safe-area-inset-left)) max(10px,env(safe-area-inset-right))}
   .brand-mark,.brand-mark svg{width:34px;height:34px}
-  .brand-text strong{font-size:18px}
-  .text-button{padding:0 10px}
+  .brand{gap:9px}
+  .brand-text strong{font-size:17px}
+  .brand-text small{font-size:11px}
+  .text-button{justify-content:center;min-width:44px;min-height:44px;padding:0 8px}
   .text-button span:last-child{display:none}
-  .workspace{padding:2px 14px 24px}
-  .page-heading{flex-direction:column;align-items:stretch;gap:16px;margin:4px 0 16px}
-  h1{font-size:27px}
-  .page-heading p{font-size:13.5px}
-  .main-controls{flex-wrap:wrap}
+  .version{display:none}
+  .workspace{padding-inline:max(10px,env(safe-area-inset-left)) max(10px,env(safe-area-inset-right))}
+  .page-heading{gap:12px;margin:6px 0 14px}
+  h1{font-size:25px}
+  .page-heading p{margin-top:5px;font-size:13px}
+  .main-controls{gap:8px}
   .speed-control{width:100%;justify-content:space-between}
   .speed-control label{flex:1}
   .speed-control label span{min-width:0}
   .main-controls .button{flex:1;min-width:0;padding:0 14px}
   .main-controls kbd{display:none}
-  .metrics{grid-template-columns:repeat(3,1fr)}
-  .metric{padding:12px 13px}
-  .metric-primary{grid-column:1/-1;flex-direction:row;align-items:center;border-bottom:1px solid var(--rule)}
-  .metric-primary .metric-value strong{font-size:38px}
-  .mini-chart{height:52px;flex:1}
+  .metrics{grid-template-columns:repeat(2,minmax(0,1fr));margin-bottom:12px;border-radius:14px}
+  .metric{padding:12px}
+  .metric-primary{display:block}
+  .metric-primary .metric-value strong{font-size:32px}
+  .mini-chart{display:none}
   .metric+.metric{border-left:0}
-  .metric:nth-child(n+3){border-left:1px solid var(--rule)}
-  .metric-value strong{font-size:23px}
+  .metric:nth-child(even){border-left:1px solid var(--rule)}
+  .metric:nth-child(n+3){border-top:1px solid var(--rule)}
+  .metric-value{flex-wrap:wrap;gap:4px}
+  .metric-value strong{max-width:100%;font-size:28px;overflow-wrap:anywhere}
   .metric-top{font-size:12px}
   .metric-icon{display:none}
-  .metric-note{display:none}
-  .studio{display:flex;flex-direction:column;gap:14px}
-  .device-panel{height:auto;min-height:0;padding:14px 10px 0}
+  .metric-main{min-width:0}
+  .metric-bottom{flex-wrap:wrap;gap:2px 6px;font-size:11px;white-space:normal}
+  .metric-bottom>span{overflow:visible;overflow-wrap:anywhere;text-overflow:clip}
+  .metric-note{display:block}
+  .fps-signal{display:none}
+  .panel-subtitle{display:none}
+  .library-tabs{margin-top:8px}
   .library-tabs button{font-size:12px}
-  .device-list{display:grid;grid-template-columns:1fr 1fr;gap:4px;overflow:visible}
-  .device-card{min-height:52px}
-  .device-interval{display:none}
-  .map-panel{border-radius:18px}
-  .map-toolbar{height:54px;padding:0 8px}
-  .mode-group button{padding:0 10px}
+  .device-card{flex-basis:138px}
+  .map-toolbar{gap:6px;padding:7px 8px}
+  .mode-group{flex:1}
+  .mode-group button{flex:1;justify-content:center;padding:0 7px;font-size:12px}
+  .map-tools{gap:2px;margin-left:auto}
+  .map-tools .toolbar-separator{display:none}
   .map-status{flex-wrap:wrap;gap:8px 10px;padding:8px 12px}
+  #map-name{flex:1 1 90px}
+  .core-position{font-size:12px}
+  .map-navigation{padding:7px 8px;gap:6px}
+  .quick-rotate{flex:1 1 160px}
+  .viewport-tools{flex:1 1 260px;justify-content:space-between}
+  .viewport-hint{font-size:11px}
   .map-stage{flex:none;min-height:0;height:auto;aspect-ratio:1/1}
   .map-bottom{padding:9px 12px}
   .map-hint{padding:10px 12px;font-size:12px}
   .inspector-panel{display:flex;flex-direction:column}
-  .workspace-footer{padding:14px}
-  .blueprint-tools input{flex:1 1 140px;width:auto}
-  .blueprint-tools select{flex:1 1 180px;width:auto}
+  .flow-panel{order:-1}
+  .blueprint-tools{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));width:100%;gap:8px}
+  .blueprint-tools input{grid-column:span 2;width:100%;font-size:16px}
+  .blueprint-tools select{grid-column:1/-1;width:100%;max-width:100%;font-size:16px}
+  .blueprint-tools button{padding-inline:5px;font-size:12px}
   .blueprint-tools .toolbar-separator{display:none}
-  .footer-actions{width:100%;justify-content:space-between;margin-left:0}
+  .footer-actions{flex-wrap:wrap;width:100%;justify-content:space-between;gap:4px;margin-left:0}
+  .footer-actions button{padding-inline:7px;font-size:12px}
+  .footer-actions .toolbar-separator{display:none}
   .help-dialog{padding:24px 20px}
   .dialog-top h2{font-size:22px}
   .help-steps{grid-template-columns:1fr;gap:18px}
   .help-device-list{grid-template-columns:1fr}
-  .toast{bottom:18px;border-radius:16px}
+  .dialog-top{gap:10px}
+  .dialog-top .icon-button{flex-shrink:0}
+  .confirm-dialog{padding:22px}
+  .toast{bottom:max(18px,env(safe-area-inset-bottom));border-radius:16px}
+}
+@media (pointer:coarse){
+  .icon-button{width:44px;height:44px}
+  .mode-group button,.library-tabs button,.map-text-button{min-height:44px}
+  .zoom-value,.pan-button,.blueprint-tools input,.blueprint-tools select,.blueprint-tools button,.footer-actions button{min-height:44px}
+  .speed-control{height:52px}
+  .speed-control label span{height:44px}
+  .compass{grid-template-columns:repeat(3,44px);grid-template-rows:repeat(3,44px)}
+  .direction-heading .hint{display:none}
+}
+@media (max-width:900px) and (orientation:landscape) and (max-height:600px){
+  .app-header{min-height:54px}
+  .page-heading{gap:10px;margin-bottom:12px}
+  .page-heading>div:first-child p{display:none}
+  .main-controls{justify-content:flex-start}
+  .metrics{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .metric{padding:10px 12px}
+  .metric-primary{display:block}
+  .mini-chart{display:none}
+  .metric+.metric{border-left:1px solid var(--rule)}
+  .metric:nth-child(n+3){border-top:0}
+  .map-stage{height:max(280px,calc(100svh - 125px));aspect-ratio:auto}
+  .map-navigation{flex-wrap:nowrap}
+  .panel-subtitle{display:none}
+}
+@media (max-width:360px){
+  .brand-mark,.brand-mark svg{width:29px;height:29px}
+  .brand-text strong{font-size:16px}
+  .header-actions{gap:0}
+  .direction-section{gap:8px}
+  .compass{gap:2px}
+  .metric-value strong{font-size:25px}
+  .metric-primary .metric-value strong{font-size:28px}
+  .button{font-size:13px}
 }
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation:none!important;transition:none!important}
 }
   </style>
   <script>
-
-
-
 (function (root, factory) {
   const api = factory();
   if (typeof module === 'object' && module.exports) module.exports = api;
@@ -932,9 +1091,17 @@ body.is-dragging .map-stage{cursor:grabbing}
       </aside>
 
       <section class="map-panel panel" aria-label="模拟工作台">
+        <div class="workbench-bar"><div class="workbench-metrics"><span>入核均速 <strong id="workbench-average">0.00</strong><small>EU/s</small></span><span>当前入核 <strong id="workbench-rate">0</strong><small>EU/s</small></span></div><div class="workbench-actions"><button id="map-run-button" class="map-run-button" aria-pressed="false"><span data-icon="play"></span><span id="map-run-label">运行</span></button><button id="map-focus-button" class="icon-button" title="专注地图" aria-label="进入地图专注模式" aria-pressed="false"><span id="map-focus-icon" data-icon="expand"></span></button></div></div>
         <div class="map-toolbar"><div class="mode-group" role="group" aria-label="操作模式"><button data-mode="place" class="active" title="放置装置 (1)"><span data-icon="plus"></span><span>放置</span></button><button data-mode="edit" title="旋转和拖动装置 (2)"><span data-icon="cursor"></span><span>修改</span></button><button data-mode="delete" title="删除装置或能量 (3)"><span data-icon="trash"></span><span>删除</span></button></div><div class="map-tools"><button id="undo-button" class="icon-button" title="撤销编辑 (Ctrl+Z)" aria-label="撤销编辑" disabled><span data-icon="undo"></span></button><span class="toolbar-separator"></span><span class="grid-size">20 × 20</span><button id="grid-button" class="icon-button active" title="显示或隐藏网格" aria-label="显示网格" aria-pressed="true"><span data-icon="grid"></span></button><label class="icon-button icon-toggle" title="显示辅助范围"><input id="range-toggle" class="sr-only" type="checkbox" checked aria-label="显示辅助范围"><span data-icon="range"></span></label></div></div>
         <div class="map-status"><span id="status-badge" class="status-badge"><span class="tiny-dot"></span><span id="status-label">编辑模式</span></span><span id="map-name">实验场 01 <span>/</span> 四向汇流</span><span id="core-position" class="core-position">核心 X10 Y10</span><button id="demo-button" class="map-text-button">载入示例</button></div>
-        <div class="map-stage" id="map-stage"><div class="caustics" aria-hidden="true"></div><canvas id="map-canvas" tabindex="0" aria-label="20乘20能量地图。方向键移动光标，回车放置或操作，R旋转，空格运行。"></canvas><div id="map-tooltip" class="map-tooltip" hidden></div></div>
+        <div class="map-navigation" aria-label="地图视图控制">
+          <button id="map-library-button" class="map-library-button" aria-expanded="false" aria-controls="map-device-picker" title="打开地图装置选择器"><span data-icon="blocks"></span><span>选装置</span></button>
+          <button id="quick-rotate-button" class="quick-rotate" title="旋转当前装置或待放置方向"><span id="quick-device-icon"></span><span><strong id="quick-device-name">集能装置</strong><small id="quick-direction-label">朝上</small></span><span data-icon="rotate"></span></button>
+          <div class="viewport-tools"><div class="zoom-controls" role="group" aria-label="地图缩放"><button id="zoom-out-button" class="icon-button" aria-label="缩小地图" title="缩小地图"><span data-icon="minus"></span></button><button id="fit-map-button" class="zoom-value" title="恢复全图视图" aria-label="恢复全图视图"><span id="zoom-value" aria-live="polite">100%</span><small>全图</small></button><button id="zoom-in-button" class="icon-button" aria-label="放大地图" title="放大地图"><span data-icon="plus"></span></button></div><div class="navigation-actions"><button id="center-core-button" class="icon-button" title="定位潮汐核心" aria-label="定位潮汐核心"><span data-icon="target"></span></button><button id="pan-map-button" class="pan-button" aria-pressed="false" title="开启后可单指或鼠标拖动地图"><span data-icon="hand"></span><span>移动视图</span></button></div></div>
+          <div id="map-device-picker" class="map-device-picker" hidden><div class="picker-heading"><strong>选择装置</strong><button id="close-map-picker" class="icon-button" aria-label="关闭装置选择器"><span data-icon="close"></span></button></div><div id="map-device-list" class="map-device-list"></div></div>
+        </div>
+        <div class="map-stage" id="map-stage"><div class="caustics" aria-hidden="true"></div><canvas id="map-canvas" tabindex="0" aria-describedby="viewport-hint" aria-label="20乘20能量地图。方向键移动光标，回车放置或操作，R旋转，空格运行。使用缩放按钮放大，开启移动视图后拖动地图。"></canvas><div id="map-tooltip" class="map-tooltip" hidden></div></div>
+        <div id="viewport-hint" class="viewport-hint">放大后可拖动空白处移图；双指缩放与移动。点击百分比恢复全图。</div>
         <div class="map-bottom"><div class="map-legend"><span><i class="legend-core"></i>潮汐核心</span><span><i class="legend-energy"></i>能量</span><span><i class="legend-range"></i>加速范围</span><span><i class="legend-compression"></i>可堆叠范围</span><span><i class="legend-blocked"></i>传输受阻</span></div><span id="coordinates">X —   Y —</span></div>
         <div class="map-hint"><span data-icon="info"></span><span id="interaction-hint">点击没有装置和能量的空格放置，按 R 切换方向</span><span class="shortcut-hint"><kbd>1</kbd><kbd>2</kbd><kbd>3</kbd>切换模式</span></div>
       </section>
@@ -973,14 +1140,12 @@ body.is-dragging .map-stage{cursor:grabbing}
     </footer>
   </main>
 
+  <dialog id="map-focus-dialog" class="map-focus-dialog" aria-label="地图专注模式"></dialog>
   <input type="file" id="import-file" accept="application/json,.json" hidden>
   <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
   <dialog id="help-dialog" class="help-dialog"><div class="dialog-top"><div><h2>让你的能量网络运转起来</h2><p>Field manual</p></div><button id="close-help" class="icon-button" aria-label="关闭指南"><span data-icon="close"></span></button></div><div class="help-intro"><span data-icon="core"></span><p>将能量送入可移动的潮汐核心（默认在第 10 列、第 10 行）。不同蓝图可以使用不同核心位置。</p></div><div class="help-steps"><article><b>01</b><h3>搭建你的网络</h3><p>在左侧选择装置，点击空格放置。使用 R 或方向按钮调整朝向；方向箭头指向装置的前方。</p></article><article><b>02</b><h3>调整布局</h3><p>切换「修改」，点击装置顺时针旋转，拖动装置到空格移动；也可拖动潮汐核心更改位置。</p></article><article><b>03</b><h3>启动并观察</h3><p>空格键开始 / 暂停。运行时禁止手动编辑。保存多份蓝图后，可随时载入和比较不同布局。</p></article></div><h3 class="help-subhead">装置规则</h3><div id="help-device-list" class="help-device-list"></div><div class="rules-notes"><h3>这个实验场的约定</h3><ul><li>单推和传输按格搬运：一次搬动一个源格中的整团能量。若该格有 N EU，单次就转移全部 N EU，不会拆成 1 EU；能量数量显示为该格中的总 EU。</li><li>每格只能有一个装置或能量，不能同格。装置占据的格子不能刷新或接收能量；移动装置和放置装置也必须选择没有能量的空格。</li><li>压能装置使周围八个未被装置占据的格子允许搬运来的能量无限堆叠，不包括压能自身格；单推、轨道、集合和侧传都可以在覆盖格合并整团能量，随机生产仍只落在空格。</li><li>集能装置基础概率为 25%，环能基础概率为 100%；每秒成功率 = 基础概率 × 可用落点数 ÷ 总可产能格数。可用落点指未被装置占据且没有能量的位置；已有能量的格子即使在压能覆盖范围内也不可产能。</li><li>随机生产成功后，从当前可用落点中随机选择一个；没有可用落点时不会生产。核心和装置占据的格子都不算可产能落点。</li><li>单推只推动前方一个装置或能量，不连续推动整排装置；能量可以推入核心，也能在压能覆盖格推入已有能量并堆叠。装置不能推入被占用、越界或核心格。轨道等运输也可在压能覆盖的目标格合并能量；没有压能覆盖的已有能量格会阻挡搬运。推拉每次交替执行推 / 拉，只移动装置。</li><li>随机侧传以装置自身的左右为目标；目标有装置或已有能量且无压能覆盖时不接收能量。传输越界或受阻时，源格能量保留。</li><li>所有间隔以模拟秒计算；同一时刻的事件按装置创建顺序执行。加速范围随引擎移动实时变化，不叠加。</li><li>实时每秒产量统计最近 1 模拟秒，全程平均 = 累计生产量 ÷ 模拟时长；产能区间记录每个完整模拟秒的最低到最高产量。点击「重置模拟」可清空能量和统计并保留当前装置布局。</li><li>压能装置不吸取、不移动能量；移走后堆叠失去覆盖的格子不能继续叠加。已有能量作为整体仍可进入空的普通格。</li><li>在地图上放置或选中装置时，虚线格表示它的输入来源，实线格和箭头表示它的输出去向。</li></ul></div><div class="help-keyboard"><span><kbd>Space</kbd>运行 / 暂停</span><span><kbd>R</kbd>旋转</span><span><kbd>1</kbd><kbd>2</kbd><kbd>3</kbd>模式</span><span><kbd>Ctrl Z</kbd>撤销</span><span><kbd>方向键</kbd><kbd>Enter</kbd>网格操作</span><span><kbd>Esc</kbd>取消选中</span></div></dialog>
   <dialog id="confirm-dialog" class="confirm-dialog"><span data-icon="reset" class="confirm-icon"></span><h2 id="confirm-title">清空地图？</h2><p id="confirm-description"></p><div class="confirm-actions"><button id="confirm-cancel" class="button secondary">取消</button><button id="confirm-accept" class="button primary">确认</button></div></dialog>
   <script>
-
-
-
 /* Tidal Lab — dependency-free canvas workspace and interaction layer. */
 (() => {
   'use strict';
@@ -1022,7 +1187,12 @@ body.is-dragging .map-stage{cursor:grabbing}
     compressor: 'M3 8V3h5 M16 3h5v5 M21 16v5h-5 M8 21H3v-5 M8 8h8v8H8Z M8 11h8 M8 14h8',
     accelerator: 'M13 2 5 13h6l-1 9 9-13h-6Z',
     play: 'M8 4v16l12-8Z', pause: 'M8 5v14 M16 5v14', reset: 'M3 10a9 9 0 1 1 1 8 M3 4v6h6',
-    plus: 'M12 5v14 M5 12h14', cursor: 'M4 3v17l5-5 4 7 3-2-4-7h8Z',
+    plus: 'M12 5v14 M5 12h14', minus: 'M5 12h14', cursor: 'M4 3v17l5-5 4 7 3-2-4-7h8Z',
+    rotate: 'M20 8a8 8 0 1 0 0 8 M20 3v5h-5',
+    expand: 'M3 9V3h6 M15 3h6v6 M21 15v6h-6 M9 21H3v-6',
+    collapse: 'M9 3v6H3 M21 9h-6V3 M15 21v-6h6 M3 15h6v6',
+    target: 'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18 M12 1v5 M12 18v5 M1 12h5 M18 12h5 M12 9a3 3 0 1 0 0 6 3 3 0 0 0 0-6',
+    hand: 'M8 12V6a2 2 0 0 1 4 0v6 M12 10V4a2 2 0 0 1 4 0v8 M16 10V7a2 2 0 0 1 4 0v8c0 4-3 7-7 7h-1c-3 0-4-1-6-4l-3-5a2 2 0 0 1 3-2l2 3',
     trash: 'M4 6h16 M9 6V3h6v3 M6 6l1 15h10l1-15 M10 10v7 M14 10v7',
     undo: 'M9 4 3 10l6 6 M3 10h11a7 7 0 0 1 7 7v3',
     grid: 'M3 3h18v18H3Z M3 9h18 M3 15h18 M9 3v18 M15 3v18',
@@ -1079,6 +1249,14 @@ body.is-dragging .map-stage{cursor:grabbing}
   let showGrid = true;
   let showRanges = true;
   let geometry = { width: 0, height: 0, x: 0, y: 0, cell: 1 };
+  const mapView = { zoom: 1, panX: 0, panY: 0, pan: false };
+  const mapTouches = new Map();
+  let pinch = null;
+  let multiTouch = false;
+  const mapFocusDialog = $('map-focus-dialog');
+  let mapHome = null;
+  let focusScroll = null;
+  let toastHome = null;
   let accumulator = 0;
   let lastTime = 0;
   let lastUI = 0;
@@ -1360,6 +1538,7 @@ body.is-dragging .map-stage{cursor:grabbing}
     const entries = Object.entries(TYPES).filter(([, type]) => category === '全部' || type.category === category);
     $('library-count').textContent = entries.length;
     $('device-list').innerHTML = entries.map(([type, data]) => `<button class="device-card ${selectedType === type ? 'active' : ''}" data-device="${type}" style="--device-color:${data.color}" aria-label="选择${data.name}" aria-pressed="${selectedType === type}" ${running ? 'disabled' : ''}><span class="device-card-icon">${icon(type)}</span><span class="device-card-text"><strong>${data.name}</strong><small>${data.short}</small></span><span class="device-interval">${data.interval === null ? '持续' : `${data.interval}s`}</span></button>`).join('');
+    $('map-device-list').innerHTML = Object.entries(TYPES).map(([type, data]) => `<button class="map-device-option" data-map-device="${type}" style="--device-color:${data.color}" aria-pressed="${selectedType === type}" ${running ? 'disabled' : ''}><span class="device-card-icon">${icon(type)}</span><span>${data.name}</span></button>`).join('');
   }
 
   function inspectedDevice() {
@@ -1416,7 +1595,7 @@ body.is-dragging .map-stage{cursor:grabbing}
     document.querySelectorAll('[data-direction]').forEach(button => {
       button.classList.toggle('active', Number(button.dataset.direction) === displayDirection);
       button.setAttribute('aria-pressed', String(Number(button.dataset.direction) === displayDirection));
-      button.disabled = running;
+      if (button.disabled !== running) button.disabled = running;
     });
     // The compass glyph always turns the short way, so R spins it clockwise.
     const targetDegrees = displayDirection * 90;
@@ -1427,6 +1606,15 @@ body.is-dragging .map-stage{cursor:grabbing}
     glyph.style.setProperty('--device-color', data.color);
     glyph.style.setProperty('--rotation', `${compassDegrees}deg`);
     $('direction-label').textContent = `朝${DIRECTIONS[displayDirection].name}`;
+    // Keep the touched nodes stable while live statistics refresh the inspector.
+    const quickIcon = $('quick-device-icon');
+    if (quickIcon.dataset.type !== type) { quickIcon.innerHTML = icon(type); quickIcon.dataset.type = type; }
+    if ($('quick-device-name').textContent !== data.name) $('quick-device-name').textContent = data.name;
+    const quickDirection = DIRECTIONS[displayDirection].arrow + ' 朝' + DIRECTIONS[displayDirection].name + ' · 点此旋转';
+    if ($('quick-direction-label').textContent !== quickDirection) $('quick-direction-label').textContent = quickDirection;
+    $('quick-rotate-button').setAttribute('aria-label', `${data.name}朝${DIRECTIONS[displayDirection].name}，点击旋转`);
+    const quickDisabled = running || mode === 'delete';
+    if ($('quick-rotate-button').disabled !== quickDisabled) $('quick-rotate-button').disabled = quickDisabled;
   }
 
   function setMode(nextMode) {
@@ -1446,6 +1634,12 @@ body.is-dragging .map-stage{cursor:grabbing}
     $('run-button').querySelector('[data-icon]').innerHTML = icon(running ? 'pause' : 'play');
     $('run-label').textContent = running ? '暂停运行' : '开始运行';
     $('run-button').setAttribute('aria-pressed', String(running));
+    $('map-run-button').setAttribute('aria-pressed', String(running));
+    $('map-run-button').querySelector('[data-icon]').innerHTML = icon(running ? 'pause' : 'play');
+    $('map-run-label').textContent = running ? '暂停' : '运行';
+    $('map-library-button').disabled = running;
+    document.querySelectorAll('[data-map-device]').forEach(button => { button.disabled = running; });
+    if (running) setMapPicker(false);
     $('status-label').textContent = running ? (document.hidden ? '后台暂停' : '运行中') : mode === 'delete' ? '删除模式' : '编辑模式';
     $('status-badge').classList.toggle('is-running', running);
     $('status-badge').classList.toggle('is-deleting', !running && mode === 'delete');
@@ -1460,7 +1654,8 @@ body.is-dragging .map-stage{cursor:grabbing}
     $('blueprint-name').disabled = running;
     renderBlueprints();
     $('undo-button').disabled = running || !undoStack.length;
-    document.querySelectorAll('[data-direction]').forEach(button => { button.disabled = running; });
+    document.querySelectorAll('[data-direction]').forEach(button => { if (button.disabled !== running) button.disabled = running; });
+    updateViewControls();
   }
 
   function toggleRun() {
@@ -1519,6 +1714,8 @@ body.is-dragging .map-stage{cursor:grabbing}
       : '等待完整 1 秒';
     $('delivery-rate').textContent = `+${formatNumber(simulation.deliveryRate)} /s`;
     $('delivery-average-rate').textContent = `全程均值 ${averageDelivery.toFixed(2)} /s`;
+    $('workbench-average').textContent = averageDelivery.toFixed(2);
+    $('workbench-rate').textContent = formatNumber(simulation.deliveryRate);
     $('flow-value').textContent = averageProduction.toFixed(2);
     $('occupied-energy').textContent = `${simulation.energy.filter(e => e > 0).length} 个格子`;
     $('producer-count').textContent = `${producers} 个生产装置`;
@@ -1553,18 +1750,73 @@ body.is-dragging .map-stage{cursor:grabbing}
         stage.style.setProperty('--core-y', cy);
       }
     }
-    if (selectedCell) renderInspector();
+    // Paused layouts change only through edits, which already render the inspector.
+    // Rebuilding it during a touch can make browsers cancel the subsequent click.
+    if (selectedCell && running) renderInspector();
   }
 
   function resize() {
+    const center = geometry.width && geometry.cell > 0 ? { x: (geometry.width / 2 - geometry.x) / geometry.cell, y: (geometry.height / 2 - geometry.y) / geometry.cell } : null;
     const bounds = stage.getBoundingClientRect();
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
     canvas.width = Math.round(bounds.width * dpr);
     canvas.height = Math.round(bounds.height * dpr);
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    const cell = Math.min((bounds.width - 47) / SIZE, (bounds.height - 49) / SIZE);
-    geometry = { width: bounds.width, height: bounds.height, x: (bounds.width - cell * SIZE) / 2 + 5, y: (bounds.height - cell * SIZE) / 2 - 1, cell };
+    geometry.width = bounds.width;
+    geometry.height = bounds.height;
+    updateMapGeometry();
+    if (center && mapView.zoom > 1) zoomMap(mapView.zoom, { x: bounds.width / 2, y: bounds.height / 2 }, center);
+  }
+
+  function updateViewControls() {
+    $('zoom-value').textContent = `${Math.round(mapView.zoom * 100)}%`;
+    $('zoom-out-button').disabled = mapView.zoom <= 1;
+    $('zoom-in-button').disabled = mapView.zoom >= 4;
+    $('pan-map-button').setAttribute('aria-pressed', String(mapView.pan));
+    document.body.classList.toggle('is-panning', mapView.pan);
+    // At full view a normal swipe still scrolls the page. Editing and zoomed
+    // views keep pointer ownership for device dragging and map gestures.
+    canvas.style.touchAction = mapView.pan || mapView.zoom > 1 || (!running && mode === 'edit') ? 'none' : 'pan-y';
+    $('viewport-hint').textContent = mapView.pan
+      ? '移动视图已开启：拖动只移动地图，关闭后可编辑。双指缩放；点击百分比恢复全图。'
+      : mapView.zoom > 1
+        ? '双指缩放与移动；拖动空白处可移图。开启「移动视图」后，拖动不会操作装置。'
+        : '用＋放大，开启「移动视图」后拖动查看；全图下可上下滑动页面。';
+  }
+
+  function updateMapGeometry() {
+    const { width, height } = geometry;
+    if (!width || !height) return;
+    const cell = Math.max(1, Math.min((width - 47) / SIZE, (height - 49) / SIZE)) * mapView.zoom;
+    const limitX = Math.max(0, (cell * SIZE + 47 - width) / 2);
+    const limitY = Math.max(0, (cell * SIZE + 49 - height) / 2);
+    mapView.panX = Math.max(-limitX, Math.min(limitX, mapView.panX));
+    mapView.panY = Math.max(-limitY, Math.min(limitY, mapView.panY));
+    geometry = { width, height, cell, x: (width - cell * SIZE) / 2 + 5 + mapView.panX, y: (height - cell * SIZE) / 2 - 1 + mapView.panY };
+    $('map-tooltip').hidden = true;
     stageCoreVars = '';
+    updateViewControls();
+  }
+
+  function zoomMap(nextZoom, anchor, gridPoint) {
+    const { width, height } = geometry;
+    if (!width || !height) return;
+    anchor ||= { x: width / 2, y: height / 2 };
+    gridPoint ||= { x: (anchor.x - geometry.x) / geometry.cell, y: (anchor.y - geometry.y) / geometry.cell };
+    mapView.zoom = Math.max(1, Math.min(4, nextZoom));
+    const cell = Math.max(1, Math.min((width - 47) / SIZE, (height - 49) / SIZE)) * mapView.zoom;
+    mapView.panX = anchor.x - ((width - cell * SIZE) / 2 + 5) - gridPoint.x * cell;
+    mapView.panY = anchor.y - ((height - cell * SIZE) / 2 - 1) - gridPoint.y * cell;
+    hover = null;
+    updateMapGeometry();
+  }
+
+  function keepCellVisible(position) {
+    const center = cellCenter(position);
+    const margin = Math.min(geometry.cell, 48);
+    mapView.panX += Math.max(margin - center.x, 0) - Math.max(center.x - geometry.width + margin, 0);
+    mapView.panY += Math.max(margin - center.y, 0) - Math.max(center.y - geometry.height + margin, 0);
+    updateMapGeometry();
   }
 
   const cellCenter = position => ({ x: geometry.x + (position.x + 0.5) * geometry.cell, y: geometry.y + (position.y + 0.5) * geometry.cell });
@@ -2190,8 +2442,9 @@ body.is-dragging .map-stage{cursor:grabbing}
       $('map-tooltip').hidden = false;
       const center = cellCenter(hover);
       const tooltipWidth = $('map-tooltip').offsetWidth;
+      const tooltipHeight = $('map-tooltip').offsetHeight;
       $('map-tooltip').style.left = `${Math.max(5, Math.min(geometry.width - tooltipWidth - 8, center.x + geometry.cell * 0.7))}px`;
-      $('map-tooltip').style.top = `${Math.max(5, center.y - 62)}px`;
+      $('map-tooltip').style.top = `${Math.max(5, Math.min(geometry.height - tooltipHeight - 8, center.y - tooltipHeight - 8))}px`;
     } else $('map-tooltip').hidden = true;
   }
 
@@ -2236,6 +2489,7 @@ body.is-dragging .map-stage{cursor:grabbing}
     if (!button || running) return;
     selectedType = button.dataset.device;
     selectedCell = null;
+    mapView.pan = false;
     setMode('place');
     renderLibrary();
     renderInspector();
@@ -2379,10 +2633,141 @@ body.is-dragging .map-stage{cursor:grabbing}
     } catch (error) { toast(`导入失败：${error instanceof SyntaxError ? '文件不是有效的 JSON。' : error.message}`, true); }
   });
 
+  // Handle touch activation directly: some mobile browsers suppress the first
+  // compatibility click after a canvas drag. Mouse and keyboard keep native clicks.
+  function bindMapButton(id, action) {
+    const button = $(id);
+    let touch = null;
+    let lastTouch = -Infinity;
+    button.addEventListener('pointerdown', event => {
+      if (event.pointerType === 'touch' && !button.disabled) touch = { id: event.pointerId, x: event.clientX, y: event.clientY };
+    });
+    button.addEventListener('pointercancel', () => { touch = null; });
+    button.addEventListener('pointerup', event => {
+      const start = touch;
+      touch = null;
+      if (!start || start.id !== event.pointerId || button.disabled) return;
+      const bounds = button.getBoundingClientRect();
+      if (Math.hypot(event.clientX - start.x, event.clientY - start.y) > 10 || event.clientX < bounds.left || event.clientX > bounds.right || event.clientY < bounds.top || event.clientY > bounds.bottom) return;
+      lastTouch = performance.now();
+      event.preventDefault();
+      action();
+    });
+    button.addEventListener('click', event => {
+      if (event.pointerType === 'touch' || event.sourceCapabilities?.firesTouchEvents || (event.detail > 0 && performance.now() - lastTouch < 700)) return;
+      action();
+    });
+  }
+
+  bindMapButton('zoom-in-button', () => zoomMap(mapView.zoom + 0.5));
+  bindMapButton('zoom-out-button', () => zoomMap(mapView.zoom - 0.5));
+  bindMapButton('fit-map-button', () => {
+    mapView.zoom = 1; mapView.panX = 0; mapView.panY = 0; mapView.pan = false;
+    hover = null;
+    updateMapGeometry();
+  });
+  bindMapButton('pan-map-button', () => {
+    mapView.pan = !mapView.pan;
+    pointer = null; hover = null;
+    document.body.classList.remove('is-dragging', 'is-view-dragging');
+    updateViewControls();
+  });
+  bindMapButton('quick-rotate-button', () => setDirection(((inspectedDevice()?.dir ?? direction) + 1) % 4));
+  bindMapButton('map-run-button', toggleRun);
+  bindMapButton('center-core-button', () => {
+    const center = { x: geometry.width / 2, y: geometry.height / 2 };
+    zoomMap(mapView.zoom, center, { x: simulation.core.x + 0.5, y: simulation.core.y + 0.5 });
+    hover = null;
+  });
+
+  function setMapPicker(open) {
+    $('map-device-picker').hidden = !open;
+    $('map-library-button').setAttribute('aria-expanded', String(open));
+  }
+  bindMapButton('map-library-button', () => { if (!running) setMapPicker($('map-device-picker').hidden); });
+  bindMapButton('close-map-picker', () => { setMapPicker(false); $('map-library-button').focus({ preventScroll: true }); });
+  $('map-device-list').addEventListener('click', event => {
+    const button = event.target.closest('[data-map-device]');
+    if (!button || running) return;
+    selectedType = button.dataset.mapDevice;
+    mapView.pan = false;
+    setMode('place');
+    renderLibrary();
+    setMapPicker(false);
+    canvas.focus({ preventScroll: true });
+  });
+  document.addEventListener('pointerdown', event => {
+    if (!event.target.closest('.map-navigation')) setMapPicker(false);
+  });
+
+  function setMapFocus(open) {
+    if (mapFocusDialog.open === open) return;
+    setMapPicker(false);
+    const panel = stage.closest('.map-panel');
+    pointer = null; hover = null; pinch = null; multiTouch = false; mapTouches.clear();
+    document.body.classList.remove('is-dragging', 'is-view-dragging');
+    if (open) {
+      focusScroll = { x: window.scrollX, y: window.scrollY };
+      mapHome = document.createComment('map-workbench-home');
+      panel.before(mapHome);
+      mapFocusDialog.append(panel);
+      toastHome = document.createComment('map-toast-home');
+      $('toast').before(toastHome);
+      mapFocusDialog.append($('toast'));
+      document.body.classList.add('map-focused');
+      mapFocusDialog.showModal();
+    } else {
+      mapFocusDialog.close();
+      mapHome?.replaceWith(panel);
+      mapHome = null;
+      toastHome?.replaceWith($('toast'));
+      toastHome = null;
+      document.body.classList.remove('map-focused');
+      if (focusScroll) window.scrollTo(focusScroll.x, focusScroll.y);
+      focusScroll = null;
+    }
+    $('map-focus-button').setAttribute('aria-pressed', String(open));
+    $('map-focus-button').setAttribute('aria-label', open ? '退出地图专注模式' : '进入地图专注模式');
+    $('map-focus-button').title = open ? '退出专注模式 (Esc)' : '专注地图';
+    $('map-focus-icon').innerHTML = icon(open ? 'collapse' : 'expand');
+    requestAnimationFrame(() => { resize(); $('map-focus-button').focus({ preventScroll: true }); });
+  }
+  bindMapButton('map-focus-button', () => setMapFocus(!mapFocusDialog.open));
+  mapFocusDialog.addEventListener('cancel', event => { event.preventDefault(); setMapFocus(false); });
+
+  function touchPair() {
+    const [a, b] = [...mapTouches.values()];
+    const bounds = canvas.getBoundingClientRect();
+    return {
+      x: (a.x + b.x) / 2 - bounds.left,
+      y: (a.y + b.y) / 2 - bounds.top,
+      distance: Math.max(1, Math.hypot(a.x - b.x, a.y - b.y)),
+    };
+  }
+
   canvas.addEventListener('pointermove', event => {
-    if (pointer && !running && mode === 'edit' && (pointer.deviceId || pointer.isCore) && Math.hypot(event.clientX - pointer.startX, event.clientY - pointer.startY) > 5) {
-      pointer.dragging = true;
-      document.body.classList.add('is-dragging');
+    if (mapTouches.has(event.pointerId)) mapTouches.set(event.pointerId, { x: event.clientX, y: event.clientY });
+    if (pinch && mapTouches.size >= 2) {
+      const pair = touchPair();
+      zoomMap(pinch.zoom * pair.distance / pinch.distance, pair, pinch.gridPoint);
+      return;
+    }
+    if (multiTouch) return;
+    if (pointer && pointer.pointerId === event.pointerId) {
+      const dx = event.clientX - pointer.startX, dy = event.clientY - pointer.startY;
+      const moved = Math.hypot(dx, dy) > (event.pointerType === 'touch' ? 8 : 5);
+      if (pointer.panning || (moved && mapView.zoom > 1 && (running || mode !== 'edit' || (!pointer.deviceId && !pointer.isCore)))) {
+        pointer.panning = true;
+        mapView.panX = pointer.panX + dx; mapView.panY = pointer.panY + dy;
+        document.body.classList.add('is-view-dragging');
+        hover = null;
+        updateMapGeometry();
+        return;
+      }
+      if (moved && !running && mode === 'edit' && (pointer.deviceId || pointer.isCore)) {
+        pointer.dragging = true;
+        document.body.classList.add('is-dragging');
+      }
     }
     updateHover(event);
   });
@@ -2392,22 +2777,46 @@ body.is-dragging .map-stage{cursor:grabbing}
     $('coordinates').textContent = 'X —   Y —';
   });
   canvas.addEventListener('pointerdown', event => {
-    if (event.button !== 0) return;
+    if (event.button !== 0 && event.button !== 1) return;
+    if (event.button === 1) event.preventDefault();
     canvas.focus({ preventScroll: true });
+    if (event.pointerType === 'touch') {
+      mapTouches.set(event.pointerId, { x: event.clientX, y: event.clientY });
+      if (mapTouches.size >= 2) {
+        const pair = touchPair();
+        multiTouch = true;
+        pinch = { distance: pair.distance, zoom: mapView.zoom, gridPoint: { x: (pair.x - geometry.x) / geometry.cell, y: (pair.y - geometry.y) / geometry.cell } };
+        pointer = null; hover = null;
+        $('map-tooltip').hidden = true;
+        document.body.classList.remove('is-dragging', 'is-view-dragging');
+        canvas.setPointerCapture(event.pointerId);
+        return;
+      }
+      if (multiTouch) return;
+    }
     const position = pointFromEvent(event);
-    if (running || !position) return;
-    const device = simulation.getDevice(position.x, position.y);
-    pointer = { ...position, startX: event.clientX, startY: event.clientY, deviceId: device?.id, isCore: simulation.isCore(position.x, position.y), dragging: false, pointerId: event.pointerId };
+    const panning = mapView.pan || event.button === 1;
+    if ((!position || running) && !panning && mapView.zoom <= 1) return;
+    const device = position && simulation.getDevice(position.x, position.y);
+    pointer = { ...position, startX: event.clientX, startY: event.clientY, panX: mapView.panX, panY: mapView.panY, panning, deviceId: device?.id, isCore: position && simulation.isCore(position.x, position.y), dragging: false, pointerId: event.pointerId };
     canvas.setPointerCapture(event.pointerId);
   });
   canvas.addEventListener('pointerup', event => {
+    mapTouches.delete(event.pointerId);
+    if (multiTouch) {
+      if (mapTouches.size < 2) pinch = null;
+      if (!mapTouches.size) multiTouch = false;
+      if (canvas.hasPointerCapture(event.pointerId)) canvas.releasePointerCapture(event.pointerId);
+      return;
+    }
     if (!pointer || pointer.pointerId !== event.pointerId) return;
     const start = pointer;
     const destination = pointFromEvent(event);
     pointer = null;
-    document.body.classList.remove('is-dragging');
+    document.body.classList.remove('is-dragging', 'is-view-dragging');
     if (canvas.hasPointerCapture(event.pointerId)) canvas.releasePointerCapture(event.pointerId);
-    if (running) return;
+    if (event.pointerType === 'touch') { hover = null; $('map-tooltip').hidden = true; }
+    if (running || start.panning) return;
     if (start.dragging && mode === 'edit' && start.isCore) {
       if (!destination || simulation.getDevice(destination.x, destination.y) || simulation.getEnergy(destination.x, destination.y)) {
         toast('核心只能移动到空白格', true); return;
@@ -2429,10 +2838,25 @@ body.is-dragging .map-stage{cursor:grabbing}
       }
     } else if (destination && destination.x === start.x && destination.y === start.y) operateAt(destination);
   });
-  canvas.addEventListener('pointercancel', () => { pointer = null; hover = null; document.body.classList.remove('is-dragging'); });
-  canvas.addEventListener('contextmenu', event => { event.preventDefault(); if (!running) setDirection(((inspectedDevice()?.dir ?? direction) + 1) % 4); });
+  canvas.addEventListener('pointercancel', event => {
+    mapTouches.delete(event.pointerId);
+    if (mapTouches.size < 2) pinch = null;
+    if (!mapTouches.size) multiTouch = false;
+    pointer = null; hover = null;
+    $('map-tooltip').hidden = true;
+    document.body.classList.remove('is-dragging', 'is-view-dragging');
+  });
+  canvas.addEventListener('contextmenu', event => { event.preventDefault(); if (!running && !mapView.pan) setDirection(((inspectedDevice()?.dir ?? direction) + 1) % 4); });
+  canvas.addEventListener('wheel', event => {
+    if (!event.ctrlKey && !event.metaKey) return;
+    event.preventDefault();
+    const bounds = canvas.getBoundingClientRect();
+    zoomMap(mapView.zoom * Math.exp(-event.deltaY * 0.005), { x: event.clientX - bounds.left, y: event.clientY - bounds.top });
+  }, { passive: false });
   document.addEventListener('keydown', event => {
     if ($('help-dialog').open || $('confirm-dialog').open) return;
+    if (event.key === 'Escape' && !$('map-device-picker').hidden) { event.preventDefault(); setMapPicker(false); $('map-library-button').focus({ preventScroll: true }); return; }
+    if (event.key === 'Escape' && mapFocusDialog.open) { event.preventDefault(); setMapFocus(false); return; }
     if (event.target.matches('input, select, textarea') || event.target.isContentEditable) return;
     if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'z') { event.preventDefault(); undo(); return; }
     if (event.ctrlKey || event.metaKey || event.altKey) return;
@@ -2441,12 +2865,14 @@ body.is-dragging .map-stage{cursor:grabbing}
     if (['1', '2', '3'].includes(event.key)) { setMode(['place', 'edit', 'delete'][Number(event.key) - 1]); return; }
     if (event.key === 'Escape') { selectedCell = null; hover = null; keyboardActive = false; $('map-tooltip').hidden = true; renderInspector(); return; }
     if (event.target !== canvas) return;
+    if (['+', '=', '-'].includes(event.key)) { event.preventDefault(); zoomMap(mapView.zoom + (event.key === '-' ? -0.5 : 0.5)); return; }
     const arrows = { ArrowUp: [0, -1], ArrowRight: [1, 0], ArrowDown: [0, 1], ArrowLeft: [-1, 0] };
     if (arrows[event.key]) {
       event.preventDefault();
       keyboardActive = true; hover = null;
       const [dx, dy] = arrows[event.key];
       keyboardCell = { x: Math.max(0, Math.min(19, keyboardCell.x + dx)), y: Math.max(0, Math.min(19, keyboardCell.y + dy)) };
+      keepCellVisible(keyboardCell);
       $('coordinates').textContent = `X ${String(keyboardCell.x + 1).padStart(2, '0')}   Y ${String(keyboardCell.y + 1).padStart(2, '0')}`;
     } else if (event.key === 'Enter') { event.preventDefault(); keyboardActive = true; operateAt(keyboardCell); }
   });
