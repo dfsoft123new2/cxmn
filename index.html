@@ -15,7 +15,7 @@
 /* ==========================================================================
    潮汐实验室 · 昼潮 / 夜潮
    Day = sunlit shallows, night = bioluminescent deep water.
-   Only the core (cyan) and energy (amber) are allowed to glow.
+   Core and energy states use separate, restrained glow colors.
    ========================================================================== */
 :root{
   color-scheme:light;
@@ -171,6 +171,18 @@ h1{margin:0;font:600 34px/1.2 var(--font-serif);letter-spacing:.07em}
 .device-panel{display:flex;flex-direction:column;height:0;min-height:100%;padding:18px 12px 0;overflow:hidden}
 .device-panel .panel-heading{padding:0 6px}
 .panel-subtitle{margin:3px 6px 14px;font-size:12.5px;color:var(--ink-3)}
+.device-search{display:flex;align-items:center;gap:7px;min-height:44px;margin:0 4px 10px;padding:0 9px;border:1px solid var(--rule-strong);border-radius:10px;background:var(--plate-sunk);color:var(--ink-3)}
+.device-search>span svg{width:15px;height:15px}
+.device-search input{width:100%;min-width:0;min-height:42px;padding:0;border:0;outline:0;background:transparent;font-size:12px;color:var(--ink)}
+.device-search:focus-within{outline:2px solid var(--accent);outline-offset:2px}
+.device-search input::-webkit-search-cancel-button{display:none}
+.device-search button{display:grid;flex-shrink:0;place-items:center;min-width:44px;min-height:44px;color:var(--ink-3)}
+.device-search button svg{width:14px;height:14px}
+.library-empty{padding:10px;margin:0;font-size:12px;color:var(--ink-3)}
+.device-meta{display:flex;align-items:flex-end;flex-direction:column;gap:5px;flex-shrink:0}
+.device-stock{font-size:10px;line-height:1.5;color:var(--ink-3);white-space:nowrap}
+.map-device-option>.device-stock{margin-left:auto}
+.map-device-option>span:nth-child(2){min-width:0;overflow-wrap:anywhere}
 .library-tabs{display:flex;gap:2px;margin:0 2px 10px;padding:3px;border:1px solid var(--rule);border-radius:11px;background:var(--plate-sunk)}
 .library-tabs button{flex:1;height:30px;border-radius:8px;font-size:12.5px;color:var(--ink-3);transition:background .15s,color .15s}
 .library-tabs button:hover{color:var(--ink)}
@@ -241,6 +253,12 @@ h1{margin:0;font:600 34px/1.2 var(--font-serif);letter-spacing:.07em}
 .map-legend i{display:inline-block;width:10px;height:10px;flex-shrink:0}
 .legend-core{border-radius:50%;background:radial-gradient(circle at 35% 35%,#FFFFFF,var(--accent) 65%);box-shadow:0 0 8px var(--accent)}
 .legend-energy{border-radius:50%;background:radial-gradient(circle at 40% 40%,#FFF4D2,var(--energy) 60%);box-shadow:0 0 8px var(--energy)}
+.legend-energy-moved{border:1px solid #2866a7;border-radius:50%;background:radial-gradient(circle at 40% 40%,#f0f8ff,#4999e9 60%);box-shadow:0 0 0 2px color-mix(in srgb,#4999e9 20%,transparent)}
+.map-legend b{font-weight:500;font-size:11px;color:var(--ink-2)}
+.energy-fresh-text{color:var(--energy)}
+.energy-moved-text{color:#2866a7}
+:root[data-theme=dark] .energy-moved-text{color:#9dd2ff}
+@media (prefers-color-scheme:dark){:root:not([data-theme=light]) .energy-moved-text{color:#9dd2ff}}
 .legend-range{border:1px dashed #D9A05F;border-radius:3px;background:rgba(239,185,123,.16)}
 .legend-compression{border:1px dashed #C77FC0;border-radius:3px;background:rgba(221,154,214,.16)}
 .legend-blocked{border:2px dashed #ff7188;border-radius:3px;background:rgba(255,75,105,.13)}
@@ -284,9 +302,19 @@ h1{margin:0;font:600 34px/1.2 var(--font-serif);letter-spacing:.07em}
 .compass-center svg{width:22px;height:22px}
 .selected-position{display:flex;align-items:flex-start;gap:8px;min-height:calc(12.5px * 1.7 * 2 + 24px);margin:0 -18px;padding:12px 18px;border-top:1px solid var(--rule);background:var(--plate-sunk);font-size:12.5px;line-height:1.7;color:var(--ink-2)}
 .selected-position svg{width:14px;height:14px;margin-top:3px;color:var(--ink-3)}
+.selection-actions{display:flex;flex-wrap:wrap;gap:8px;padding:0 0 14px}
+.selection-actions button{display:inline-flex;flex:1 1 auto;align-items:center;justify-content:center;gap:6px;min-height:44px;padding:6px 10px;border:1px solid var(--rule-strong);border-radius:10px;background:var(--plate-sunk);font-size:12px;color:var(--ink-2)}
+.selection-actions button:hover:not(:disabled){border-color:var(--accent-line);color:var(--accent)}
+.selection-actions svg{width:15px;height:15px}
 
 .flow-panel{padding:16px 18px 18px}
 .chart-period{font-size:12px;color:var(--ink-3)}
+.chart-tools-button{display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;gap:4px;min-height:44px;padding:4px 7px;border:1px solid var(--rule);border-radius:10px;font-size:11px;color:var(--ink-3)}
+.chart-tools-button svg{width:14px;height:14px}
+.chart-tools-button:hover,.chart-tools-button.is-measuring{border-color:var(--accent-line);background:var(--accent-soft);color:var(--accent)}
+.chart-metric{display:flex;gap:4px;margin-top:12px;padding:3px;border:1px solid var(--rule);border-radius:11px;background:var(--plate-sunk)}
+.chart-metric button{flex:1;min-width:0;min-height:38px;padding:4px 8px;border-radius:8px;font-size:12.5px;color:var(--ink-3)}
+.chart-metric button[aria-pressed=true]{background:var(--plate-raised);box-shadow:0 1px 4px rgba(0,0,0,.06);color:var(--accent)}
 .flow-value{display:flex;align-items:baseline;gap:7px;margin-top:10px}
 #flow-value{font:500 34px/1 var(--font-serif);color:var(--ink)}
 .flow-value small{font-size:12.5px;color:var(--ink-3)}
@@ -380,6 +408,52 @@ dialog::backdrop{background:color-mix(in srgb,var(--page-bottom) 72%,transparent
 .confirm-dialog p{margin:0;font-size:14px;line-height:1.8;color:var(--ink-2)}
 .confirm-actions{display:flex;justify-content:flex-end;gap:10px;margin-top:26px}
 .confirm-actions .button{height:42px;min-width:0}
+.locate-dialog{width:min(440px,calc(100vw - 24px));max-height:calc(100dvh - 24px);padding:22px;overflow:auto;overscroll-behavior:contain}
+.locate-dialog .dialog-top h2{font-size:23px}
+.locate-dialog .dialog-top p{font-family:var(--font-sans);font-style:normal;font-size:12px}
+.locate-form{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) auto;gap:10px;align-items:end;margin-top:20px}
+.locate-form label{display:flex;min-width:0;flex-direction:column;gap:6px;font-size:12px;color:var(--ink-2)}
+.locate-form input{width:100%;min-width:0;height:44px;padding:0 10px;border:1px solid var(--rule-strong);border-radius:10px;background:var(--plate-sunk);color:var(--ink)}
+.locate-form .button{height:44px;min-width:0;padding-inline:14px}
+.locate-shortcuts{display:flex;gap:8px;margin-top:16px}
+.locate-shortcuts button{display:flex;flex:1;align-items:center;justify-content:center;gap:6px;min-height:44px;padding:6px;border:1px solid var(--rule-strong);border-radius:10px;background:var(--accent-soft);color:var(--accent);font-size:12px}
+.locate-shortcuts button:last-child{background:var(--plate-sunk);color:var(--ink-2)}
+.locate-shortcuts svg{width:15px;height:15px}
+.locate-snapshot{margin:16px 0 8px;font-size:11px;color:var(--ink-3)}
+.locate-energy-list{display:grid;gap:6px}
+.locate-energy-list button{display:flex;align-items:center;gap:10px;min-height:44px;padding:8px 12px;border:1px solid var(--rule);border-radius:10px;background:var(--plate-sunk);font-size:12.5px;color:var(--ink-2)}
+.locate-energy-list button:hover{border-color:var(--accent-line);background:var(--accent-soft)}
+.locate-energy-list strong{margin-left:auto;font-weight:500;color:var(--ink)}
+.locate-energy-list svg{width:15px;height:15px;color:var(--accent)}
+.locate-empty{margin:0;padding:16px 12px;border:1px dashed var(--rule-strong);border-radius:10px;font-size:12px;color:var(--ink-3)}
+.tool-dialog{width:min(520px,calc(100vw - 24px));max-height:calc(100dvh - 24px);padding:24px;overflow-y:auto;overscroll-behavior:contain}
+.tool-dialog .dialog-top h2{font-size:23px}
+.tool-dialog .dialog-top p{font:12px/1.7 var(--font-sans);color:var(--ink-3)}
+.tool-note{margin:12px 0;font-size:12px;line-height:1.8;color:var(--ink-3);overflow-wrap:anywhere}
+.tool-empty{margin:0;padding:16px;border:1px dashed var(--rule-strong);border-radius:12px;font-size:13px;line-height:1.8;color:var(--ink-2)}
+.diagnostics-actions{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;margin-top:20px}
+.diagnostics-actions>strong{font-size:12px;font-weight:500;color:var(--ink-2)}
+.diagnostics-actions>button{display:inline-flex;align-items:center;gap:5px;min-height:44px;padding:5px 10px;border:1px solid var(--rule-strong);border-radius:10px;font-size:12px;color:var(--accent)}
+.diagnostics-actions svg{width:15px;height:15px}
+.diagnostics-list{display:grid;gap:9px}
+.diagnostic-item{display:flex;align-items:stretch;flex-direction:column;gap:6px;width:100%;padding:12px;border:1px solid var(--rule);border-radius:12px;background:var(--plate-sunk);text-align:left}
+.diagnostic-item:hover{border-color:var(--accent-line);background:var(--accent-soft)}
+.diagnostic-item-heading{display:flex;align-items:baseline;justify-content:space-between;flex-wrap:wrap;gap:6px;font-size:13px;color:var(--ink)}
+.diagnostic-item-heading strong{font-weight:500}
+.diagnostic-item-heading>span{font-size:11px;color:var(--danger)}
+.diagnostic-position{font-size:11px;color:var(--accent)}
+.diagnostic-detail{font-size:12px;line-height:1.8;color:var(--ink-2);overflow-wrap:anywhere}
+.measurement-heading{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:22px 0 12px}
+.measurement-heading h3,.csv-section h3{margin:0;font:600 16px/1.5 var(--font-serif);color:var(--ink)}
+.measurement-metrics{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.measurement-metrics>div{min-width:0;padding:12px;border:1px solid var(--rule);border-radius:12px;background:var(--plate-sunk)}
+.measurement-metrics>div:first-child{grid-column:1/-1}
+.measurement-metrics span{display:block;font-size:11px;color:var(--ink-3)}
+.measurement-metrics strong{display:block;margin-top:6px;font:500 28px/1.2 var(--font-serif);color:var(--accent);overflow-wrap:anywhere}
+.measurement-metrics>div:first-child strong{font-size:23px;color:var(--ink)}
+.measurement-actions{display:flex;flex-wrap:wrap;gap:8px}
+.measurement-actions .button{flex:1 1 auto;min-width:0;min-height:44px;padding:6px 12px;font-size:12px}
+.csv-section{margin-top:18px;padding-top:18px;border-top:1px solid var(--rule)}
 
 /* ---------- states ---------- */
 body[data-mode=place] .map-stage,body[data-mode=delete] .map-stage{cursor:crosshair}
@@ -398,6 +472,45 @@ body.is-dragging .map-stage{cursor:grabbing}
 .workbench-metrics strong{font-size:16px;font-weight:600;color:var(--accent);overflow-wrap:anywhere}
 .workbench-metrics small{font-size:10px}
 .workbench-actions,.navigation-actions{display:flex;align-items:center;gap:6px}
+.workbench-bar{position:relative;z-index:8}
+.view-options{position:static;flex-shrink:0}
+.view-options summary{list-style:none;cursor:pointer;touch-action:manipulation}
+.view-options summary::-webkit-details-marker{display:none}
+.view-options[open] summary{background:var(--accent-soft);color:var(--accent)}
+.view-options:not([open]) .view-options-panel{display:none}
+.view-options-panel{position:absolute;z-index:12;right:8px;top:calc(100% + 4px);width:260px;max-width:calc(100% - 16px);max-height:calc(100dvh - 130px);padding:14px 16px;border:1px solid var(--rule-strong);border-radius:14px;background:var(--plate-raised);box-shadow:0 18px 38px -14px rgba(0,0,0,.4);overflow-y:auto;overscroll-behavior:contain}
+.view-options-panel>strong{font:600 15px/1.5 var(--font-serif);color:var(--ink)}
+.view-options-panel>p{margin:9px 0 0;padding-top:9px;border-top:1px solid var(--rule);font-size:11.5px;color:var(--ink-3)}
+.export-map-button{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;min-height:44px;margin-top:10px;padding:8px;border:1px solid var(--accent-line);border-radius:10px;background:var(--accent-soft);font-size:12px;color:var(--accent)}
+.export-map-button svg{width:15px;height:15px}
+.tool-menu-button{background:var(--plate-sunk);border-color:var(--rule-strong);color:var(--ink-2)}
+.highlight-option{display:flex;flex-direction:column;gap:7px;padding:12px 0;border-top:1px solid var(--rule);font-size:12px;color:var(--ink-2)}
+.highlight-option select{width:100%;min-width:0;min-height:44px;padding:7px;border:1px solid var(--rule-strong);border-radius:10px;background:var(--plate-sunk);color:var(--ink);font-size:12px}
+.highlight-badge{position:absolute;z-index:4;right:10px;top:10px;display:flex;align-items:center;gap:6px;max-width:calc(100% - 20px);padding-left:10px;border:1px solid var(--accent-line);border-radius:11px;background:var(--plate-raised);font-size:11px;color:var(--accent);pointer-events:none}
+.highlight-badge>span{min-width:0;overflow-wrap:anywhere}
+.highlight-badge .icon-button{width:44px;height:44px;pointer-events:auto}
+@media(max-width:400px){.tool-dialog{padding:18px}.measurement-metrics{gap:8px}.measurement-metrics>div{padding:10px}.chart-tools-button{padding-inline:5px;font-size:10px}}
+.map-observation{position:absolute;z-index:4;left:12px;bottom:12px;display:flex;align-items:center;gap:8px;max-width:calc(100% - 24px);padding:6px 6px 6px 12px;border:1px solid var(--accent-line);border-radius:12px;background:color-mix(in srgb,var(--plate-raised) 94%,transparent);box-shadow:0 6px 20px -12px rgba(0,0,0,.3);pointer-events:none}
+.map-observation>div{display:flex;min-width:0;flex-direction:column;gap:2px}
+.map-observation strong{font-size:12px;font-weight:500;color:var(--ink)}
+.map-observation span{font-size:11px;color:var(--ink-2);overflow-wrap:anywhere}
+.map-observation .icon-button{width:44px;height:44px;pointer-events:auto}
+@media(max-width:400px){
+  .pan-button{width:44px;padding:0;justify-content:center}
+  .pan-button>span:last-child{display:none}
+  .locate-dialog{padding:18px}
+  .locate-form{gap:8px}
+  .locate-form .button{padding-inline:10px;font-size:12px}
+}
+.view-option{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:56px;cursor:pointer;font-size:13px;color:var(--ink)}
+.view-option small{display:block;font-size:11px;color:var(--ink-3)}
+.view-option input{width:18px;height:18px;flex-shrink:0;accent-color:var(--accent);cursor:pointer}
+.chart-detail{min-height:34px;margin-top:4px;font-size:11.5px;line-height:1.5;color:var(--ink-2);font-variant-numeric:tabular-nums}
+#flow-chart{touch-action:pan-y;cursor:crosshair;border-radius:4px}
+.chart-probe-line{fill:none;stroke:var(--ink-3);stroke-width:1;stroke-dasharray:2 3;vector-effect:non-scaling-stroke}
+.chart-probe-dot{fill:var(--accent);stroke:var(--plate);stroke-width:1.5;vector-effect:non-scaling-stroke}
+:root[data-calm=true] .caustics{display:none}
+:root[data-calm=true] *, :root[data-calm=true] *::before, :root[data-calm=true] *::after{animation:none!important;transition:none!important}
 .map-run-button,.map-library-button{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:40px;padding:0 12px;border:1px solid var(--accent-line);border-radius:10px;background:var(--accent-soft);color:var(--accent);font-size:13px;white-space:nowrap}
 .map-run-button[aria-pressed=true]{background:var(--accent);color:var(--accent-ink)}
 .map-run-button svg,.map-library-button svg{width:16px;height:16px}
@@ -466,6 +579,8 @@ body.map-focused{overflow:hidden}
   .map-focus-dialog .workbench-bar{grid-area:1/1;gap:6px;padding-inline:10px;border-right:1px solid var(--rule)}
   .map-focus-dialog .workbench-metrics{flex-direction:column;gap:0}
   .map-focus-dialog .map-toolbar{grid-area:1/2;padding-inline:8px}
+  .map-focus-dialog .mode-group button>span:last-child{display:none}
+  .map-focus-dialog .mode-group button{min-width:44px;padding-inline:6px}
   .map-focus-dialog .map-navigation{grid-area:2/1/3/-1;flex-wrap:wrap}
   .map-focus-dialog .map-stage{grid-area:3/1/4/-1;min-height:0}
 }
@@ -483,6 +598,7 @@ body.map-focused{overflow:hidden}
   .map-focus-dialog .map-run-button{padding-inline:8px}
   .map-focus-dialog .mode-group button>span:last-child{display:none}
   .map-focus-dialog .map-toolbar{gap:4px;padding-inline:4px}
+  .map-focus-dialog #grid-button,.map-focus-dialog .map-tools .icon-toggle{display:none}
   .map-focus-dialog .mode-group button{padding-inline:5px}
   .map-focus-dialog .map-navigation{flex-wrap:nowrap;gap:5px;padding-inline:6px}
   .map-focus-dialog .quick-rotate{flex:none;padding-inline:8px}
@@ -695,6 +811,8 @@ body.map-focused{overflow:hidden}
       this.core = { ...CORE };
       this.devices = new Map();
       this.energy = new Array(SIZE * SIZE).fill(0);
+      // Display metadata only; never consulted by production or transport rules.
+      this.movedEnergy = new Array(SIZE * SIZE).fill(0);
       this.nextId = 1;
       this.resetMetrics();
     }
@@ -719,6 +837,7 @@ body.map-focused{overflow:hidden}
 
     getDevice(x, y) { return inside(x, y) ? this.devices.get(index(x, y)) : undefined; }
     getEnergy(x, y) { return inside(x, y) ? this.energy[index(x, y)] : 0; }
+    getMovedEnergy(x, y) { return inside(x, y) ? Math.min(this.getEnergy(x, y), this.movedEnergy[index(x, y)]) : 0; }
     isCore(x, y) { return x === this.core.x && y === this.core.y; }
     moveCore(x, y) {
       if (!inside(x, y) || this.isCore(x, y) || this.getDevice(x, y) || this.getEnergy(x, y)) return false;
@@ -763,6 +882,7 @@ body.map-focused{overflow:hidden}
       if (!amount) return false;
       this.removed += amount;
       this.energy[index(x, y)] = 0;
+      this.movedEnergy[index(x, y)] = 0;
       return 'energy';
     }
 
@@ -840,12 +960,14 @@ body.map-focused{overflow:hidden}
       const stack = this.getEnergy(from.x, from.y);
       if (!stack) return 0;
       this.energy[index(from.x, from.y)] = 0;
+      this.movedEnergy[index(from.x, from.y)] = 0;
       if (this.isCore(to.x, to.y)) {
         this.delivered += stack;
         this.deliveryEvents.push({ at: this.time, count: stack });
         this.log(`核心接收 +${stack} EU`, 'delivery');
       } else {
         this.energy[index(to.x, to.y)] += stack;
+        this.movedEnergy[index(to.x, to.y)] += stack;
       }
       this.addEffect(from, to, 'energy', stack);
       return stack;
@@ -856,6 +978,7 @@ body.map-focused{overflow:hidden}
       if (!targets.length || chance <= 0 || this.random() >= chance) return;
       const destination = targets[Math.min(targets.length - 1, Math.floor(this.random() * targets.length))];
       this.energy[index(destination.x, destination.y)]++;
+      this.movedEnergy[index(destination.x, destination.y)] = 0;
       this.produced++;
       this.productionEvents.push({ at: this.time, count: 1 });
       this.addEffect(device, destination, 'spawn');
@@ -957,6 +1080,7 @@ body.map-focused{overflow:hidden}
 
     resetRun() {
       this.energy.fill(0);
+      this.movedEnergy.fill(0);
       this.resetMetrics();
       for (const device of this.devices.values()) {
         device.elapsed = 0;
@@ -973,6 +1097,7 @@ body.map-focused{overflow:hidden}
         // Persist creation order so restoring a save preserves event ordering.
         devices: [...this.devices.values()].sort((a, b) => a.id - b.id).map(({ type, x, y, dir, elapsed, pulling, collectCursor }) => ({ type, x, y, dir, elapsed, pulling, ...(type === 'collector' ? { collectCursor } : {}) })),
         energy: [...this.energy],
+        movedEnergy: this.movedEnergy.map((n, i) => Math.min(n, this.energy[i])),
         stats: {
           time: this.time, produced: this.produced, delivered: this.delivered, removed: this.removed,
           productionMin: this.productionMin, productionMax: this.productionMax, productionSamples: this.productionSamples,
@@ -1005,6 +1130,10 @@ body.map-focused{overflow:hidden}
         if (data.energy[index(device.x, device.y)] !== 0) throw new Error('能量和装置不能占用同一格。');
       }
       simulation.energy = [...data.energy];
+      if (data.movedEnergy !== undefined) {
+        if (!Array.isArray(data.movedEnergy) || data.movedEnergy.length !== SIZE * SIZE || data.movedEnergy.some((n, i) => !Number.isSafeInteger(n) || n < 0 || n > data.energy[i])) throw new Error('能量移动标记无效。');
+        simulation.movedEnergy = [...data.movedEnergy];
+      }
       for (const key of ['time', 'produced', 'delivered', 'removed']) {
         const value = data.stats?.[key];
         if (!Number.isFinite(value) || value < 0 || value > 1e14 || (key !== 'time' && !Number.isSafeInteger(value))) throw new Error('统计数据无效。');
@@ -1103,47 +1232,67 @@ body.map-focused{overflow:hidden}
       <aside class="device-panel panel">
         <div class="panel-heading"><h2>装置库</h2><span id="library-count" class="count-badge">11</span></div>
         <p class="panel-subtitle">选择装置后点击空格放置；单推和传输每次搬动一格中的整团能量</p>
+        <div class="device-search"><span data-icon="search"></span><input id="device-search" type="search" maxlength="60" autocomplete="off" placeholder="搜索名称、英文或用途" aria-label="搜索装置"><button type="button" data-clear-device-search hidden aria-label="清空装置搜索"><span data-icon="close"></span></button></div>
         <div class="library-tabs" role="group" aria-label="装置分类"><button class="active" data-category="全部" aria-pressed="true">全部</button><button data-category="生产" aria-pressed="false">生产</button><button data-category="运输" aria-pressed="false">运输</button><button data-category="机械" aria-pressed="false">机械</button><button data-category="辅助" aria-pressed="false">辅助</button></div>
         <div id="device-list" class="device-list"></div>
         <div class="library-footer"><span>已放置装置</span><span id="device-count">14 / 399</span></div>
       </aside>
 
       <section class="map-panel panel" aria-label="模拟工作台">
-        <div class="workbench-bar"><div class="workbench-metrics"><span>入核均速 <strong id="workbench-average">0.00</strong><small>EU/s</small></span><span>当前入核 <strong id="workbench-rate">0</strong><small>EU/s</small></span></div><div class="workbench-actions"><button id="map-run-button" class="map-run-button" aria-pressed="false"><span data-icon="play"></span><span id="map-run-label">运行</span></button><button id="map-focus-button" class="icon-button" title="专注地图" aria-label="进入地图专注模式" aria-pressed="false"><span id="map-focus-icon" data-icon="expand"></span></button></div></div>
-        <div class="map-toolbar"><div class="mode-group" role="group" aria-label="操作模式"><button data-mode="place" class="active" title="放置装置 (1)"><span data-icon="plus"></span><span>放置</span></button><button data-mode="edit" title="旋转和拖动装置 (2)"><span data-icon="cursor"></span><span>修改</span></button><button data-mode="delete" title="删除装置或能量 (3)"><span data-icon="trash"></span><span>删除</span></button></div><div class="map-tools"><button id="undo-button" class="icon-button" title="撤销编辑 (Ctrl+Z)" aria-label="撤销编辑" disabled><span data-icon="undo"></span></button><span class="toolbar-separator"></span><span class="grid-size">20 × 20</span><button id="grid-button" class="icon-button active" title="显示或隐藏网格" aria-label="显示网格" aria-pressed="true"><span data-icon="grid"></span></button><label class="icon-button icon-toggle" title="显示辅助范围"><input id="range-toggle" class="sr-only" type="checkbox" checked aria-label="显示辅助范围"><span data-icon="range"></span></label></div></div>
+        <div class="workbench-bar">
+          <div class="workbench-metrics"><span>入核均速 <strong id="workbench-average">0.00</strong><small>EU/s</small></span><span>当前入核 <strong id="workbench-rate">0</strong><small>EU/s</small></span></div>
+          <div class="workbench-actions"><button id="map-run-button" class="map-run-button" aria-pressed="false"><span data-icon="play"></span><span id="map-run-label">运行</span></button><details id="view-options" class="view-options"><summary class="icon-button" title="显示设置" aria-label="显示设置"><span data-icon="sliders"></span></summary>
+            <div class="view-options-panel"><strong>显示设置</strong>
+              <label class="view-option"><span>能量数量<small>直接标注每格 EU 数量</small></span><input id="energy-label-toggle" type="checkbox" checked></label>
+              <label class="view-option"><span>传输轨迹<small>显示能量搬运与生成轨迹</small></span><input id="trail-toggle" type="checkbox" checked></label>
+              <label class="view-option"><span>轻量显示<small>减少动画与水纹，降低绘制负担</small></span><input id="calm-toggle" type="checkbox"></label>
+              <label class="view-option"><span>网格<small>显示地图格线</small></span><input id="display-grid-toggle" type="checkbox" checked></label>
+              <label class="view-option"><span>辅助范围<small>显示加速与压能覆盖</small></span><input id="display-range-toggle" type="checkbox" checked></label>
+              <label class="highlight-option" for="highlight-device-select">突出装置类型<select id="highlight-device-select"><option value="">全部同等显示</option></select></label>
+              <button id="diagnostics-button" class="export-map-button tool-menu-button"><span data-icon="search"></span>布局检查与受阻定位</button>
+              <button id="analysis-button" class="export-map-button tool-menu-button"><span data-icon="clock"></span><span id="analysis-menu-label">区间测速与 CSV</span></button>
+              <button id="export-map-button" class="export-map-button"><span data-icon="download"></span>导出当前视图 PNG</button>
+              <p>显示选择会自动记住。图片包含当前视图、入核统计与能量图例。</p>
+            </div></details><button id="map-focus-button" class="icon-button" title="专注地图" aria-label="进入地图专注模式" aria-pressed="false"><span id="map-focus-icon" data-icon="expand"></span></button>
+          </div>
+        </div>
+        <div class="map-toolbar"><div class="mode-group" role="group" aria-label="操作模式"><button data-mode="place" class="active" title="放置装置 (1)"><span data-icon="plus"></span><span>放置</span></button><button data-mode="edit" title="旋转和拖动装置 (2)"><span data-icon="cursor"></span><span>修改</span></button><button data-mode="delete" title="删除装置或能量 (3)"><span data-icon="trash"></span><span>删除</span></button></div><div class="map-tools"><button id="undo-button" class="icon-button" title="撤销编辑 (Ctrl+Z)" aria-label="撤销编辑" disabled><span data-icon="undo"></span></button><button id="redo-button" class="icon-button" title="重做编辑 (Ctrl+Shift+Z / Ctrl+Y)" aria-label="重做编辑" disabled><span data-icon="redo"></span></button><span class="toolbar-separator"></span><span class="grid-size">20 × 20</span><button id="grid-button" class="icon-button active" title="显示或隐藏网格 (G)" aria-label="显示网格" aria-pressed="true"><span data-icon="grid"></span></button><label class="icon-button icon-toggle" title="显示辅助范围"><input id="range-toggle" class="sr-only" type="checkbox" checked aria-label="显示辅助范围"><span data-icon="range"></span></label></div></div>
         <div class="map-status"><span id="status-badge" class="status-badge"><span class="tiny-dot"></span><span id="status-label">编辑模式</span></span><span id="map-name">实验场 01 <span>/</span> 四向汇流</span><span id="core-position" class="core-position">核心 X10 Y10</span><button id="demo-button" class="map-text-button">载入示例</button></div>
         <div class="map-navigation" aria-label="地图视图控制">
           <button id="map-library-button" class="map-library-button" aria-expanded="false" aria-controls="map-device-picker" title="打开地图装置选择器"><span data-icon="blocks"></span><span>选装置</span></button>
           <button id="quick-rotate-button" class="quick-rotate" title="旋转当前装置或待放置方向"><span id="quick-device-icon"></span><span><strong id="quick-device-name">集能装置</strong><small id="quick-direction-label">朝上</small></span><span data-icon="rotate"></span></button>
-          <div class="viewport-tools"><div class="zoom-controls" role="group" aria-label="地图缩放"><button id="zoom-out-button" class="icon-button" aria-label="缩小地图" title="缩小地图"><span data-icon="minus"></span></button><button id="fit-map-button" class="zoom-value" title="恢复全图视图" aria-label="恢复全图视图"><span id="zoom-value" aria-live="polite">100%</span><small>全图</small></button><button id="zoom-in-button" class="icon-button" aria-label="放大地图" title="放大地图"><span data-icon="plus"></span></button></div><div class="navigation-actions"><button id="center-core-button" class="icon-button" title="定位潮汐核心" aria-label="定位潮汐核心"><span data-icon="target"></span></button><button id="pan-map-button" class="pan-button" aria-pressed="false" title="开启后可单指或鼠标拖动地图"><span data-icon="hand"></span><span>移动视图</span></button></div></div>
-          <div id="map-device-picker" class="map-device-picker" hidden><div class="picker-heading"><strong>选择装置</strong><button id="close-map-picker" class="icon-button" aria-label="关闭装置选择器"><span data-icon="close"></span></button></div><div id="map-device-list" class="map-device-list"></div></div>
+          <div class="viewport-tools"><div class="zoom-controls" role="group" aria-label="地图缩放"><button id="zoom-out-button" class="icon-button" aria-label="缩小地图" title="缩小地图"><span data-icon="minus"></span></button><button id="fit-map-button" class="zoom-value" title="恢复全图视图" aria-label="恢复全图视图"><span id="zoom-value" aria-live="polite">100%</span><small>全图</small></button><button id="zoom-in-button" class="icon-button" aria-label="放大地图" title="放大地图"><span data-icon="plus"></span></button></div><div class="navigation-actions"><button id="center-core-button" class="icon-button" title="定位潮汐核心" aria-label="定位潮汐核心"><span data-icon="target"></span></button><button id="locate-button" class="icon-button" title="坐标与能量定位（L）" aria-label="坐标与能量定位"><span data-icon="search"></span></button><button id="pan-map-button" class="pan-button" aria-pressed="false" title="开启后可单指或鼠标拖动地图"><span data-icon="hand"></span><span>移动视图</span></button></div></div>
+          <div id="map-device-picker" class="map-device-picker" hidden><div class="picker-heading"><strong>选择装置</strong><button id="close-map-picker" class="icon-button" aria-label="关闭装置选择器"><span data-icon="close"></span></button></div><div class="device-search"><span data-icon="search"></span><input id="map-device-search" type="search" maxlength="60" autocomplete="off" placeholder="搜索装置" aria-label="在地图选择器搜索装置"><button type="button" data-clear-device-search hidden aria-label="清空地图装置搜索"><span data-icon="close"></span></button></div><div id="map-device-list" class="map-device-list"></div></div>
         </div>
-        <div class="map-stage" id="map-stage"><div class="caustics" aria-hidden="true"></div><canvas id="map-canvas" tabindex="0" aria-describedby="viewport-hint" aria-label="20乘20能量地图。方向键移动光标，回车放置或操作，R旋转，空格运行。使用缩放按钮放大，开启移动视图后拖动地图。"></canvas><div id="map-tooltip" class="map-tooltip" hidden></div></div>
+        <div class="map-stage" id="map-stage"><div class="caustics" aria-hidden="true"></div><canvas id="map-canvas" tabindex="0" aria-describedby="viewport-hint" aria-label="20乘20能量地图。方向键移动光标，回车放置或操作，运行时点击只读观察。R旋转，C沿用装置，L定位，空格运行。使用缩放按钮放大，开启移动视图后拖动地图。"></canvas><div id="map-tooltip" class="map-tooltip" hidden></div><div id="map-observation" class="map-observation" hidden><div><strong id="observation-name"></strong><span id="observation-detail"></span></div><button id="close-observation" class="icon-button" aria-label="取消格子观察"><span data-icon="close"></span></button></div><div id="highlight-badge" class="highlight-badge" hidden><span id="highlight-summary"></span><button id="clear-highlight-button" class="icon-button" aria-label="取消装置类型突出显示"><span data-icon="close"></span></button></div></div>
         <div id="viewport-hint" class="viewport-hint">放大后可拖动空白处移图；双指缩放与移动。点击百分比恢复全图。</div>
-        <div class="map-bottom"><div class="map-legend"><span><i class="legend-core"></i>潮汐核心</span><span><i class="legend-energy"></i>能量</span><span><i class="legend-range"></i>加速范围</span><span><i class="legend-compression"></i>可堆叠范围</span><span><i class="legend-blocked"></i>传输受阻</span></div><span id="coordinates">X —   Y —</span></div>
+        <div class="map-bottom"><div class="map-legend"><span><i class="legend-core"></i>潮汐核心</span><span title="生成后尚未发生搬运"><i class="legend-energy"></i>未移动 <b id="fresh-energy-count">0</b></span><span title="至少被成功搬运过一次；外圈标记也可辅助辨认"><i class="legend-energy-moved"></i>已移动 <b id="moved-energy-count">0</b></span><span><i class="legend-range"></i>加速范围</span><span><i class="legend-compression"></i>可堆叠范围</span><span><i class="legend-blocked"></i>传输受阻</span></div><span id="coordinates">X —   Y —</span></div>
         <div class="map-hint"><span data-icon="info"></span><span id="interaction-hint">点击没有装置和能量的空格放置，按 R 切换方向</span><span class="shortcut-hint"><kbd>1</kbd><kbd>2</kbd><kbd>3</kbd>切换模式</span></div>
       </section>
 
       <aside class="inspector-panel">
         <section class="selection-panel panel">
-          <div class="panel-heading"><h2>装置详情</h2><span id="selection-tag" class="small-tag">待放置</span></div>
+          <div class="panel-heading"><h2 id="inspector-title">装置详情</h2><span id="selection-tag" class="small-tag">待放置</span></div>
           <div class="selection-identity"><span id="selected-icon" class="selected-icon"></span><div><h3 id="selected-name">集能装置</h3><span id="selected-en">Harvester</span></div></div>
           <p id="selected-description" class="selection-description"></p>
-          <div class="property-row"><span>执行间隔</span><strong id="selected-interval">1 <span>s</span></strong></div>
-          <div class="property-row"><span>装置类型</span><strong id="selected-category">能量生产</strong></div>
-          <div class="direction-section">
+          <div class="property-row"><span id="interval-label">执行间隔</span><strong id="selected-interval">1 <span>s</span></strong></div>
+          <div class="property-row"><span id="category-label">装置类型</span><strong id="selected-category">能量生产</strong></div>
+          <div id="direction-section" class="direction-section">
             <div class="direction-heading"><span>摆放方向</span><strong id="direction-label">朝上</strong><span class="hint"><kbd>R</kbd>或右键旋转</span></div>
             <div class="compass" role="group" aria-label="摆放方向"><button data-direction="0" class="active" title="朝上" aria-label="朝上"><span data-icon="chevron"></span></button><button data-direction="1" title="朝右" aria-label="朝右"><span data-icon="chevron"></span></button><button data-direction="2" title="朝下" aria-label="朝下"><span data-icon="chevron"></span></button><button data-direction="3" title="朝左" aria-label="朝左"><span data-icon="chevron"></span></button><span id="compass-glyph" class="compass-center" aria-hidden="true"></span></div>
           </div>
+          <div class="selection-actions"><button id="sample-device-button" disabled title="沿用此装置的类型与朝向（C）"><span data-icon="copy"></span>沿用此装置</button><button id="locate-selected-button" disabled><span data-icon="target"></span>定位选中</button></div>
           <div id="selected-position" class="selected-position"><span data-icon="cursor"></span>点击地图中的空格即可放置</div>
         </section>
 
         <section class="flow-panel panel">
-          <div class="panel-heading"><h2>平均每秒产能</h2><span class="chart-period">最近 40 秒</span></div>
+          <div class="panel-heading"><h2 id="flow-title">平均每秒产能</h2><button id="chart-analysis-button" class="chart-tools-button" title="区间测速与逐秒数据导出" aria-label="区间测速与统计导出"><span data-icon="clock"></span><span id="chart-tools-label">测速 / CSV</span></button></div>
+          <div class="chart-metric" role="group" aria-label="选择折线统计指标"><button data-chart-metric="produced" aria-pressed="true">能量生产</button><button data-chart-metric="delivered" aria-pressed="false">实际入核</button></div>
           <div class="flow-value"><span id="flow-value">0</span><small>EU/s</small><span class="live-tag"><i></i>全程平均</span></div>
           <svg id="flow-chart" viewBox="0 0 210 72" role="img" aria-label="最近40秒每秒生产能量折线图，虚线标注全程平均"><defs><linearGradient id="production-fill" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#4FE3DD" stop-opacity="0.24"/><stop offset="1" stop-color="#4FE3DD" stop-opacity="0"/></linearGradient></defs><path class="chart-grid" d="M0 10H210 M0 36H210 M0 62H210"/><path id="production-area" fill="url(#production-fill)"/><path id="production-line" d="M0 62H210" fill="none" stroke="#4FE3DD" stroke-width="1.8"/><path id="production-average-line" d="M0 62H210" fill="none" stroke="#77dcbc" stroke-width="1.3" stroke-dasharray="4 3"/><text id="production-average-label" x="4" y="12" text-anchor="start" fill="#77dcbc" stroke="#0A2130" stroke-width="3" paint-order="stroke" font-size="8">平均 0.00 EU/s</text></svg>
+          <div id="chart-detail" class="chart-detail" aria-live="polite">悬停或轻触折线，查看该秒生产与入核</div>
           <div class="chart-axis"><span>−40s</span><span>现在</span></div>
-          <div class="efficiency"><span>逐秒产能区间</span><strong id="production-range">—</strong></div>
+          <div class="efficiency"><span id="chart-range-label">全程逐秒产能区间</span><strong id="production-range">—</strong></div>
           <div class="efficiency"><span>累计送达率</span><strong id="efficiency-value">0%</strong></div>
           <div class="efficiency-track"><div id="efficiency-bar"></div></div>
         </section>
@@ -1159,6 +1308,26 @@ body.map-focused{overflow:hidden}
   </main>
 
   <dialog id="map-focus-dialog" class="map-focus-dialog" aria-label="地图专注模式"></dialog>
+  <dialog id="diagnostics-dialog" class="tool-dialog" aria-labelledby="diagnostics-title">
+    <div class="dialog-top"><div><h2 id="diagnostics-title">布局检查</h2><p>查看当前受阻，点选结果定位</p></div><button class="icon-button" data-close-tool aria-label="关闭布局检查"><span data-icon="close"></span></button></div>
+    <div class="diagnostics-actions"><strong id="diagnostics-summary"></strong><button id="refresh-diagnostics-button"><span data-icon="reset"></span>刷新检查</button></div>
+    <p id="diagnostics-time" class="tool-note"></p><div id="diagnostics-list" class="diagnostics-list" aria-label="当前受阻装置"></div>
+  </dialog>
+  <dialog id="analysis-dialog" class="tool-dialog analysis-dialog" aria-labelledby="analysis-title">
+    <div class="dialog-top"><div><h2 id="analysis-title">区间测速与导出</h2><p>独立测量当前区间，保留全程统计</p></div><button class="icon-button" data-close-tool aria-label="关闭测速与导出"><span data-icon="close"></span></button></div>
+    <div class="measurement-heading"><h3>区间测量</h3><span id="measurement-status" class="small-tag">未开始</span></div>
+    <div class="measurement-metrics"><div><span>测量时长 · 模拟秒</span><strong id="measurement-elapsed">0.00</strong></div><div><span>区间平均入核 · EU/s</span><strong id="measurement-delivery">0.00</strong></div><div><span>区间平均生产 · EU/s</span><strong id="measurement-production">0.00</strong></div></div>
+    <p id="measurement-notice" class="tool-note">开始后按模拟秒测量，独立于全程平均。</p>
+    <div class="measurement-actions"><button id="start-measurement-button" class="button primary">开始测量</button><button id="stop-measurement-button" class="button secondary" disabled>结束并冻结结果</button></div>
+    <p class="tool-note">暂停运行时测量也暂停。手动编辑、撤销、重置或导入会清除测量；刷新页面后需重新开始。</p>
+    <section class="csv-section"><h3>最近 40 秒逐秒数据</h3><p id="csv-period" class="tool-note">暂无完整秒记录。</p><button id="export-stats-button" class="export-map-button" disabled><span data-icon="download"></span>导出逐秒生产与入核 CSV</button></section>
+  </dialog>
+  <dialog id="locate-dialog" class="locate-dialog" aria-labelledby="locate-title">
+    <div class="dialog-top"><div><h2 id="locate-title">快速定位</h2><p>查看坐标与能量分布</p></div><button id="close-locate-button" class="icon-button" aria-label="关闭快速定位"><span data-icon="close"></span></button></div>
+    <form id="locate-form" class="locate-form"><label>X 列<input id="locate-x" type="number" min="1" max="20" step="1" required inputmode="numeric" autofocus></label><label>Y 行<input id="locate-y" type="number" min="1" max="20" step="1" required inputmode="numeric"></label><button type="submit" class="button primary">定位坐标</button></form>
+    <div class="locate-shortcuts"><button id="locate-largest-button"><span data-icon="energy"></span>最大能量堆</button><button id="refresh-locate-button"><span data-icon="reset"></span>刷新列表</button></div>
+    <p id="locate-snapshot-time" class="locate-snapshot"></p><div id="locate-energy-list" class="locate-energy-list" aria-label="能量最多的六个格子"></div>
+  </dialog>
   <input type="file" id="import-file" accept="application/json,.json" hidden>
   <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
   <dialog id="help-dialog" class="help-dialog"><div class="dialog-top"><div><h2>让你的能量网络运转起来</h2><p>Field manual</p></div><button id="close-help" class="icon-button" aria-label="关闭指南"><span data-icon="close"></span></button></div><div class="help-intro"><span data-icon="core"></span><p>将能量送入可移动的潮汐核心（默认在第 10 列、第 10 行）。不同蓝图可以使用不同核心位置。</p></div><div class="help-steps"><article><b>01</b><h3>搭建你的网络</h3><p>在左侧选择装置，点击空格放置。使用 R 或方向按钮调整朝向；方向箭头指向装置的前方。</p></article><article><b>02</b><h3>调整布局</h3><p>切换「修改」，点击装置顺时针旋转，拖动装置到空格移动；也可拖动潮汐核心更改位置。</p></article><article><b>03</b><h3>启动并观察</h3><p>空格键开始 / 暂停。运行时禁止手动编辑。保存多份蓝图后，可随时载入和比较不同布局。</p></article></div><h3 class="help-subhead">装置规则</h3><div id="help-device-list" class="help-device-list"></div><div class="rules-notes"><h3>这个实验场的约定</h3><ul><li>单推和传输按格搬运：一次搬动一个源格中的整团能量。若该格有 N EU，单次就转移全部 N EU，不会拆成 1 EU；能量数量显示为该格中的总 EU。</li><li>每格只能有一个装置或能量，不能同格。装置占据的格子不能刷新或接收能量；移动装置和放置装置也必须选择没有能量的空格。</li><li>压能装置使周围八个未被装置占据的格子允许搬运来的能量无限堆叠，不包括压能自身格；单推、轨道、集合和侧传都可以在覆盖格合并整团能量，随机生产仍只落在空格。</li><li>集能装置基础概率为 25%，环能基础概率为 100%；每秒成功率 = 基础概率 × 可用落点数 ÷ 总可产能格数。可用落点指未被装置占据且没有能量的位置；已有能量的格子即使在压能覆盖范围内也不可产能。</li><li>随机生产成功后，从当前可用落点中随机选择一个；没有可用落点时不会生产。核心和装置占据的格子都不算可产能落点。</li><li>单推只推动前方一个装置或能量，不连续推动整排装置；能量可以推入核心，也能在压能覆盖格推入已有能量并堆叠。装置不能推入被占用、越界或核心格。轨道等运输也可在压能覆盖的目标格合并能量；没有压能覆盖的已有能量格会阻挡搬运。推拉每次交替执行推 / 拉，只移动装置。</li><li>随机侧传以装置自身的左右为目标；目标有装置或已有能量且无压能覆盖时不接收能量。传输越界或受阻时，源格能量保留。</li><li>所有间隔以模拟秒计算；同一时刻的事件按装置创建顺序执行。加速范围随引擎移动实时变化，不叠加。</li><li>实时每秒产量统计最近 1 模拟秒，全程平均 = 累计生产量 ÷ 模拟时长；产能区间记录每个完整模拟秒的最低到最高产量。点击「重置模拟」可清空能量和统计并保留当前装置布局。</li><li>压能装置不吸取、不移动能量；移走后堆叠失去覆盖的格子不能继续叠加。已有能量作为整体仍可进入空的普通格。</li><li>在地图上放置或选中装置时，虚线格表示它的输入来源，实线格和箭头表示它的输出去向。</li></ul></div><div class="help-keyboard"><span><kbd>Space</kbd>运行 / 暂停</span><span><kbd>R</kbd>旋转</span><span><kbd>1</kbd><kbd>2</kbd><kbd>3</kbd>模式</span><span><kbd>Ctrl Z</kbd>撤销</span><span><kbd>方向键</kbd><kbd>Enter</kbd>网格操作</span><span><kbd>Esc</kbd>取消选中</span></div></dialog>
@@ -1175,6 +1344,16 @@ body.map-focused{overflow:hidden}
   const STORAGE_KEY = 'tidal-lab-v1';
   const BLUEPRINTS_KEY = 'tidal-lab-blueprints-v1';
   const THEME_KEY = 'tidal-lab-theme';
+  const DISPLAY_KEY = 'tidal-lab-display-v1';
+  const CHART_KEY = 'tidal-lab-chart-v1';
+  let chartMetric = 'produced';
+  try { if (localStorage.getItem(CHART_KEY) === 'delivered') chartMetric = 'delivered'; } catch { /* Optional preference. */ }
+  const displaySettings = { labels: true, trails: true, calm: false, grid: true, ranges: true, highlight: '' };
+  try {
+    const stored = JSON.parse(localStorage.getItem(DISPLAY_KEY) || '{}');
+    for (const key of Object.keys(displaySettings)) if (typeof displaySettings[key] === 'boolean' && typeof stored?.[key] === 'boolean') displaySettings[key] = stored[key];
+    if (typeof stored?.highlight === 'string' && Object.hasOwn(TYPES, stored.highlight)) displaySettings.highlight = stored.highlight;
+  } catch { /* Display preferences are optional. */ }
   function restoreLocalSimulation(serialized) {
     const data = JSON.parse(serialized);
     try { return { simulation: Simulation.from(data), repairedEnergy: 0 }; }
@@ -1186,6 +1365,7 @@ body.map-focused{overflow:hidden}
         const cell = device.y * SIZE + device.x;
         repairedEnergy += repaired.energy[cell] || 0;
         repaired.energy[cell] = 0;
+        if (Array.isArray(repaired.movedEnergy)) repaired.movedEnergy[cell] = 0;
       }
       repaired.stats.removed = (repaired.stats.removed || 0) + repairedEnergy;
       return { simulation: Simulation.from(repaired), repairedEnergy };
@@ -1210,9 +1390,12 @@ body.map-focused{overflow:hidden}
     expand: 'M3 9V3h6 M15 3h6v6 M21 15v6h-6 M9 21H3v-6',
     collapse: 'M9 3v6H3 M21 9h-6V3 M15 21v-6h6 M3 15h6v6',
     target: 'M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18 M12 1v5 M12 18v5 M1 12h5 M18 12h5 M12 9a3 3 0 1 0 0 6 3 3 0 0 0 0-6',
+    search: 'M10.5 3a7.5 7.5 0 1 0 0 15 7.5 7.5 0 0 0 0-15 M16 16l6 6',
+    copy: 'M9 9h12v12H9Z M15 9V3H3v12h6',
     hand: 'M8 12V6a2 2 0 0 1 4 0v6 M12 10V4a2 2 0 0 1 4 0v8 M16 10V7a2 2 0 0 1 4 0v8c0 4-3 7-7 7h-1c-3 0-4-1-6-4l-3-5a2 2 0 0 1 3-2l2 3',
     trash: 'M4 6h16 M9 6V3h6v3 M6 6l1 15h10l1-15 M10 10v7 M14 10v7',
     undo: 'M9 4 3 10l6 6 M3 10h11a7 7 0 0 1 7 7v3',
+    redo: 'M15 4 21 10l-6 6 M21 10H10a7 7 0 0 0-7 7v3',
     grid: 'M3 3h18v18H3Z M3 9h18 M3 15h18 M9 3v18 M15 3v18',
     blocks: 'M3 3h7v7H3Z M14 3h7v7h-7Z M3 14h7v7H3Z M14 14h7v7h-7Z',
     info: 'M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20 M12 11v6 M12 7v.1',
@@ -1264,8 +1447,11 @@ body.map-focused{overflow:hidden}
   let pointer = null;
   let speed = 1;
   let category = '全部';
-  let showGrid = true;
-  let showRanges = true;
+  let deviceSearch = '';
+  let measurement = null;
+  let measurementNotice = '开始后按模拟秒测量，独立于全程平均。';
+  let showGrid = displaySettings.grid;
+  let showRanges = displaySettings.ranges;
   let geometry = { width: 0, height: 0, x: 0, y: 0, cell: 1 };
   const mapView = { zoom: 1, panX: 0, panY: 0, pan: false };
   const mapTouches = new Map();
@@ -1278,6 +1464,8 @@ body.map-focused{overflow:hidden}
   let accumulator = 0;
   let lastTime = 0;
   let lastUI = 0;
+  let lastPaint = 0;
+  let chartRatio = null;
   let frameCount = 0;
   let fpsWindow = 0;
   let fps = 0;
@@ -1285,8 +1473,16 @@ body.map-focused{overflow:hidden}
   let toastTimer;
   let pendingConfirmation = null;
   const undoStack = [];
-  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const formatNumber = number => new Intl.NumberFormat('zh-CN').format(Math.round(number));
+  const redoStack = [];
+  const motionPreference = window.matchMedia('(prefers-reduced-motion: reduce)');
+  let reducedMotion = motionPreference.matches;
+  const motionEnabled = () => !reducedMotion && !displaySettings.calm;
+  const numberFormatter = new Intl.NumberFormat('zh-CN');
+  const formatNumber = number => numberFormatter.format(Math.round(number));
+  const compactNumber = number => {
+    const unit = Math.min(4, Math.floor(Math.log10(Math.max(1, number)) / 3));
+    return unit ? `${(number / 1000 ** unit).toFixed(number / 1000 ** unit >= 100 ? 0 : 1).replace(/\.0$/, '')}${['', 'k', 'M', 'G', 'T'][unit]}` : String(number);
+  };
   const formatTime = seconds => {
     const total = Math.floor(seconds + 1e-8);
     const hours = Math.floor(total / 3600);
@@ -1310,7 +1506,8 @@ body.map-focused{overflow:hidden}
       ripple: [79, 227, 221],
       energy: ['#FFF8E0', '#FFE3A0', '#FFC766', 'rgba(255,190,90,0.42)', 'rgba(255,170,60,0.12)'], energyRing: null,
       energyText: '#FFE2A6', energyTextStroke: 'rgba(4,22,32,0.92)',
-      trailEnergy: [255, 208, 128], trailSpawn: [255, 222, 140], trailMove: [190, 170, 255], trailDelete: [255, 138, 120], trailRotate: [240, 176, 112],
+      movedEnergy: ['#F5FBFF', '#B8DEFF', '#66B2FF', 'rgba(70,150,255,0.45)', 'rgba(70,150,255,0.12)'], movedRing: '#7FC4FF', movedText: '#BDDEFF',
+      trailEnergy: [100, 180, 255], trailSpawn: [255, 222, 140], trailMove: [190, 170, 255], trailDelete: [255, 138, 120], trailRotate: [240, 176, 112],
       reticle: 'rgba(230,246,248,0.92)', hoverFill: 'rgba(230,246,248,0.05)', crosshair: 'rgba(120,214,226,0.035)',
       danger: '#FF8A78', selected: '#4FE3DD', inCell: [160, 200, 214], outCell: [79, 227, 221],
       blend: 'lighter', glyphGlow: 0.2,
@@ -1326,7 +1523,8 @@ body.map-focused{overflow:hidden}
       ripple: [6, 128, 136],
       energy: ['#FFF6D6', '#FFD772', '#EC9E14', 'rgba(232,150,20,0.30)', 'rgba(232,150,20,0.07)'], energyRing: 'rgba(150,92,4,0.75)',
       energyText: '#6E4604', energyTextStroke: 'rgba(240,250,250,0.95)',
-      trailEnergy: [214, 136, 10], trailSpawn: [206, 140, 16], trailMove: [110, 90, 210], trailDelete: [200, 70, 58], trailRotate: [196, 112, 40],
+      movedEnergy: ['#EFF7FF', '#9DCBFF', '#3D82DF', 'rgba(44,110,210,0.35)', 'rgba(44,110,210,0.08)'], movedRing: '#285F9F', movedText: '#174F87',
+      trailEnergy: [42, 110, 205], trailSpawn: [206, 140, 16], trailMove: [110, 90, 210], trailDelete: [200, 70, 58], trailRotate: [196, 112, 40],
       reticle: 'rgba(14,44,56,0.85)', hoverFill: 'rgba(14,44,56,0.04)', crosshair: 'rgba(10,96,110,0.035)',
       danger: '#C2453A', selected: '#087A7E', inCell: [60, 100, 116], outCell: [8, 122, 126],
       blend: 'source-over', glyphGlow: 0,
@@ -1363,10 +1561,10 @@ body.map-focused{overflow:hidden}
   }
 
   function buildSprites() {
-    sprites.energy = makeSprite(128, (g, s) => {
+    const energySprite = (colors, ring) => makeSprite(128, (g, s) => {
       const h = s / 2;
       const gradient = g.createRadialGradient(h, h, 0, h, h, h);
-      const [c0, c1, c2, c3, c4] = P.energy;
+      const [c0, c1, c2, c3, c4] = colors;
       gradient.addColorStop(0, c0);
       gradient.addColorStop(0.14, c1);
       gradient.addColorStop(0.27, c2);
@@ -1375,14 +1573,16 @@ body.map-focused{overflow:hidden}
       gradient.addColorStop(1, 'rgba(255,170,60,0)');
       g.fillStyle = gradient;
       g.fillRect(0, 0, s, s);
-      if (P.energyRing) {
+      if (ring) {
         g.beginPath();
         g.arc(h, h, s * 0.142, 0, Math.PI * 2);
-        g.strokeStyle = P.energyRing;
+        g.strokeStyle = ring;
         g.lineWidth = s * 0.018;
         g.stroke();
       }
     });
+    sprites.energy = energySprite(P.energy, P.energyRing);
+    sprites.movedEnergy = energySprite(P.movedEnergy, null);
     sprites.halo = makeSprite(192, (g, s) => {
       const h = s / 2;
       const gradient = g.createRadialGradient(h, h, 0, h, h, h);
@@ -1480,6 +1680,7 @@ body.map-focused{overflow:hidden}
     const data = simulation.serialize();
     data.devices = data.devices.map(device => ({ ...device, elapsed: 0, pulling: false }));
     data.energy.fill(0);
+    data.movedEnergy.fill(0);
     data.stats = { time: 0, produced: 0, delivered: 0, removed: 0, productionMin: null, productionMax: null, productionSamples: 0 };
     return data;
   }
@@ -1526,9 +1727,14 @@ body.map-focused{overflow:hidden}
   function checkpoint() {
     undoStack.push(simulation.serialize());
     if (undoStack.length > 40) undoStack.shift();
+    redoStack.length = 0;
   }
 
   function afterEdit() {
+    if (measurement) {
+      measurement = null;
+      measurementNotice = '布局或存档已更改，请重新测量。';
+    }
     save();
     renderInspector();
     updateStats();
@@ -1537,11 +1743,22 @@ body.map-focused{overflow:hidden}
 
   function undo() {
     if (running || !undoStack.length) return;
+    redoStack.push(simulation.serialize());
     simulation = Simulation.from(undoStack.pop());
     selectedCell = null;
     afterEdit();
     renderLibrary();
     toast('已撤销上一步编辑');
+  }
+
+  function redo() {
+    if (running || !redoStack.length) return;
+    undoStack.push(simulation.serialize());
+    simulation = Simulation.from(redoStack.pop());
+    selectedCell = null;
+    afterEdit();
+    renderLibrary();
+    toast('已重做上一步编辑');
   }
 
   function confirmAction(title, description, label, action) {
@@ -1553,18 +1770,42 @@ body.map-focused{overflow:hidden}
   }
 
   function renderLibrary() {
-    const entries = Object.entries(TYPES).filter(([, type]) => category === '全部' || type.category === category);
+    const terms = deviceSearch.toLocaleLowerCase().trim().split(/\s+/).filter(Boolean);
+    const matches = ([key, data]) => terms.every(term => `${key} ${data.name} ${data.en} ${data.short} ${data.description} ${data.category}`.toLocaleLowerCase().includes(term));
+    const allEntries = Object.entries(TYPES).filter(matches);
+    const entries = allEntries.filter(([, type]) => category === '全部' || type.category === category);
     $('library-count').textContent = entries.length;
-    $('device-list').innerHTML = entries.map(([type, data]) => `<button class="device-card ${selectedType === type ? 'active' : ''}" data-device="${type}" style="--device-color:${data.color}" aria-label="选择${data.name}" aria-pressed="${selectedType === type}" ${running ? 'disabled' : ''}><span class="device-card-icon">${icon(type)}</span><span class="device-card-text"><strong>${data.name}</strong><small>${data.short}</small></span><span class="device-interval">${data.interval === null ? '持续' : `${data.interval}s`}</span></button>`).join('');
-    $('map-device-list').innerHTML = Object.entries(TYPES).map(([type, data]) => `<button class="map-device-option" data-map-device="${type}" style="--device-color:${data.color}" aria-pressed="${selectedType === type}" ${running ? 'disabled' : ''}><span class="device-card-icon">${icon(type)}</span><span>${data.name}</span></button>`).join('');
+    const stock = type => `<span class="device-stock" data-device-count="${type}" title="地图上已放置的数量">×0</span>`;
+    $('device-list').innerHTML = entries.map(([type, data]) => `<button class="device-card ${selectedType === type ? 'active' : ''}" data-device="${type}" style="--device-color:${data.color}" aria-label="选择${data.name}" aria-pressed="${selectedType === type}" ${running ? 'disabled' : ''}><span class="device-card-icon">${icon(type)}</span><span class="device-card-text"><strong>${data.name}</strong><small>${data.short}</small></span><span class="device-meta"><span class="device-interval">${data.interval === null ? '持续' : `${data.interval}s`}</span>${stock(type)}</span></button>`).join('') || '<p class="library-empty">没有匹配装置，请修改关键词或分类。</p>';
+    $('map-device-list').innerHTML = allEntries.map(([type, data]) => `<button class="map-device-option" data-map-device="${type}" style="--device-color:${data.color}" aria-pressed="${selectedType === type}" ${running ? 'disabled' : ''}><span class="device-card-icon">${icon(type)}</span><span>${data.name}</span>${stock(type)}</button>`).join('') || '<p class="library-empty">没有匹配装置。</p>';
+    document.querySelectorAll('[data-clear-device-search]').forEach(button => { button.hidden = !deviceSearch; });
+    updateDeviceCounts();
+  }
+
+  function updateDeviceCounts() {
+    const counts = Object.fromEntries(Object.keys(TYPES).map(type => [type, 0]));
+    for (const device of simulation.devices.values()) counts[device.type]++;
+    document.querySelectorAll('[data-device-count]').forEach(element => {
+      const text = `×${counts[element.dataset.deviceCount]}`;
+      if (element.textContent !== text) element.textContent = text;
+    });
+    const highlighted = displaySettings.highlight;
+    $('highlight-badge').hidden = !highlighted;
+    if (highlighted) $('highlight-summary').textContent = `突出 ${TYPES[highlighted].name} · ${counts[highlighted]} 个`;
+  }
+
+  function setDeviceSearch(value) {
+    deviceSearch = value.slice(0, 60);
+    for (const id of ['device-search', 'map-device-search']) if ($(id).value !== deviceSearch) $(id).value = deviceSearch;
+    renderLibrary();
   }
 
   function inspectedDevice() {
     return selectedCell ? simulation.getDevice(selectedCell.x, selectedCell.y) : null;
   }
 
-  function transportStatus(device) {
-    if (!device || !['rail', 'pusher', 'collector', 'splitter'].includes(device.type)) return '';
+  function transportCells(device) {
+    if (!device || !['rail', 'pusher', 'collector', 'splitter'].includes(device.type)) return null;
     const inputPositions = device.type === 'collector'
       ? [3, 1, 2].map(relative => simulation.position(device, relative))
       : [device.type === 'rail' ? simulation.position(device, 2) : simulation.position(device)];
@@ -1573,6 +1814,13 @@ body.map-focused{overflow:hidden}
       : device.type === 'pusher'
         ? [simulation.position(device, 0, 2)]
         : [simulation.position(device, 3), simulation.position(device, 1)];
+    return { inputPositions, outputPositions };
+  }
+
+  function transportStatus(device) {
+    const cells = transportCells(device);
+    if (!cells) return '';
+    const { inputPositions, outputPositions } = cells;
     const inputEu = inputPositions.reduce((sum, position) => sum + simulation.getEnergy(position.x, position.y), 0);
     const occupiedInputs = inputPositions.filter(position => simulation.getEnergy(position.x, position.y) > 0).length;
     const destinations = outputPositions.map(position => {
@@ -1596,20 +1844,45 @@ body.map-focused{overflow:hidden}
     const type = device?.type || selectedType;
     const data = TYPES[type];
     const displayDirection = device?.dir ?? direction;
-    $('selected-icon').innerHTML = icon(type);
-    $('selected-icon').style.setProperty('--device-color', data.color);
-    $('selected-name').textContent = data.name;
-    $('selected-en').textContent = titleCase(data.en);
-    $('selected-description').textContent = data.description;
+    const observing = selectedCell && !device;
+    const amount = selectedCell ? simulation.getEnergy(selectedCell.x, selectedCell.y) : 0;
+    const moved = selectedCell ? simulation.getMovedEnergy(selectedCell.x, selectedCell.y) : 0;
+    const core = selectedCell && simulation.isCore(selectedCell.x, selectedCell.y);
+    const stackable = selectedCell && simulation.stackable(selectedCell.x, selectedCell.y);
+    const name = observing ? (core ? '潮汐核心' : amount ? '能量堆' : '空白格') : data.name;
+    $('inspector-title').textContent = selectedCell ? '格子详情' : '装置详情';
+    $('selected-icon').innerHTML = icon(observing ? (core ? 'core' : amount ? 'energy' : 'grid') : type);
+    $('selected-icon').style.setProperty('--device-color', observing ? (amount ? '#FFC766' : '#4FE3DD') : data.color);
+    $('selected-name').textContent = name;
+    $('selected-en').textContent = observing ? (core ? 'Tidal Core' : amount ? 'Energy Stack' : 'Empty Cell') : titleCase(data.en);
+    $('selected-description').textContent = observing
+      ? core ? '接收成功输送到此的能量。这里显示本次模拟的累计入核量与全程平均入核速度。'
+        : amount ? `未移动 ${formatNumber(amount - moved)} EU，已移动 ${formatNumber(moved)} EU。运输时按格搬运整堆能量。${stackable ? '此格有压能覆盖，可接收搬运来的能量堆叠。' : '此格无压能覆盖，已有能量会阻挡继续搬入。'}`
+          : `此格目前没有装置或能量。${stackable ? '有压能覆盖，可接收搬运来的能量堆叠。' : '无压能覆盖。'}选中观察会持续显示该坐标的当前状态。`
+      : data.description;
     const interval = device ? simulation.interval(device) : data.interval;
     const movementStatus = transportStatus(device);
-    $('selected-interval').innerHTML = data.interval === null ? '持续生效' : `${interval} <span>s${device && simulation.boosted(device) && data.interval > 1 ? '（已加速）' : ''}</span>`;
-    $('selected-category').textContent = { 生产: '能量生产', 运输: '能量运输', 机械: '机械控制', 辅助: '效率辅助' }[data.category];
-    $('selection-tag').textContent = device ? (running ? '运行中' : '已选中') : '待放置';
+    $('interval-label').textContent = observing ? (core ? '累计入核' : '能量总量') : '执行间隔';
+    $('category-label').textContent = observing ? (core ? '全程入核均速' : '压能覆盖') : '装置类型';
+    $('selected-interval').innerHTML = observing ? `${formatNumber(core ? simulation.delivered : amount)} <span>EU</span>`
+      : data.interval === null ? '持续生效' : `${interval} <span>s${device && simulation.boosted(device) && data.interval > 1 ? '（已加速）' : ''}</span>`;
+    $('selected-category').textContent = observing ? (core ? `${(simulation.time ? simulation.delivered / simulation.time : 0).toFixed(2)} EU/s` : stackable ? '可搬运堆叠' : '无覆盖')
+      : { 生产: '能量生产', 运输: '能量运输', 机械: '机械控制', 辅助: '效率辅助' }[data.category];
+    $('selection-tag').textContent = selectedCell ? (running ? '只读观察' : '已选中') : '待放置';
+    $('direction-section').hidden = Boolean(observing);
+    $('sample-device-button').disabled = running || !device;
+    $('locate-selected-button').disabled = !selectedCell;
     const productionSpace = device && data.baseChance !== undefined ? simulation.productionSpaceInfo(device) : null;
-    $('selected-position').innerHTML = icon(device ? 'grid' : 'cursor') + `<span>${device
-      ? `第 ${device.x + 1} 列，第 ${device.y + 1} 行${productionSpace ? `<br>当前生产成功率 ${(productionSpace.chance * 100).toFixed(1)}%，可用空位 ${productionSpace.available}/${productionSpace.total}` : ''}${movementStatus ? `<br>${movementStatus}` : ''}`
+    $('selected-position').innerHTML = icon(selectedCell ? 'grid' : 'cursor') + `<span>${selectedCell
+      ? `第 ${selectedCell.x + 1} 列，第 ${selectedCell.y + 1} 行${productionSpace ? `<br>当前生产成功率 ${(productionSpace.chance * 100).toFixed(1)}%，可用空位 ${productionSpace.available}/${productionSpace.total}` : ''}${movementStatus ? `<br>${movementStatus}` : ''}`
       : '点击无装置、无能量的空格放置'}</span>`;
+    $('map-observation').hidden = !selectedCell;
+    if (selectedCell) {
+      $('observation-name').textContent = `X${selectedCell.x + 1} Y${selectedCell.y + 1} · ${name}`;
+      $('observation-detail').textContent = device ? `${DIRECTIONS[device.dir].arrow} 朝${DIRECTIONS[device.dir].name} · ${productionSpace ? `成功率 ${(productionSpace.chance * 100).toFixed(1)}%` : interval === Infinity ? '持续生效' : `间隔 ${interval}s`}`
+        : core ? `累计 ${formatNumber(simulation.delivered)} EU · 均速 ${(simulation.time ? simulation.delivered / simulation.time : 0).toFixed(2)} EU/s`
+          : amount ? `${formatNumber(amount)} EU · 未移动 ${formatNumber(amount - moved)} / 已移动 ${formatNumber(moved)}` : stackable ? '空闲 · 有压能覆盖' : '空闲 · 无压能覆盖';
+    }
     document.querySelectorAll('[data-direction]').forEach(button => {
       button.classList.toggle('active', Number(button.dataset.direction) === displayDirection);
       button.setAttribute('aria-pressed', String(Number(button.dataset.direction) === displayDirection));
@@ -1633,6 +1906,113 @@ body.map-focused{overflow:hidden}
     $('quick-rotate-button').setAttribute('aria-label', `${data.name}朝${DIRECTIONS[displayDirection].name}，点击旋转`);
     const quickDisabled = running || mode === 'delete';
     if ($('quick-rotate-button').disabled !== quickDisabled) $('quick-rotate-button').disabled = quickDisabled;
+  }
+
+  function sampleDevice(position = hover || selectedCell || (keyboardActive ? keyboardCell : null)) {
+    if (running || !position) return;
+    const device = simulation.getDevice(position.x, position.y);
+    if (!device) { toast('先选择或指向一个装置，再按 C 沿用'); return; }
+    selectedType = device.type;
+    direction = device.dir;
+    setDeviceSearch('');
+    mapView.pan = false;
+    category = '全部';
+    document.querySelectorAll('[data-category]').forEach(button => {
+      const active = button.dataset.category === category;
+      button.classList.toggle('active', active); button.setAttribute('aria-pressed', String(active));
+    });
+    setMode('place');
+    renderLibrary();
+    toast(`已沿用${TYPES[selectedType].name}，朝${DIRECTIONS[direction].name}`);
+  }
+
+  function inspectCell(position) {
+    selectedCell = { x: position.x, y: position.y };
+    keyboardCell = { ...selectedCell };
+    renderInspector();
+  }
+
+  function locateCell(position) {
+    if (!inside(position.x, position.y)) return;
+    inspectCell(position);
+    zoomMap(Math.max(2, mapView.zoom), null, { x: position.x + 0.5, y: position.y + 0.5 });
+    hover = null;
+    canvas.focus({ preventScroll: true });
+  }
+
+  function readOnlyDialogOpen() {
+    return ['locate-dialog', 'diagnostics-dialog', 'analysis-dialog'].some(id => $(id).open);
+  }
+
+  function measurementResult() {
+    if (!measurement) return { seconds: 0, produced: 0, delivered: 0 };
+    return measurement.result || {
+      seconds: Math.max(0, simulation.time - measurement.time),
+      produced: Math.max(0, simulation.produced - measurement.produced),
+      delivered: Math.max(0, simulation.delivered - measurement.delivered),
+    };
+  }
+
+  function updateMeasurement() {
+    if (measurement && (measurement.simulation !== simulation || simulation.time < measurement.time)) {
+      measurement = null; measurementNotice = '模拟状态已更改，请重新测量。';
+    }
+    const active = Boolean(measurement && !measurement.result);
+    const result = measurementResult();
+    $('measurement-status').textContent = measurement ? active ? '测量中' : '结果已冻结' : '未开始';
+    $('measurement-elapsed').textContent = result.seconds.toFixed(2);
+    $('measurement-delivery').textContent = (result.seconds > 0 ? result.delivered / result.seconds : 0).toFixed(2);
+    $('measurement-production').textContent = (result.seconds > 0 ? result.produced / result.seconds : 0).toFixed(2);
+    $('measurement-notice').textContent = measurement
+      ? `从 ${formatTime(measurement.time)} 开始 · 生产 ${formatNumber(result.produced)} EU · 入核 ${formatNumber(result.delivered)} EU${active && !running ? ' · 已暂停计时' : ''}`
+      : measurementNotice;
+    $('start-measurement-button').disabled = active;
+    $('start-measurement-button').textContent = measurement ? '重新测量' : '开始测量';
+    $('stop-measurement-button').disabled = !active;
+    $('chart-analysis-button').classList.toggle('is-measuring', active);
+    $('chart-tools-label').textContent = active ? '测量中' : '测速 / CSV';
+    $('analysis-menu-label').textContent = active ? '区间测速 · 进行中' : '区间测速与 CSV';
+    const samples = simulation.history.slice(-40);
+    $('export-stats-button').disabled = !samples.length;
+    $('csv-period').textContent = samples.length
+      ? `${samples.length} 条完整秒记录 · ${formatTime(samples[0].at)}—${formatTime(samples.at(-1).at)}`
+      : '暂无完整秒记录，运行至少 1 模拟秒后可导出。';
+  }
+
+  function refreshDiagnostics() {
+    const issues = [];
+    let transports = 0, producers = 0;
+    for (const device of simulation.devices.values()) {
+      const cells = transportCells(device);
+      if (cells) {
+        const input = cells.inputPositions.reduce((sum, point) => sum + simulation.getEnergy(point.x, point.y), 0);
+        if (input && !cells.outputPositions.some(point => simulation.canReceive(point.x, point.y, device.type !== 'splitter', true))) {
+          transports++;
+          issues.push({ device, input, label: '运输受阻', detail: transportStatus(device) });
+        }
+      }
+      if (['generator', 'ring'].includes(device.type)) {
+        const space = simulation.productionSpaceInfo(device);
+        if (!space.available) {
+          producers++;
+          issues.push({ device, input: 0, label: '生产落点占满', detail: `可用空位 0/${space.total}，当前不能生产。压能覆盖不允许随机产出堆叠。` });
+        }
+      }
+    }
+    issues.sort((a, b) => b.input - a.input || a.device.y - b.device.y || a.device.x - b.device.x);
+    $('diagnostics-summary').textContent = `运输受阻 ${transports} 处 · 生产落点占满 ${producers} 处`;
+    $('diagnostics-time').textContent = `${formatTime(simulation.time)} 的快照。仅检查当前有能量输入但无可接收输出的运输装置，以及无空位的生产装置。`;
+    $('diagnostics-list').innerHTML = issues.map(({ device, label, detail }) => `<button type="button" class="diagnostic-item" data-diagnostic-x="${device.x}" data-diagnostic-y="${device.y}"><span class="diagnostic-item-heading"><strong>${TYPES[device.type].name}</strong><span>${label}</span></span><span class="diagnostic-position">X${device.x + 1} Y${device.y + 1} · 点此定位</span><span class="diagnostic-detail">${detail}</span></button>`).join('')
+      || '<p class="tool-empty">当前没有发现这两类受阻。检查结果是瞬时快照，可在运行一段时间后刷新。</p>';
+  }
+
+  const toolReturnFocus = new Map();
+  function openToolDialog(id, refresh) {
+    if (readOnlyDialogOpen() || $('help-dialog').open || $('confirm-dialog').open) return;
+    const trigger = document.activeElement;
+    toolReturnFocus.set(id, trigger.closest('#view-options') ? $('view-options').querySelector('summary') : trigger);
+    $('view-options').open = false; setMapPicker(false);
+    refresh(); $(id).showModal();
   }
 
   function setMode(nextMode) {
@@ -1661,7 +2041,7 @@ body.map-focused{overflow:hidden}
     $('status-label').textContent = running ? (document.hidden ? '后台暂停' : '运行中') : mode === 'delete' ? '删除模式' : '编辑模式';
     $('status-badge').classList.toggle('is-running', running);
     $('status-badge').classList.toggle('is-deleting', !running && mode === 'delete');
-    $('interaction-hint').textContent = running ? '网络运行中，暂停后可继续搭建和调整装置' : { place: '点击没有装置和能量的空格放置，按 R 切换方向', edit: '点击装置旋转；拖动装置到空格，或拖动潮汐核心', delete: '点击删除装置或能量' }[mode];
+    $('interaction-hint').textContent = running ? '点击任意格只读观察；暂停后可继续搭建和调整装置' : { place: '点击没有装置和能量的空格放置，按 R 切换方向', edit: '点击装置旋转；拖动装置到空格，或拖动潮汐核心', delete: '点击删除装置或能量' }[mode];
     document.querySelectorAll('[data-mode]').forEach(button => {
       button.classList.toggle('active', button.dataset.mode === mode);
       button.setAttribute('aria-pressed', String(button.dataset.mode === mode));
@@ -1672,18 +2052,20 @@ body.map-focused{overflow:hidden}
     $('blueprint-name').disabled = running;
     renderBlueprints();
     $('undo-button').disabled = running || !undoStack.length;
+    $('redo-button').disabled = running || !redoStack.length;
     document.querySelectorAll('[data-direction]').forEach(button => { if (button.disabled !== running) button.disabled = running; });
     updateViewControls();
   }
 
   function toggleRun() {
-    if ($('help-dialog').open || $('confirm-dialog').open) return;
+    if ($('help-dialog').open || $('confirm-dialog').open || readOnlyDialogOpen()) return;
     running = !running;
     pointer = null;
     document.body.classList.remove('is-dragging');
     if (running) {
       // An undo from a previous editing session must not erase live simulation progress.
       undoStack.length = 0;
+      redoStack.length = 0;
       accumulator = 0;
     } else save();
     updateControls();
@@ -1709,6 +2091,26 @@ body.map-focused{overflow:hidden}
     return values.map((value, i) => `${i ? 'L' : 'M'}${(i / (values.length - 1) * width).toFixed(1)} ${(baseline - value / maxValue * height).toFixed(1)}`).join(' ');
   }
 
+  function updateChartDetail() {
+    const probe = $('chart-probe');
+    const samples = simulation.history.slice(-40);
+    if (chartRatio === null || !samples.length) {
+      probe.toggleAttribute('hidden', true);
+      $('chart-detail').textContent = samples.length ? '悬停或轻触折线，查看该秒生产与入核' : '等待完整 1 秒后，可查看折线明细';
+      return;
+    }
+    const slot = Math.max(40 - samples.length, Math.round(chartRatio * 39));
+    const entry = samples[slot - (40 - samples.length)];
+    const average = simulation.time > 0 ? simulation[chartMetric] / simulation.time : 0;
+    const scale = Math.max(1, average, ...samples.map(v => v[chartMetric]));
+    const x = slot / 39 * 210, y = 62 - entry[chartMetric] / scale * 52;
+    probe.toggleAttribute('hidden', false);
+    $('chart-probe-line').setAttribute('d', `M${x.toFixed(1)} 6V66`);
+    $('chart-probe-dot').setAttribute('cx', x.toFixed(1));
+    $('chart-probe-dot').setAttribute('cy', y.toFixed(1));
+    $('chart-detail').textContent = `${formatTime(entry.at)} · 生产 ${formatNumber(entry.produced)} EU · 入核 ${formatNumber(entry.delivered)} EU`;
+  }
+
   function updateStats() {
     const total = simulation.totalEnergy;
     const count = simulation.devices.size;
@@ -1716,9 +2118,13 @@ body.map-focused{overflow:hidden}
     const averageProduction = simulation.time > 0 ? simulation.produced / simulation.time : 0;
     const averageDelivery = simulation.time > 0 ? simulation.delivered / simulation.time : 0;
     const productionSamples = simulation.history.slice(-40);
-    const productionScaleMax = Math.max(1, averageProduction, ...productionSamples.map(entry => entry.produced));
+    const chartAverage = chartMetric === 'delivered' ? averageDelivery : averageProduction;
+    const productionScaleMax = Math.max(1, chartAverage, ...productionSamples.map(entry => entry[chartMetric]));
+    const deliverySamples = productionSamples.map(entry => entry.delivered);
+    updateDeviceCounts();
+    updateMeasurement();
     $('delivered-value').textContent = formatNumber(simulation.delivered);
-    if (lastDeliveredShown !== null && simulation.delivered > lastDeliveredShown && !reducedMotion) {
+    if (lastDeliveredShown !== null && simulation.delivered > lastDeliveredShown && motionEnabled()) {
       const value = $('delivered-value');
       value.classList.remove('bump');
       void value.offsetWidth;
@@ -1727,15 +2133,20 @@ body.map-focused{overflow:hidden}
     lastDeliveredShown = simulation.delivered;
     $('energy-value').textContent = formatNumber(total);
     $('production-value').textContent = formatNumber(simulation.productionRate);
-    $('production-range').textContent = simulation.productionSamples
-      ? `${formatNumber(simulation.productionMin)}–${formatNumber(simulation.productionMax)} EU/s`
-      : '等待完整 1 秒';
+    $('production-range').textContent = chartMetric === 'delivered'
+      ? deliverySamples.length ? `${formatNumber(Math.min(...deliverySamples))}–${formatNumber(Math.max(...deliverySamples))} EU/s` : '等待完整 1 秒'
+      : simulation.productionSamples ? `${formatNumber(simulation.productionMin)}–${formatNumber(simulation.productionMax)} EU/s` : '等待完整 1 秒';
+    $('chart-range-label').textContent = chartMetric === 'delivered' ? '近40秒入核区间' : '全程逐秒产能区间';
+    $('flow-title').textContent = chartMetric === 'delivered' ? '平均每秒入核' : '平均每秒产能';
     $('delivery-rate').textContent = `+${formatNumber(simulation.deliveryRate)} /s`;
     $('delivery-average-rate').textContent = `全程均值 ${averageDelivery.toFixed(2)} /s`;
     $('workbench-average').textContent = averageDelivery.toFixed(2);
     $('workbench-rate').textContent = formatNumber(simulation.deliveryRate);
-    $('flow-value').textContent = averageProduction.toFixed(2);
+    $('flow-value').textContent = chartAverage.toFixed(2);
     $('occupied-energy').textContent = `${simulation.energy.filter(e => e > 0).length} 个格子`;
+    const movedTotal = simulation.movedEnergy.reduce((sum, n, i) => sum + Math.min(n, simulation.energy[i]), 0);
+    $('fresh-energy-count').textContent = formatNumber(total - movedTotal);
+    $('moved-energy-count').textContent = formatNumber(movedTotal);
     $('producer-count').textContent = `${producers} 个生产装置`;
     $('device-count').textContent = `${count} / 399`;
     $('core-position').textContent = `核心 X${String(simulation.core.x + 1).padStart(2, '0')} Y${String(simulation.core.y + 1).padStart(2, '0')}`;
@@ -1746,18 +2157,20 @@ body.map-focused{overflow:hidden}
     const efficiency = simulation.produced ? simulation.delivered / simulation.produced * 100 : 0;
     $('efficiency-value').textContent = `${efficiency.toFixed(1)}%`;
     $('efficiency-bar').style.width = `${Math.min(100, efficiency)}%`;
-    const values = new Array(Math.max(0, 40 - simulation.history.length)).fill(0).concat(simulation.history.map(entry => entry.produced));
+    const values = new Array(Math.max(0, 40 - productionSamples.length)).fill(0).concat(productionSamples.map(entry => entry[chartMetric]));
     const productionPath = chartPath(values, 210, 62, 52, productionScaleMax);
-    const averageY = 62 - averageProduction / productionScaleMax * 52;
+    const averageY = 62 - chartAverage / productionScaleMax * 52;
     $('production-line').setAttribute('d', productionPath);
     $('production-area').setAttribute('d', `${productionPath} L210 72 L0 72Z`);
     $('production-average-line').setAttribute('d', `M0 ${averageY.toFixed(1)}H210`);
     $('production-average-label').setAttribute('y', String(Math.max(12, averageY - 3)));
-    $('production-average-label').textContent = `平均 ${averageProduction.toFixed(2)} EU/s`;
+    $('production-average-label').textContent = `平均 ${chartAverage.toFixed(2)} EU/s`;
     const deliveryValues = simulation.history.slice(-20).map(entry => entry.delivered);
     const sparkline = deliveryValues.length ? chartPath(deliveryValues, 94, 25, 22, Math.max(2, ...simulation.history.map(entry => entry.delivered))) : 'M0 25H94';
     $('delivery-sparkline').setAttribute('d', sparkline);
     $('delivery-area').setAttribute('d', `${sparkline} L94 29 L0 29Z`);
+    updateChartDetail();
+    renderMapTooltip();
     if (geometry.width) {
       const core = cellCenter(simulation.core);
       const vars = `${(core.x / geometry.width * 100).toFixed(1)}%|${(core.y / geometry.height * 100).toFixed(1)}%`;
@@ -1870,7 +2283,7 @@ body.map-focused{overflow:hidden}
     const since = running && !ghost ? simulation.time - device.firedAt : 99;
     const flash = since >= 0 && since < 0.3 ? 1 - since / 0.3 : 0;
     ctx.save();
-    ctx.globalAlpha = ghost ? 0.55 : 1;
+    ctx.globalAlpha *= ghost ? 0.55 : 1;
     roundedRect(center.x - half, center.y - half, side, side, radius);
     ctx.fillStyle = P.tileBase;
     ctx.fill();
@@ -1911,7 +2324,7 @@ body.map-focused{overflow:hidden}
         ctx.fillRect(center.x - barWidth / 2, barY, barWidth * progress, Math.max(1.2, cell * 0.04));
       }
     }
-    if (flash > 0 && !reducedMotion) {
+    if (flash > 0 && motionEnabled()) {
       const grow = side * (1 + (1 - flash) * 0.38);
       ctx.save();
       roundedRect(center.x - grow / 2, center.y - grow / 2, grow, grow, radius * 1.3);
@@ -2130,7 +2543,7 @@ body.map-focused{overflow:hidden}
       ctx.stroke();
     });
     ctx.setLineDash([]);
-    if (running && !reducedMotion) {
+    if (running && motionEnabled()) {
       const phase = (now % 4200) / 4200;
       ctx.strokeStyle = rgba(P.ripple, (1 - phase) * 0.28);
       ctx.lineWidth = 1;
@@ -2149,13 +2562,22 @@ body.map-focused{overflow:hidden}
       const position = { x: i % SIZE, y: Math.floor(i / SIZE) };
       const center = cellCenter(position);
       const hasDevice = !!simulation.getDevice(position.x, position.y);
-      const bob = reducedMotion ? 0 : Math.sin(now / 900 + i * 1.71) * cell * 0.035;
+      const moved = simulation.getMovedEnergy(position.x, position.y);
+      const bob = motionEnabled() ? Math.sin(now / 900 + i * 1.71) * cell * 0.035 : 0;
       const px = center.x + (hasDevice ? cell * 0.29 : 0);
       const py = center.y + (hasDevice ? cell * 0.28 : 0) + bob;
       const size = cell * (hasDevice ? 0.6 : amount > 1 ? 0.9 + Math.min(0.35, Math.log10(amount) * 0.22) : 0.82);
-      ctx.drawImage(sprites.energy, px - size / 2, py - size / 2, size, size);
-      if (amount > 1) {
-        const label = amount > 999 ? '1k+' : String(amount);
+      ctx.drawImage(moved === amount ? sprites.movedEnergy : sprites.energy, px - size / 2, py - size / 2, size, size);
+      if (moved > 0) {
+        // A ring also distinguishes transported energy without relying on color.
+        ctx.beginPath();
+        ctx.arc(px, py, cell * 0.23, -Math.PI / 2, -Math.PI / 2 + Math.PI * 2 * moved / amount);
+        ctx.strokeStyle = P.movedRing;
+        ctx.lineWidth = Math.max(1.5, cell * 0.055);
+        ctx.stroke();
+      }
+      if (amount > 1 && displaySettings.labels) {
+        const label = compactNumber(amount);
         ctx.save();
         ctx.font = `600 ${Math.max(8, cell * 0.28)}px "Noto Sans SC","Noto Sans CJK SC",system-ui,sans-serif`;
         ctx.textAlign = 'left';
@@ -2165,7 +2587,7 @@ body.map-focused{overflow:hidden}
         ctx.strokeStyle = P.energyTextStroke;
         const tx = center.x + (hasDevice ? -cell * 0.32 : cell * 0.16), ty = center.y + (hasDevice ? cell * 0.29 : -cell * 0.2);
         ctx.strokeText(label, tx, ty);
-        ctx.fillStyle = P.energyText;
+        ctx.fillStyle = moved === amount ? P.movedText : P.energyText;
         ctx.fillText(label, tx, ty);
         ctx.restore();
       }
@@ -2212,7 +2634,7 @@ body.map-focused{overflow:hidden}
 
   function drawCore(core, now, ghost = false) {
     const { cell } = geometry;
-    const pulse = running && !reducedMotion ? (Math.sin(now / 520) + 1) / 2 : 0.5;
+    const pulse = running && motionEnabled() ? (Math.sin(now / 520) + 1) / 2 : 0.5;
     const flash = coreFlashAt && !ghost ? Math.max(0, 1 - (now - coreFlashAt) / 480) : 0;
     ctx.save();
     if (ghost) ctx.globalAlpha = 0.45;
@@ -2237,7 +2659,7 @@ body.map-focused{overflow:hidden}
     ctx.strokeStyle = rgba(P.ripple, 0.32 + flash * 0.5);
     ctx.lineWidth = 1;
     ctx.stroke();
-    if (running && !reducedMotion && !ghost) {
+    if (running && motionEnabled() && !ghost) {
       // Four gauge ticks orbit the core while the network runs.
       const turn = now / 2600;
       ctx.strokeStyle = rgba(P.ripple, 0.85);
@@ -2254,7 +2676,7 @@ body.map-focused{overflow:hidden}
   }
 
   function drawEffects() {
-    if (!running || reducedMotion) return;
+    if (!running || !motionEnabled() || !displaySettings.trails) return;
     const { cell } = geometry;
     ctx.save();
     ctx.globalCompositeOperation = P.blend;
@@ -2301,7 +2723,7 @@ body.map-focused{overflow:hidden}
       if (effect.kind === 'move') {
         ctx.fillStyle = rgba(color, 0.9);
         ctx.beginPath(); ctx.arc(hx, hy, cell * 0.07, 0, Math.PI * 2); ctx.fill();
-      } else ctx.drawImage(sprites.energy, hx - s / 2, hy - s / 2, s, s);
+      } else ctx.drawImage(effect.kind === 'energy' ? sprites.movedEnergy : sprites.energy, hx - s / 2, hy - s / 2, s, s);
       ctx.globalAlpha = 1;
       if (effect.kind === 'spawn' && progress > 0.55) {
         const p = (progress - 0.55) / 0.45;
@@ -2359,7 +2781,7 @@ body.map-focused{overflow:hidden}
       ctx.arc(core.x, core.y, revealRadius, 0, Math.PI * 2);
       ctx.clip();
     }
-    drawContours(core, now);
+    if (!displaySettings.calm) drawContours(core, now);
     if (showRanges) drawRanges();
     if (target && !running) {
       ctx.fillStyle = P.crosshair;
@@ -2367,16 +2789,24 @@ body.map-focused{overflow:hidden}
       ctx.fillRect(geometry.x + target.x * cell, geometry.y, cell, cell * SIZE);
     }
     drawGrid(target);
-    drawNodes(now, revealRadius, core);
+    if (!displaySettings.calm) drawNodes(now, revealRadius, core);
 
     const inspected = !running ? inspectedDevice() : null;
     if (inspected && !pointer?.dragging) drawFlowPreview(inspected, 0.85);
-    const placing = target && !running && mode === 'place' && !simulation.getDevice(target.x, target.y) && !simulation.isCore(target.x, target.y);
+    const placing = target && !running && mode === 'place' && !simulation.getDevice(target.x, target.y) && !simulation.getEnergy(target.x, target.y) && !simulation.isCore(target.x, target.y);
     if (placing) drawFlowPreview({ ...target, type: selectedType, dir: direction });
 
     for (const device of simulation.devices.values()) {
       if (pointer?.dragging && pointer.deviceId === device.id) continue;
+      ctx.save();
+      if (displaySettings.highlight && device.type !== displaySettings.highlight) ctx.globalAlpha *= 0.23;
       drawDevice(device);
+      ctx.restore();
+      if (device.type === displaySettings.highlight) {
+        const center = cellCenter(device);
+        ctx.save(); ctx.strokeStyle = P.selected; ctx.lineWidth = Math.max(1, cell * 0.045);
+        ctx.beginPath(); ctx.arc(center.x, center.y, cell * 0.46, 0, Math.PI * 2); ctx.stroke(); ctx.restore();
+      }
     }
     if (placing) drawDevice({ ...target, type: selectedType, dir: direction }, true);
     drawEnergy(now);
@@ -2423,7 +2853,7 @@ body.map-focused{overflow:hidden}
       const gained = simulation.delivered - seenDelivered;
       seenDelivered = simulation.delivered;
       coreFlashAt = now;
-      if (!reducedMotion && now - lastRippleAt > 220) {
+      if (motionEnabled() && now - lastRippleAt > 220) {
         ripples.push({ start: now, origin: { ...simulation.core }, strength: Math.min(1, 0.6 + gained * 0.12) });
         if (ripples.length > 6) ripples.shift();
         lastRippleAt = now;
@@ -2449,16 +2879,24 @@ body.map-focused{overflow:hidden}
     }
     keyboardCell = { ...hover };
     $('coordinates').textContent = `X ${String(hover.x + 1).padStart(2, '0')}   Y ${String(hover.y + 1).padStart(2, '0')}`;
-    const device = simulation.getDevice(hover.x, hover.y);
-    const energy = simulation.getEnergy(hover.x, hover.y);
-    if ((device || energy || simulation.isCore(hover.x, hover.y)) && !pointer?.dragging) {
-      const title = simulation.isCore(hover.x, hover.y) ? '潮汐核心' : device ? TYPES[device.type].name : '能量';
+    renderMapTooltip();
+  }
+
+  function renderMapTooltip() {
+    const point = hover || (keyboardActive && document.activeElement === canvas ? keyboardCell : null);
+    if (!point || pointer?.dragging || pointer?.panning || mapView.pan) { $('map-tooltip').hidden = true; return; }
+    const device = simulation.getDevice(point.x, point.y);
+    const energy = simulation.getEnergy(point.x, point.y);
+    if (device || energy || simulation.isCore(point.x, point.y)) {
+      const moved = simulation.getMovedEnergy(point.x, point.y);
+      const title = simulation.isCore(point.x, point.y) ? '潮汐核心' : device ? TYPES[device.type].name : moved === 0 ? '能量 · 未移动' : moved === energy ? '能量 · 已移动' : '能量 · 混合堆叠';
       const productionSpace = device && TYPES[device.type].baseChance !== undefined ? simulation.productionSpaceInfo(device) : null;
       const movementStatus = transportStatus(device);
-      const detail = simulation.isCore(hover.x, hover.y) ? `累计接收 ${formatNumber(simulation.delivered)} EU，修改模式下可拖动` : `${device ? `${DIRECTIONS[device.dir].arrow} 朝${DIRECTIONS[device.dir].name}${TYPES[device.type].interval === null ? ' · 持续生效' : ` · ${simulation.interval(device)}s`}` : ''}${movementStatus ? ` · ${movementStatus}` : ''}${productionSpace ? ` · 成功率 ${(productionSpace.chance * 100).toFixed(1)}%（空位 ${productionSpace.available}/${productionSpace.total}）` : ''}${energy ? `${device ? ' · ' : ''}${formatNumber(energy)} EU` : ''}${simulation.stackable(hover.x, hover.y) ? ' · 搬运可堆叠' : ' · 不可叠加'}`;
-      $('map-tooltip').innerHTML = `${title}<small>${detail}</small>`;
+      const detail = simulation.isCore(point.x, point.y) ? `累计接收 ${formatNumber(simulation.delivered)} EU，修改模式下可拖动` : `${device ? `${DIRECTIONS[device.dir].arrow} 朝${DIRECTIONS[device.dir].name}${TYPES[device.type].interval === null ? ' · 持续生效' : ` · ${simulation.interval(device)}s`}` : ''}${movementStatus ? ` · ${movementStatus}` : ''}${productionSpace ? ` · 成功率 ${(productionSpace.chance * 100).toFixed(1)}%（空位 ${productionSpace.available}/${productionSpace.total}）` : ''}${energy ? `${device ? ' · ' : ''}共 ${formatNumber(energy)} EU<br><span class="energy-fresh-text">未移动 ${formatNumber(energy - moved)} EU</span> · <span class="energy-moved-text">已移动 ${formatNumber(moved)} EU</span>` : ''}${simulation.stackable(point.x, point.y) ? ' · 搬运可堆叠' : ' · 不可叠加'}`;
+      const content = `${title}<small>X${point.x + 1} Y${point.y + 1} · ${detail}</small>`;
+      if ($('map-tooltip').innerHTML !== content) $('map-tooltip').innerHTML = content;
       $('map-tooltip').hidden = false;
-      const center = cellCenter(hover);
+      const center = cellCenter(point);
       const tooltipWidth = $('map-tooltip').offsetWidth;
       const tooltipHeight = $('map-tooltip').offsetHeight;
       $('map-tooltip').style.left = `${Math.max(5, Math.min(geometry.width - tooltipWidth - 8, center.x + geometry.cell * 0.7))}px`;
@@ -2467,9 +2905,10 @@ body.map-focused{overflow:hidden}
   }
 
   function operateAt(position) {
-    if (running || !position) return;
+    if (!position) return;
+    if (running) { inspectCell(position); return; }
     const { x, y } = position;
-    if (simulation.isCore(x, y)) { toast('切换到「修改」并拖动潮汐核心即可更改位置'); return; }
+    if (simulation.isCore(x, y)) { inspectCell(position); toast('切换到「修改」并拖动潮汐核心即可更改位置'); return; }
     const device = simulation.getDevice(x, y);
     if (mode === 'place') {
       if (device) {
@@ -2479,6 +2918,7 @@ body.map-focused{overflow:hidden}
         return;
       }
       if (simulation.getEnergy(x, y)) {
+        inspectCell(position);
         toast('该格已有能量；能量和装置不能同格', true);
         return;
       }
@@ -2488,7 +2928,7 @@ body.map-focused{overflow:hidden}
       currentBlueprintId = '';
       setMapName('实验场', '自由搭建');
     } else if (mode === 'edit') {
-      if (!device) { selectedCell = null; renderInspector(); return; }
+      if (!device) { inspectCell(position); return; }
       checkpoint();
       selectedCell = { x, y };
       simulation.rotate(x, y);
@@ -2512,6 +2952,16 @@ body.map-focused{overflow:hidden}
     renderLibrary();
     renderInspector();
   });
+  for (const id of ['device-search', 'map-device-search']) {
+    $(id).addEventListener('input', event => setDeviceSearch(event.target.value));
+    $(id).addEventListener('keydown', event => {
+      if (event.key === 'Escape' && deviceSearch) { event.preventDefault(); event.stopPropagation(); setDeviceSearch(''); }
+    });
+  }
+  document.querySelectorAll('[data-clear-device-search]').forEach(button => button.addEventListener('click', () => {
+    const input = button.closest('.device-search').querySelector('input');
+    setDeviceSearch(''); input.focus({ preventScroll: true });
+  }));
   document.querySelectorAll('[data-category]').forEach(button => button.addEventListener('click', () => {
     category = button.dataset.category;
     document.querySelectorAll('[data-category]').forEach(el => { el.classList.toggle('active', el === button); el.setAttribute('aria-pressed', String(el === button)); });
@@ -2521,18 +2971,170 @@ body.map-focused{overflow:hidden}
   document.querySelectorAll('[data-direction]').forEach(button => button.addEventListener('click', () => setDirection(Number(button.dataset.direction))));
   $('run-button').addEventListener('click', toggleRun);
   $('undo-button').addEventListener('click', undo);
+  $('redo-button').addEventListener('click', redo);
+  $('sample-device-button').addEventListener('click', () => sampleDevice(selectedCell));
+  $('locate-selected-button').addEventListener('click', () => { if (selectedCell) locateCell(selectedCell); });
+  $('close-observation').addEventListener('click', () => { selectedCell = null; renderInspector(); canvas.focus({ preventScroll: true }); });
+  $('view-options').querySelector('summary').addEventListener('keydown', event => { if (event.code === 'Space') event.stopPropagation(); });
   document.querySelectorAll('input[name="speed"]').forEach(radio => radio.addEventListener('change', event => { speed = Number(event.target.value); }));
-  $('range-toggle').addEventListener('change', event => { showRanges = event.target.checked; });
-  $('grid-button').addEventListener('click', () => {
-    showGrid = !showGrid;
+  function applyDisplaySettings() {
+    showGrid = displaySettings.grid;
+    showRanges = displaySettings.ranges;
+    $('range-toggle').checked = showRanges;
     $('grid-button').classList.toggle('active', showGrid);
     $('grid-button').setAttribute('aria-pressed', String(showGrid));
+    $('energy-label-toggle').checked = displaySettings.labels;
+    $('trail-toggle').checked = displaySettings.trails;
+    $('calm-toggle').checked = displaySettings.calm;
+    $('display-grid-toggle').checked = showGrid;
+    $('display-range-toggle').checked = showRanges;
+    $('highlight-device-select').value = displaySettings.highlight;
+    updateDeviceCounts();
+    document.documentElement.dataset.calm = String(displaySettings.calm);
+    if (!motionEnabled()) { revealStart = 0; ripples = []; }
+    lastPaint = 0;
+  }
+  function saveDisplaySettings() {
+    applyDisplaySettings();
+    try { localStorage.setItem(DISPLAY_KEY, JSON.stringify(displaySettings)); } catch { /* Still usable for this session. */ }
+  }
+  for (const [id, key] of [['energy-label-toggle', 'labels'], ['trail-toggle', 'trails'], ['calm-toggle', 'calm'], ['range-toggle', 'ranges'], ['display-grid-toggle', 'grid'], ['display-range-toggle', 'ranges']]) {
+    $(id).addEventListener('change', event => { displaySettings[key] = event.target.checked; saveDisplaySettings(); });
+  }
+  $('grid-button').addEventListener('click', () => {
+    displaySettings.grid = !displaySettings.grid;
+    saveDisplaySettings();
+  });
+  motionPreference.addEventListener('change', event => { reducedMotion = event.matches; applyDisplaySettings(); });
+  for (const [type, data] of Object.entries(TYPES)) $('highlight-device-select').add(new Option(data.name, type));
+  $('highlight-device-select').addEventListener('change', event => { displaySettings.highlight = event.target.value; saveDisplaySettings(); });
+  $('clear-highlight-button').addEventListener('click', () => { displaySettings.highlight = ''; saveDisplaySettings(); canvas.focus({ preventScroll: true }); });
+  $('diagnostics-button').addEventListener('click', () => openToolDialog('diagnostics-dialog', refreshDiagnostics));
+  $('analysis-button').addEventListener('click', () => openToolDialog('analysis-dialog', updateMeasurement));
+  $('chart-analysis-button').addEventListener('click', () => openToolDialog('analysis-dialog', updateMeasurement));
+  $('refresh-diagnostics-button').addEventListener('click', refreshDiagnostics);
+  for (const id of ['diagnostics-dialog', 'analysis-dialog']) {
+    const dialog = $(id);
+    dialog.querySelector('[data-close-tool]').addEventListener('click', () => dialog.close());
+    dialog.addEventListener('cancel', event => { event.preventDefault(); dialog.close(); });
+    dialog.addEventListener('close', () => {
+      const target = toolReturnFocus.get(id);
+      toolReturnFocus.delete(id);
+      if (target?.isConnected) target.focus({ preventScroll: true });
+    });
+  }
+  $('diagnostics-list').addEventListener('click', event => {
+    const button = event.target.closest('[data-diagnostic-x]');
+    if (!button) return;
+    toolReturnFocus.delete('diagnostics-dialog');
+    $('diagnostics-dialog').close();
+    locateCell({ x: Number(button.dataset.diagnosticX), y: Number(button.dataset.diagnosticY) });
+  });
+  $('start-measurement-button').addEventListener('click', () => {
+    measurement = { simulation, time: simulation.time, produced: simulation.produced, delivered: simulation.delivered, result: null };
+    updateMeasurement();
+  });
+  $('stop-measurement-button').addEventListener('click', () => {
+    if (!measurement || measurement.result) return;
+    measurement.result = measurementResult();
+    updateMeasurement();
+  });
+  $('export-stats-button').addEventListener('click', () => {
+    const samples = simulation.history.slice(-40).map(entry => ({ ...entry }));
+    if (!samples.length) return;
+    const csv = '\uFEFF' + ['模拟秒,生产能量(EU),实际入核(EU)', ...samples.map(entry => `${entry.at},${entry.produced},${entry.delivered}`)].join('\r\n') + '\r\n';
+    const url = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8' }));
+    const anchor = document.createElement('a'); anchor.href = url;
+    anchor.download = `潮汐逐秒统计-${formatTime(simulation.time).replace(/:/g, '-')}.csv`; anchor.click();
+    setTimeout(() => URL.revokeObjectURL(url), 5000);
+    toast(`已导出 ${samples.length} 条逐秒生产与入核记录`);
+  });
+  for (const id of ['chart-analysis-button', 'diagnostics-button', 'analysis-button', 'clear-highlight-button']) {
+    $(id).addEventListener('keydown', event => { if (event.code === 'Space') event.stopPropagation(); });
+  }
+
+  $('export-map-button').addEventListener('click', () => {
+    if (!canvas.width || !geometry.width) return;
+    const button = $('export-map-button');
+    button.disabled = true;
+    try {
+      const image = document.createElement('canvas');
+      const width = Math.max(960, Math.min(2400, canvas.width));
+      const mapHeight = Math.round(width * geometry.height / geometry.width);
+      const header = 112, footer = 76;
+      image.width = width; image.height = mapHeight + header + footer;
+      const paint = image.getContext('2d');
+      const colors = getComputedStyle(document.documentElement);
+      const color = name => colors.getPropertyValue(name).trim();
+      paint.fillStyle = color('--plate'); paint.fillRect(0, 0, width, image.height);
+      const water = paint.createLinearGradient(0, header, width, header + mapHeight);
+      water.addColorStop(0, color('--water-1')); water.addColorStop(1, color('--water-3'));
+      paint.fillStyle = water; paint.fillRect(0, header, width, mapHeight);
+      paint.drawImage(canvas, 0, header, width, mapHeight);
+      paint.fillStyle = color('--ink'); paint.font = '600 27px "Microsoft YaHei", sans-serif';
+      paint.fillText('潮汐实验室 · 当前地图', 28, 39);
+      paint.font = '17px "Microsoft YaHei", sans-serif'; paint.fillStyle = color('--ink-2');
+      paint.fillText(`模拟时间 ${formatTime(simulation.time)}   核心 X${simulation.core.x + 1} Y${simulation.core.y + 1}   装置 ${simulation.devices.size}`, 28, 69);
+      paint.fillText(`累计入核 ${formatNumber(simulation.delivered)} EU   全程入核均速 ${(simulation.time ? simulation.delivered / simulation.time : 0).toFixed(2)} EU/s`, 28, 96);
+      const legendY = header + mapHeight + 29;
+      for (const [x, fill, text] of [[28, P.energy[2], '未移动能量'], [210, P.movedEnergy[2], '已移动能量']]) {
+        paint.fillStyle = fill; paint.beginPath(); paint.arc(x + 7, legendY - 6, 6, 0, Math.PI * 2); paint.fill();
+        paint.fillStyle = color('--ink-2'); paint.fillText(text, x + 23, legendY);
+      }
+      paint.fillStyle = color('--ink-3'); paint.font = '15px "Microsoft YaHei", sans-serif';
+      paint.fillText(`当前视图 · 缩放 ${Math.round(mapView.zoom * 100)}% · 金蓝混合环表示两类能量比例`, 28, legendY + 28);
+      image.toBlob(blob => {
+        button.disabled = false;
+        if (!blob) { toast('图片生成失败，请重试', true); return; }
+        const url = URL.createObjectURL(blob);
+        const anchor = document.createElement('a');
+        anchor.href = url; anchor.download = `潮汐地图-${new Date().toISOString().replace(/[:.]/g, '-')}.png`;
+        anchor.click();
+        setTimeout(() => URL.revokeObjectURL(url), 5000);
+        toast('当前地图已导出为 PNG，包含入核统计与能量图例');
+      }, 'image/png');
+      $('view-options').open = false;
+    } catch {
+      button.disabled = false;
+      toast('图片生成失败，请重试', true);
+    }
+  });
+
+  const flowChart = $('flow-chart');
+  flowChart.setAttribute('tabindex', '0');
+  function applyChartMetric() {
+    document.querySelectorAll('[data-chart-metric]').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.chartMetric === chartMetric)));
+    flowChart.setAttribute('aria-label', `最近40秒${chartMetric === 'delivered' ? '实际入核' : '生产能量'}折线图。悬停、轻触或使用左右方向键查看每秒生产和入核明细。绿色虚线为全程平均。`);
+  }
+  document.querySelectorAll('[data-chart-metric]').forEach(button => button.addEventListener('click', () => {
+    chartMetric = button.dataset.chartMetric;
+    try { localStorage.setItem(CHART_KEY, chartMetric); } catch { /* Still applies for this visit. */ }
+    applyChartMetric(); updateStats();
+  }));
+  applyChartMetric();
+  flowChart.insertAdjacentHTML('beforeend', '<g id="chart-probe" hidden aria-hidden="true"><path id="chart-probe-line" class="chart-probe-line"/><circle id="chart-probe-dot" r="3" class="chart-probe-dot"/></g>');
+  const probeChart = event => {
+    const bounds = flowChart.getBoundingClientRect();
+    chartRatio = Math.max(0, Math.min(1, (event.clientX - bounds.left) / bounds.width));
+    updateChartDetail();
+  };
+  flowChart.addEventListener('pointermove', probeChart);
+  flowChart.addEventListener('pointerdown', probeChart);
+  flowChart.addEventListener('pointerleave', event => {
+    if (event.pointerType !== 'touch') { chartRatio = null; updateChartDetail(); }
+  });
+  flowChart.addEventListener('blur', () => { chartRatio = null; updateChartDetail(); });
+  flowChart.addEventListener('keydown', event => {
+    if (!['ArrowLeft', 'ArrowRight', 'Home', 'End', 'Escape'].includes(event.key)) return;
+    event.preventDefault(); event.stopPropagation();
+    chartRatio = event.key === 'Escape' ? null : event.key === 'Home' ? 0 : event.key === 'End' ? 1 : Math.max(0, Math.min(1, (chartRatio ?? 1) + (event.key === 'ArrowLeft' ? -1 : 1) / 39));
+    updateChartDetail();
   });
   $('theme-button').addEventListener('click', () => {
     themeChoice = theme === 'dark' ? 'light' : 'dark';
     try { localStorage.setItem(THEME_KEY, themeChoice); } catch { /* the choice still applies for this visit */ }
     applyTheme();
-    if (!reducedMotion) revealStart = performance.now();
+    if (motionEnabled()) revealStart = performance.now();
   });
   systemDark.addEventListener('change', () => { if (!themeChoice) applyTheme(); });
   $('reset-button').addEventListener('click', () => {
@@ -2653,6 +3255,17 @@ body.map-focused{overflow:hidden}
 
   // Handle touch activation directly: some mobile browsers suppress the first
   // compatibility click after a canvas drag. Mouse and keyboard keep native clicks.
+  let consumedTouchClick = null;
+  document.addEventListener('pointerdown', () => { consumedTouchClick = null; }, true);
+  for (const type of ['mousedown', 'mouseup', 'click']) document.addEventListener(type, event => {
+    // Compatibility mouse events can land inside a dialog opened on touch
+    // release, activating a button or stealing focus from its first input.
+    if (consumedTouchClick && event.detail > 0 && (event.pointerType === 'touch' || event.sourceCapabilities?.firesTouchEvents)
+      && performance.now() - consumedTouchClick < 700) {
+      if (type === 'click') consumedTouchClick = null;
+      event.preventDefault(); event.stopImmediatePropagation();
+    }
+  }, true);
   function bindMapButton(id, action) {
     const button = $(id);
     let touch = null;
@@ -2668,6 +3281,7 @@ body.map-focused{overflow:hidden}
       const bounds = button.getBoundingClientRect();
       if (Math.hypot(event.clientX - start.x, event.clientY - start.y) > 10 || event.clientX < bounds.left || event.clientX > bounds.right || event.clientY < bounds.top || event.clientY > bounds.bottom) return;
       lastTouch = performance.now();
+      consumedTouchClick = lastTouch;
       event.preventDefault();
       action();
     });
@@ -2698,6 +3312,50 @@ body.map-focused{overflow:hidden}
     hover = null;
   });
 
+  const locateDialog = $('locate-dialog');
+  let locateReturnFocus = null;
+  let locateSnapshot = [];
+  function refreshLocateList() {
+    locateSnapshot = simulation.energy.map((amount, cell) => ({ amount, x: cell % SIZE, y: Math.floor(cell / SIZE) }))
+      .filter(cell => cell.amount > 0).sort((a, b) => b.amount - a.amount || a.y - b.y || a.x - b.x).slice(0, 6);
+    $('locate-snapshot-time').textContent = `${formatTime(simulation.time)} 的快照 · 运行中可手动刷新`;
+    $('locate-largest-button').disabled = !locateSnapshot.length;
+    $('locate-energy-list').innerHTML = locateSnapshot.length ? locateSnapshot.map((cell, i) => `<button type="button" data-locate-energy="${i}"><span>X${cell.x + 1} Y${cell.y + 1}</span><strong>${formatNumber(cell.amount)} EU</strong>${icon('target')}</button>`).join('')
+      : '<p class="locate-empty">地图上暂时没有能量，可以使用坐标定位。</p>';
+  }
+  function openLocateDialog() {
+    if (readOnlyDialogOpen() || $('help-dialog').open || $('confirm-dialog').open) return;
+    locateReturnFocus = document.activeElement;
+    const position = selectedCell || simulation.core;
+    $('locate-x').value = position.x + 1; $('locate-y').value = position.y + 1;
+    setMapPicker(false); $('view-options').open = false;
+    refreshLocateList(); locateDialog.showModal();
+  }
+  function finishLocate(position) {
+    locateDialog.close();
+    locateReturnFocus = null;
+    locateCell(position);
+  }
+  bindMapButton('locate-button', openLocateDialog);
+  $('close-locate-button').addEventListener('click', () => locateDialog.close());
+  locateDialog.addEventListener('cancel', event => { event.preventDefault(); locateDialog.close(); });
+  locateDialog.addEventListener('close', () => {
+    const target = locateReturnFocus;
+    locateReturnFocus = null;
+    if (target?.isConnected) target.focus({ preventScroll: true });
+  });
+  $('locate-form').addEventListener('submit', event => {
+    event.preventDefault();
+    const x = Number($('locate-x').value) - 1, y = Number($('locate-y').value) - 1;
+    if (Number.isInteger(x) && Number.isInteger(y) && inside(x, y)) finishLocate({ x, y });
+  });
+  $('refresh-locate-button').addEventListener('click', refreshLocateList);
+  $('locate-largest-button').addEventListener('click', () => { if (locateSnapshot.length) finishLocate(locateSnapshot[0]); });
+  $('locate-energy-list').addEventListener('click', event => {
+    const button = event.target.closest('[data-locate-energy]');
+    if (button && locateSnapshot[Number(button.dataset.locateEnergy)]) finishLocate(locateSnapshot[Number(button.dataset.locateEnergy)]);
+  });
+
   function setMapPicker(open) {
     $('map-device-picker').hidden = !open;
     $('map-library-button').setAttribute('aria-expanded', String(open));
@@ -2716,11 +3374,13 @@ body.map-focused{overflow:hidden}
   });
   document.addEventListener('pointerdown', event => {
     if (!event.target.closest('.map-navigation')) setMapPicker(false);
+    if (!event.target.closest('#view-options')) $('view-options').open = false;
   });
 
   function setMapFocus(open) {
     if (mapFocusDialog.open === open) return;
     setMapPicker(false);
+    $('view-options').open = false;
     const panel = stage.closest('.map-panel');
     pointer = null; hover = null; pinch = null; multiTouch = false; mapTouches.clear();
     document.body.classList.remove('is-dragging', 'is-view-dragging');
@@ -2814,7 +3474,7 @@ body.map-focused{overflow:hidden}
     }
     const position = pointFromEvent(event);
     const panning = mapView.pan || event.button === 1;
-    if ((!position || running) && !panning && mapView.zoom <= 1) return;
+    if (!position && !panning && mapView.zoom <= 1) return;
     const device = position && simulation.getDevice(position.x, position.y);
     pointer = { ...position, startX: event.clientX, startY: event.clientY, panX: mapView.panX, panY: mapView.panY, panning, deviceId: device?.id, isCore: position && simulation.isCore(position.x, position.y), dragging: false, pointerId: event.pointerId };
     canvas.setPointerCapture(event.pointerId);
@@ -2834,7 +3494,11 @@ body.map-focused{overflow:hidden}
     document.body.classList.remove('is-dragging', 'is-view-dragging');
     if (canvas.hasPointerCapture(event.pointerId)) canvas.releasePointerCapture(event.pointerId);
     if (event.pointerType === 'touch') { hover = null; $('map-tooltip').hidden = true; }
-    if (running || start.panning) return;
+    if (start.panning) return;
+    if (running) {
+      if (destination && destination.x === start.x && destination.y === start.y) inspectCell(destination);
+      return;
+    }
     if (start.dragging && mode === 'edit' && start.isCore) {
       if (!destination || simulation.getDevice(destination.x, destination.y) || simulation.getEnergy(destination.x, destination.y)) {
         toast('核心只能移动到空白格', true); return;
@@ -2872,14 +3536,24 @@ body.map-focused{overflow:hidden}
     zoomMap(mapView.zoom * Math.exp(-event.deltaY * 0.005), { x: event.clientX - bounds.left, y: event.clientY - bounds.top });
   }, { passive: false });
   document.addEventListener('keydown', event => {
+    for (const id of ['locate-dialog', 'diagnostics-dialog', 'analysis-dialog']) {
+      if ($(id).open) {
+        if (event.key === 'Escape') { event.preventDefault(); $(id).close(); }
+        return;
+      }
+    }
     if ($('help-dialog').open || $('confirm-dialog').open) return;
+    if (event.key === 'Escape' && $('view-options').open) { event.preventDefault(); $('view-options').open = false; $('view-options').querySelector('summary').focus({ preventScroll: true }); return; }
     if (event.key === 'Escape' && !$('map-device-picker').hidden) { event.preventDefault(); setMapPicker(false); $('map-library-button').focus({ preventScroll: true }); return; }
     if (event.key === 'Escape' && mapFocusDialog.open) { event.preventDefault(); setMapFocus(false); return; }
     if (event.target.matches('input, select, textarea') || event.target.isContentEditable) return;
-    if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'z') { event.preventDefault(); undo(); return; }
+    if ((event.ctrlKey || event.metaKey) && ['z', 'y'].includes(event.key.toLowerCase())) { event.preventDefault(); if (event.shiftKey || event.key.toLowerCase() === 'y') redo(); else undo(); return; }
     if (event.ctrlKey || event.metaKey || event.altKey) return;
     if (event.code === 'Space') { event.preventDefault(); if (!event.repeat) toggleRun(); return; }
     if (event.key.toLowerCase() === 'r') { event.preventDefault(); if (!event.repeat) setDirection(((inspectedDevice()?.dir ?? direction) + 1) % 4); return; }
+    if (event.key.toLowerCase() === 'g') { event.preventDefault(); if (!event.repeat) $('grid-button').click(); return; }
+    if (event.key.toLowerCase() === 'c') { event.preventDefault(); if (!event.repeat) sampleDevice(); return; }
+    if (event.key.toLowerCase() === 'l') { event.preventDefault(); if (!event.repeat) openLocateDialog(); return; }
     if (['1', '2', '3'].includes(event.key)) { setMode(['place', 'edit', 'delete'][Number(event.key) - 1]); return; }
     if (event.key === 'Escape') { selectedCell = null; hover = null; keyboardActive = false; $('map-tooltip').hidden = true; renderInspector(); return; }
     if (event.target !== canvas) return;
@@ -2911,8 +3585,11 @@ body.map-focused{overflow:hidden}
       while (accumulator + 1e-9 >= 0.05) { simulation.tick(0.05); accumulator -= 0.05; }
     }
     trackDeliveries(now);
-    drawMap(now);
-    frameCount++;
+    if (!displaySettings.calm || !lastPaint || now - lastPaint >= 1000 / 30 - 0.5) {
+      drawMap(now);
+      lastPaint = now;
+      frameCount++;
+    }
     fpsWindow += dt;
     if (fpsWindow >= 0.6) { fps = Math.round(frameCount / fpsWindow); frameCount = 0; fpsWindow = 0; }
     if (now - lastUI >= 160) { updateStats(); lastUI = now; }
@@ -2920,7 +3597,19 @@ body.map-focused{overflow:hidden}
     requestAnimationFrame(frame);
   }
 
+  const energyColorHelp = document.createElement('li');
+  energyColorHelp.textContent = '金色能量尚未移动，蓝色带外圈的能量已经成功搬运过。混合堆叠用蓝色比例环表示，悬停可查看两类数量；旧存档从载入后开始记录颜色。右上角显示设置可调整数量、轨迹和轻量显示。';
+  $('help-dialog').querySelector('.rules-notes ul').append(energyColorHelp);
+  $('help-dialog').querySelector('.help-keyboard').insertAdjacentHTML('beforeend', '<span><kbd>Ctrl Shift Z</kbd>重做</span><span><kbd>G</kbd>网格</span><span><kbd>图表方向键</kbd>查看逐秒明细</span>');
+  $('help-dialog').querySelector('.help-keyboard').insertAdjacentHTML('beforeend', '<span><kbd>C</kbd>沿用装置与朝向</span><span><kbd>L</kbd>坐标 / 能量定位</span>');
+  const observationHelp = document.createElement('li');
+  observationHelp.textContent = '运行时点击任意格可只读观察，能量离开后继续跟踪该坐标。选中装置后可在暂停时沿用其类型与朝向。定位支持坐标和最大能量堆；图表可切换生产与实际入核，绿色线始终表示对应的全程平均。显示设置中可导出当前视图 PNG。';
+  $('help-dialog').querySelector('.rules-notes ul').append(observationHelp);
+  const analysisHelp = document.createElement('li');
+  analysisHelp.textContent = '装置库支持按名称、英文名或用途搜索，× 数字表示当前地图用量。显示设置可突出某类装置，并打开布局检查或区间测速。布局检查记录当前快照，点结果可定位；区间测速只读取模拟时间与计数，暂停时停止计时，手动编辑、重置或导入会清除测量。可导出最近 40 秒已有完整秒的生产与实际入核 CSV。';
+  $('help-dialog').querySelector('.rules-notes ul').append(analysisHelp);
   applyTheme();
+  applyDisplaySettings();
   loadBlueprints();
   if (restored) setMapName('实验场', '已恢复布局');
   if (!saveAvailable) $('save-status').textContent = '本地保存不可用，请导出存档';
@@ -2930,7 +3619,7 @@ body.map-focused{overflow:hidden}
   resize();
   updateStats();
   save();
-  if (!reducedMotion) revealStart = performance.now() + 150;
+  if (motionEnabled()) revealStart = performance.now() + 150;
   requestAnimationFrame(frame);
   // Webfonts can arrive after the first paint; the canvas labels pick them up on the next frame.
   document.fonts?.ready.then(resize);
